@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Rydny Ihims — Full-Stack Developer & Web Engineer based in Riga, Latvia." />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/Rydny_logo.png" />
+    <title>Rydny Ihims — Full-Stack Developer</title>
+
+    <!-- Google Fonts -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com" />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet" />
+
+    <!-- Font Awesome 6 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+
+    <!-- Stylesheet -->
+    <link
+      rel="stylesheet"
+      href="style.css" />
+  </head>
+  <body>
+    <!-- ============================================================
+       NAVBAR
+  ============================================================ -->
+    <header
+      class="navbar"
+      id="navbar">
+      <div class="navbar__inner">
+        <!-- Brand -->
+        <a
+          href="#home"
+          class="navbar__brand">
+          <div class="navbar__avatar-ring">
+            <img
+              src="assets/linkdin-profile.jpg"
+              alt="Rydny Ihims"
+              class="navbar__avatar" />
+          </div>
+          <span class="navbar__name">Rydny I.</span>
+        </a>
+
+        <!-- Center Nav -->
+        <nav
+          class="navbar__links"
+          id="navLinks"
+          aria-label="Primary navigation">
+          <a
+            href="#home"
+            class="nav-link"
+            >Home</a
+          >
+          <a
+            href="#about"
+            class="nav-link"
+            >About</a
+          >
+          <a
+            href="#projects"
+            class="nav-link"
+            >Projects</a
+          >
+          <a
+            href="#skills"
+            class="nav-link"
+            >Skills</a
+          >
+          <a
+            href="#certifications"
+            class="nav-link"
+            >Certifications</a
+          >
+          <a
+            href="#contact"
+            class="nav-link"
+            >Contact</a
+          >
+        </nav>
+
+        <!-- Right CTA -->
+        <div class="navbar__right">
+          <a
+            href="#contact"
+            class="btn btn--pill btn--accent"
+            >Hire Me</a
+          >
+          <button
+            class="hamburger"
+            id="hamburger"
+            aria-label="Toggle menu"
+            aria-expanded="false">
+            <span class="hamburger__line"></span>
+            <span class="hamburger__line"></span>
+            <span class="hamburger__line"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Nav Overlay -->
+    <div
+      class="mobile-nav"
+      id="mobileNav"
+      aria-hidden="true">
+      <nav
+        class="mobile-nav__links"
+        aria-label="Mobile navigation">
+        <a
+          href="#home"
+          class="mobile-nav__link"
+          >Home</a
+        >
+        <a
+          href="#about"
+          class="mobile-nav__link"
+          >About</a
+        >
+        <a
+          href="#projects"
+          class="mobile-nav__link"
+          >Projects</a
+        >
+        <a
+          href="#skills"
+          class="mobile-nav__link"
+          >Skills</a
+        >
+        <a
+          href="#certifications"
+          class="mobile-nav__link"
+          >Certifications</a
+        >
+        <a
+          href="#contact"
+          class="mobile-nav__link"
+          >Contact</a
+        >
+        <a
+          href="#contact"
+          class="btn btn--pill btn--accent mobile-nav__cta"
+          >Hire Me</a
+        >
+      </nav>
+    </div>
+
+    <!-- ============================================================
+       HERO
+  ============================================================ -->
+    <section
+      class="hero"
+      id="home">
+      <canvas
+        class="hero__canvas"
+        id="dotCanvas"
+        aria-hidden="true"></canvas>
+
+      <div class="container hero__inner">
+        <!-- Left Column -->
+        <div class="hero__content">
+          <p class="hero__badge">
+            <span
+              class="hero__dot"
+              aria-hidden="true"></span>
+            AVAILABLE
+          </p>
+
+          <h1 class="hero__name">Rydny Ihims</h1>
+
+          <p
+            class="hero__typewriter"
+            aria-live="polite">
+            I build —
+            <span
+              class="hero__typed"
+              id="typedText"></span
+            ><span
+              class="hero__cursor"
+              aria-hidden="true"
+              >|</span
+            >
+          </p>
+
+          <p class="hero__bio">Based in Riga. Previously building client projects in Dubai. I build clean, functional web products. From e-commerce platforms to dynamic web apps. 3+ years of professional experience, 5+ projects delivered.</p>
+
+          <div class="hero__cta">
+            <a
+              href="#projects"
+              class="btn btn--filled btn--accent-bg">
+              View My Work
+              <i
+                class="fa-solid fa-arrow-right"
+                aria-hidden="true"></i>
+            </a>
+            <a
+              href="assets/Rydny_Ihims_CV.pdf"
+              download
+              class="btn btn--outline">
+              <i
+                class="fa-solid fa-download"
+                aria-hidden="true"></i>
+              Download CV
+            </a>
+          </div>
+
+          <div class="hero__socials">
+            <a
+              href="https://github.com/Rydny1"
+              class="social-icon"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub">
+              <i class="fa-brands fa-github"></i>
+            </a>
+            <a
+              href="https://linkedin.com/in/rydny-ihims"
+              class="social-icon"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn">
+              <i class="fa-brands fa-linkedin-in"></i>
+            </a>
+            <a
+              href="mailto:rydny01@gmail.com"
+              class="social-icon"
+              aria-label="Email">
+              <i class="fa-solid fa-envelope"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="hero__photo-wrap">
+          <div
+            class="hero__photo-glow"
+            aria-hidden="true"></div>
+          <img
+            src="assets/linkdin-profile.jpg"
+            alt="Rydny Ihims"
+            class="hero__photo" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+       ABOUT
+  ============================================================ -->
+    <section
+      class="about section"
+      id="about">
+      <div class="container about__inner">
+        <!-- Left -->
+        <div class="about__left reveal">
+          <span class="section-label">About Me</span>
+          <h2 class="section-heading">The Story So Far</h2>
+
+          <p class="about__bio">
+            I am a full-stack developer Living in Riga, Latvia. I am getting my BSc in Computer Science at the University of Latvia. I worked on client projects in e-commerce, hospitality, and events in Dubai for three years, from 2022 to 2025. I
+            learnt that writing clean code is only part of making good software. You also need to know what the business needs and deliver.
+          </p>
+          <p class="about__bio">
+            I'm improving my basic computer science skills while still working with real-world products. I'm interested in tech and tech, AI, and it's implementations in bussinesses and Users. <br />
+            If it needs to work well and look good, I want to build it.
+          </p>
+
+          <!-- Stats -->
+          <div class="about__stats">
+            <div class="stat-card reveal-stagger">
+              <span class="stat-card__number">3+</span>
+              <span class="stat-card__label">Years Experience</span>
+            </div>
+            <div class="stat-card reveal-stagger">
+              <span class="stat-card__number">5+</span>
+              <span class="stat-card__label">Projects Delivered</span>
+            </div>
+            <div class="stat-card reveal-stagger">
+              <span class="stat-card__number">2</span>
+              <span class="stat-card__label">Languages (EN / FR)</span>
+            </div>
+            <div class="stat-card reveal-stagger">
+              <span class="stat-card__number">1</span>
+              <span class="stat-card__label">Certification</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right — Terminal -->
+        <div class="about__right reveal">
+          <div class="terminal">
+            <div class="terminal__bar">
+              <span class="terminal__dot terminal__dot--red"></span>
+              <span class="terminal__dot terminal__dot--yellow"></span>
+              <span class="terminal__dot terminal__dot--green"></span>
+              <span class="terminal__title">rydny@portfolio ~ </span>
+            </div>
+            <div class="terminal__body">
+              <div class="terminal__line">
+                <span class="terminal__prompt">$</span>
+                <span class="terminal__cmd"> whoami</span>
+              </div>
+              <div class="terminal__line terminal__output">→ rydny-ihims</div>
+
+              <div class="terminal__line">
+                <span class="terminal__prompt">$</span>
+                <span class="terminal__cmd"> location</span>
+              </div>
+              <div class="terminal__line terminal__output">→ Riga, Latvia</div>
+
+              <div class="terminal__line">
+                <span class="terminal__prompt">$</span>
+                <span class="terminal__cmd"> status</span>
+              </div>
+              <div class="terminal__line terminal__output">→ open to opportunities</div>
+
+              <div class="terminal__line">
+                <span class="terminal__prompt">$</span>
+                <span class="terminal__cmd"> currently</span>
+              </div>
+              <div class="terminal__line terminal__output">→ BSc Computer Science @ UL</div>
+
+              <div class="terminal__line">
+                <span class="terminal__prompt">$</span>
+                <span class="terminal__cmd"> passion</span>
+              </div>
+              <div class="terminal__line terminal__output terminal__output--last">
+                → building things that matter<span
+                  class="terminal__blink"
+                  aria-hidden="true"
+                  >_</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+       PROJECTS
+  ============================================================ -->
+    <section
+      class="projects section"
+      id="projects">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Portfolio</span>
+          <h2 class="section-heading">Selected Work</h2>
+        </div>
+
+        <div class="projects__grid">
+          <!-- Card 01 -->
+          <article class="project-card reveal-stagger">
+            <div class="project-card__preview">
+              <img
+                src="assets/Altays_catalogue.png"
+                alt="ALTAYS Marble preview" />
+            </div>
+            <span class="project-card__num">01</span>
+            <div class="project-card__body">
+              <h3 class="project-card__title">ALTAYS Marble</h3>
+              <p class="project-card__desc">Luxury furniture e-commerce platform built for the Dubai market. Features a full product catalog, cart system, and polished responsive design tailored for high-end clientele.</p>
+              <div class="project-card__stack">
+                <span class="tech-pill">HTML</span>
+                <span class="tech-pill">CSS</span>
+                <span class="tech-pill">JavaScript</span>
+                <span class="tech-pill">React</span>
+              </div>
+            </div>
+            <a
+              href="https://altaystradingllc.com/"
+              class="project-card__link"
+              aria-label="View ALTAYS Marble project">
+              <i
+                class="fa-solid fa-arrow-up-right-from-square"
+                aria-hidden="true"></i>
+              <span>View Project</span>
+            </a>
+          </article>
+
+          <!-- Card 02 -->
+          <article class="project-card reveal-stagger">
+            <div class="project-card__preview">
+              <img
+                src="assets/African-grill.png"
+                alt="African Grill preview" />
+            </div>
+            <span class="project-card__num">02</span>
+            <div class="project-card__body">
+              <h3 class="project-card__title">African grill</h3>
+              <p class="project-card__desc">Full responsive website for a restaurant client. Clean UI with an interactive menu display, reservation-ready contact integration, and smooth mobile experience.</p>
+              <div class="project-card__stack">
+                <span class="tech-pill">HTML</span>
+                <span class="tech-pill">CSS</span>
+                <span class="tech-pill">JavaScript</span>
+              </div>
+            </div>
+            <a
+              href="https://rydny1.github.io/African-Grill/index.html"
+              class="project-card__link"
+              aria-label="View Restaurant Website project">
+              <i
+                class="fa-solid fa-arrow-up-right-from-square"
+                aria-hidden="true"></i>
+              <span>View Project</span>
+            </a>
+          </article>
+
+          <!-- Card 03 -->
+          <article class="project-card reveal-stagger">
+            <div class="project-card__preview project-card__preview--gradient project-card__preview--event">
+              <span class="project-card__preview-label">Event System</span>
+            </div>
+            <span class="project-card__num">03</span>
+            <div class="project-card__body">
+              <h3 class="project-card__title">Event Management System</h3>
+              <p class="project-card__desc">Web application with user authentication, full event CRUD operations, and database integration. Handles multi-role access and real-time event state management.</p>
+              <div class="project-card__stack">
+                <span class="tech-pill">PHP</span>
+                <span class="tech-pill">Laravel</span>
+                <span class="tech-pill">MySQL</span>
+              </div>
+            </div>
+            <a
+              href="#"
+              class="project-card__link"
+              aria-label="View Event Management System project">
+              <i
+                class="fa-solid fa-arrow-up-right-from-square"
+                aria-hidden="true"></i>
+              <span>View Project</span>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+       SKILLS
+  ============================================================ -->
+    <section
+      class="skills section"
+      id="skills">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Tech Stack</span>
+          <h2 class="section-heading">What I Work With</h2>
+        </div>
+
+        <div class="skills__grid">
+          <!-- Frontend -->
+          <div class="skills__column skills__column--frontend reveal-stagger">
+            <h3 class="skills__category">
+              <i
+                class="fa-solid fa-display"
+                aria-hidden="true"></i>
+              Frontend
+            </h3>
+            <div class="skills__pills">
+              <span class="skill-pill">HTML5</span>
+              <span class="skill-pill">CSS3</span>
+              <span class="skill-pill">JavaScript</span>
+              <span class="skill-pill">React</span>
+              <span class="skill-pill">Tailwind CSS</span>
+              <span class="skill-pill">Responsive Design</span>
+            </div>
+          </div>
+
+          <!-- Backend -->
+          <div class="skills__column skills__column--backend reveal-stagger">
+            <h3 class="skills__category">
+              <i
+                class="fa-solid fa-server"
+                aria-hidden="true"></i>
+              Backend
+            </h3>
+            <div class="skills__pills">
+              <span class="skill-pill">PHP</span>
+              <span class="skill-pill">Python</span>
+              <span class="skill-pill">MySQL</span>
+              <span class="skill-pill">Laravel</span>
+            </div>
+          </div>
+
+          <!-- Tools -->
+          <div class="skills__column skills__column--tools reveal-stagger">
+            <h3 class="skills__category">
+              <i
+                class="fa-solid fa-wrench"
+                aria-hidden="true"></i>
+              Tools &amp; Other
+            </h3>
+            <div class="skills__pills">
+              <span class="skill-pill">Git</span>
+              <span class="skill-pill">GitHub</span>
+              <span class="skill-pill">VS Code</span>
+              <span class="skill-pill">Figma</span>
+              <span class="skill-pill">Prompt Engineering</span>
+              <span class="skill-pill">RESTful APIs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+       CERTIFICATIONS
+  ============================================================ -->
+    <section
+      class="certifications section"
+      id="certifications">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Credentials</span>
+          <h2 class="section-heading">Certifications</h2>
+        </div>
+
+        <div class="certifications__card reveal">
+          <img
+            src="assets/webdev-cert.jpg"
+            alt="Full-Stack Developer Certification"
+            class="certifications__img" />
+          <div class="certifications__info">
+            <span class="certifications__badge">Certified</span>
+            <h3 class="certifications__title">Full-Stack Developer Certification</h3>
+            <p class="certifications__issuer">Zabeel Institute, Dubai — UAE</p>
+            <p class="certifications__date">June 2023 – January 2024</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+       TESTIMONIALS
+  ============================================================ -->
+    <section
+      class="testimonials section"
+      id="testimonials">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Kind Words</span>
+          <h2 class="section-heading">What Clients Say</h2>
+        </div>
+
+        <div class="testimonials__grid">
+          <!-- Card 1 -->
+          <article class="testimonial-card reveal-stagger">
+            <p class="testimonial-card__quote">
+              Rydny built my e-commerce store from scratch and honestly I was not expecting it to be that smooth. I had changed my mind about the layout like three times and he just… handled it. No drama, no extra charges. The site has been running
+              clean for months now.
+            </p>
+            <div class="testimonial-card__footer">
+              <div
+                class="testimonial-card__avatar"
+                aria-hidden="true">
+                M
+              </div>
+              <div>
+                <p class="testimonial-card__name">Marcus T.</p>
+                <p class="testimonial-card__role">Online Store Owner, Dubai</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="testimonial-card reveal-stagger">
+            <p class="testimonial-card__quote">
+              I hired him for a quick landing page and ended up giving him two more projects after that. He knows what he's doing and he doesn't need you to hold his hand through every step, which for me was a big deal. Very reliable.
+            </p>
+            <div class="testimonial-card__footer">
+              <div
+                class="testimonial-card__avatar"
+                aria-hidden="true">
+                P
+              </div>
+              <div>
+                <p class="testimonial-card__name">Priya N.</p>
+                <p class="testimonial-card__role">Founder, Freelance Client</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="testimonial-card reveal-stagger">
+            <p class="testimonial-card__quote">
+              We needed a premium catalogue site for our marble collections, something that could communicate to our customers. Rydny understood the brief immediately. The animations, the layout, the way the products are displayed — we loved it.
+              Genuinely good work.
+            </p>
+            <div class="testimonial-card__footer">
+              <div
+                class="testimonial-card__avatar"
+                aria-hidden="true">
+                A
+              </div>
+              <div>
+                <p class="testimonial-card__name">Altay S.</p>
+                <p class="testimonial-card__role">Director, Altays Premium Marble</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+       CONTACT
+  ============================================================ -->
+    <section
+      class="contact section"
+      id="contact">
+      <div class="container contact__inner">
+        <div class="contact__header reveal">
+          <span class="section-label">Get In Touch</span>
+          <h2 class="section-heading contact__heading">Let's Build Something</h2>
+          <p class="contact__sub">Open to freelance projects, collaborations, and full-time opportunities.</p>
+
+          <a
+            href="mailto:rydny01@gmail.com"
+            class="contact__email"
+            >rydny01@gmail.com</a
+          >
+
+          <div class="contact__socials">
+            <a
+              href="https://github.com/Rydny1"
+              class="social-icon"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub">
+              <i class="fa-brands fa-github"></i>
+            </a>
+            <a
+              href="https://linkedin.com/in/rydny-ihims"
+              class="social-icon"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn">
+              <i class="fa-brands fa-linkedin-in"></i>
+            </a>
+            <a
+              href="mailto:rydny01@gmail.com"
+              class="social-icon"
+              aria-label="Email">
+              <i class="fa-solid fa-envelope"></i>
+            </a>
+            <a
+              href="https://wa.me/37125737618"
+              class="social-icon social-icon--whatsapp"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp">
+              <i class="fa-brands fa-whatsapp"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <form
+          class="contact__form reveal"
+          id="contactForm"
+          novalidate>
+          <div class="form-group">
+            <label
+              for="formName"
+              class="form-label"
+              >Name</label
+            >
+            <input
+              type="text"
+              id="formName"
+              name="name"
+              class="form-input"
+              placeholder="Your name"
+              required />
+            <span
+              class="form-field-error"
+              id="nameError"
+              aria-live="polite"></span>
+          </div>
+          <div class="form-group">
+            <label
+              for="formEmail"
+              class="form-label"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="formEmail"
+              name="email"
+              class="form-input"
+              placeholder="your@email.com"
+              required />
+            <span
+              class="form-field-error"
+              id="emailError"
+              aria-live="polite"></span>
+          </div>
+          <div class="form-group">
+            <label
+              for="formMessage"
+              class="form-label"
+              >Message</label
+            >
+            <textarea
+              id="formMessage"
+              name="message"
+              class="form-input form-textarea"
+              placeholder="Tell me about your project..."
+              rows="5"
+              required></textarea>
+            <span
+              class="form-field-error"
+              id="messageError"
+              aria-live="polite"></span>
+          </div>
+          <div class="contact__form-actions">
+            <button
+              type="submit"
+              class="btn btn--filled btn--accent-bg">
+              <i
+                class="fa-solid fa-paper-plane"
+                aria-hidden="true"></i>
+              Send Message
+            </button>
+            <a
+              href="assets/Rydny_Ihims_CV.pdf"
+              download
+              class="btn btn--outline">
+              <i
+                class="fa-solid fa-download"
+                aria-hidden="true"></i>
+              Download CV
+            </a>
+          </div>
+          <p
+            class="form-success"
+            id="formSuccess"
+            aria-live="polite"
+            hidden>
+            <i class="fa-solid fa-circle-check"></i> Message sent! I'll be in touch soon.
+          </p>
+          <p
+            class="form-error-msg"
+            id="formError"
+            aria-live="polite"
+            hidden>
+            <i class="fa-solid fa-circle-exclamation"></i> Something went wrong. Email me directly at
+            <a
+              href="mailto:rydny01@gmail.com"
+              style="color: inherit; text-decoration: underline"
+              >rydny01@gmail.com</a
+            >
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+    <footer class="footer">
+      <div class="container footer__inner">
+        <p class="footer__copy">Designed &amp; built by Rydny Ihims &mdash; &copy; <span id="footerYear"></span></p>
+        <div class="footer__socials">
+          <a
+            href="https://github.com/Rydny1"
+            class="social-icon social-icon--sm"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub">
+            <i class="fa-brands fa-github"></i>
+          </a>
+          <a
+            href="https://linkedin.com/in/rydny-ihims"
+            class="social-icon social-icon--sm"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn">
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scroll to top -->
+    <button
+      class="scroll-top"
+      id="scrollTop"
+      aria-label="Scroll to top"
+      hidden>
+      <i
+        class="fa-solid fa-chevron-up"
+        aria-hidden="true"></i>
+    </button>
+
+    <!-- Main JS -->
+    <script src="js/main.js"></script>
+  </body>
+</html>
