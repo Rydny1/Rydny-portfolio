@@ -1,0 +1,118 @@
+---
+import { withBase } from '../lib/base';
+
+const stats = [
+  { number: '3+', label: 'Years Experience' },
+  { number: '5+', label: 'Projects Delivered' },
+];
+---
+
+<section class="about section" id="about">
+  <div class="hairline-draw" aria-hidden="true"></div>
+  <div class="container about__inner">
+    <div class="about__photo reveal">
+      <img
+        src={withBase('/assets/linkdin-profile.jpg')}
+        alt="Rydny Ihims"
+        width="480"
+        height="600"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="about__content reveal">
+      <span class="section-label">About Me</span>
+      <h2 class="section-heading">The Story So Far</h2>
+
+      <p class="about__bio">
+        I'm a full-stack developer living in Riga, Latvia, working toward a BSc in Computer
+        Science at the University of Latvia. I spent three years building client projects in
+        Dubai — e-commerce, hospitality, events — and learned that clean code is only half the
+        job. The other half is understanding what the business actually needs.
+      </p>
+      <p class="about__bio">
+        I'm sharpening my computer science fundamentals while still shipping real products, with a
+        growing focus on AI and how it fits into practical business tools. If it needs to work
+        well and look good, I want to build it.
+      </p>
+
+      <div class="about__stats">
+        {
+          stats.map((s) => (
+            <div class="stat-row">
+              <span class="stat-row__number">{s.number}</span>
+              <span class="stat-row__label">{s.label}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    position: relative;
+  }
+
+  .about__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .about__inner {
+      grid-template-columns: 0.75fr 1.25fr;
+      gap: 80px;
+      align-items: center;
+    }
+  }
+
+  .about__photo img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: top center;
+    border: 1px solid var(--hairline-strong);
+  }
+
+  .about__bio {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 20px;
+    max-width: 60ch;
+  }
+
+  .about__stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .stat-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-row__number {
+    font-family: var(--font-display);
+    font-size: var(--fs-40);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-row__label {
+    font-size: var(--fs-12);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+</style>
