@@ -1,0 +1,308 @@
+---
+import GlassButton from './GlassButton';
+import { withBase } from '../lib/base';
+
+const socials = [
+  { label: 'GitHub', href: 'https://github.com/Rydny1' },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/rydny-ihims' },
+  { label: 'WhatsApp', href: 'https://wa.me/37125737618' },
+];
+---
+
+<section class="contact" id="contact">
+  <div class="contact__intro theme-dark">
+    <div class="hairline-draw" aria-hidden="true"></div>
+    <div class="container contact__intro-inner reveal">
+      <span class="section-label">Get In Touch</span>
+      <h2 class="section-heading">Let's Build Something</h2>
+      <p class="contact__sub">Open to freelance projects, collaborations, and full-time opportunities.</p>
+      <a href="mailto:rydny01@gmail.com" class="contact__email">rydny01@gmail.com</a>
+      <div class="contact__socials">
+        {
+          socials.map((s) => (
+            <a href={s.href} class="contact__social" target="_blank" rel="noopener noreferrer">
+              {s.label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="contact__form-area section">
+    <div class="container">
+      <form class="contact__form reveal" id="contactForm" novalidate>
+        <div class="form-group">
+          <label for="formName" class="form-label">Name</label>
+          <input type="text" id="formName" name="name" class="form-input" placeholder="Your name" required />
+          <span class="form-field-error" id="nameError" aria-live="polite"></span>
+        </div>
+        <div class="form-group">
+          <label for="formEmail" class="form-label">Email</label>
+          <input type="email" id="formEmail" name="email" class="form-input" placeholder="your@email.com" required />
+          <span class="form-field-error" id="emailError" aria-live="polite"></span>
+        </div>
+        <div class="form-group">
+          <label for="formMessage" class="form-label">Message</label>
+          <textarea
+            id="formMessage"
+            name="message"
+            class="form-input form-textarea"
+            placeholder="Tell me about your project..."
+            rows="5"
+            required></textarea>
+          <span class="form-field-error" id="messageError" aria-live="polite"></span>
+        </div>
+
+        <div class="contact__form-actions">
+          <GlassButton type="submit" client:visible>Send Message</GlassButton>
+          <a href={withBase('/assets/Rydny_Ihims_CV.pdf')} download class="btn btn--ghost">Download CV</a>
+        </div>
+
+        <p class="form-success" id="formSuccess" role="status" aria-live="polite" hidden>Message sent! I'll be in touch soon.</p>
+        <p class="form-error-msg" id="formError" role="alert" aria-live="polite" hidden>
+          Something went wrong — email me directly at
+          <a href="mailto:rydny01@gmail.com">rydny01@gmail.com</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact__intro {
+    padding-block: 96px;
+    position: relative;
+  }
+
+  .contact__intro-inner {
+    max-width: 640px;
+  }
+
+  .contact__sub {
+    color: var(--text-secondary);
+    max-width: 44ch;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .contact__email {
+    display: inline-block;
+    font-size: var(--fs-28);
+    font-weight: 300;
+    color: var(--brushed);
+    border-bottom: 1px solid transparent;
+    margin-bottom: 28px;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+
+  .contact__email:hover {
+    border-color: var(--brushed);
+  }
+
+  .contact__socials {
+    display: flex;
+    gap: 24px;
+  }
+
+  .contact__social {
+    font-size: var(--fs-14);
+    color: var(--text-secondary);
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition:
+      color var(--dur-fast) var(--ease),
+      border-color var(--dur-fast) var(--ease);
+  }
+
+  .contact__social:hover {
+    color: var(--text);
+    border-color: var(--accent-ui);
+  }
+
+  .contact__form-area {
+    padding-top: 64px;
+  }
+
+  .contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 560px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-label {
+    font-size: var(--fs-14);
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .form-input {
+    background: transparent;
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-control);
+    padding: 14px 16px;
+    font-family: var(--font-body);
+    font-size: var(--fs-16);
+    color: var(--text);
+    width: 100%;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+
+  .form-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--accent-ui);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .form-input--error {
+    border-color: var(--oxide) !important;
+  }
+
+  .form-field-error {
+    font-size: var(--fs-12);
+    color: var(--oxide);
+    min-height: 1em;
+  }
+
+  .contact__form-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .form-success {
+    font-size: var(--fs-14);
+    color: var(--moss);
+  }
+
+  .form-error-msg {
+    font-size: var(--fs-14);
+    color: var(--oxide);
+  }
+
+  .form-error-msg a {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contactForm') as HTMLFormElement | null;
+  const successEl = document.getElementById('formSuccess');
+  const errorEl = document.getElementById('formError');
+  const ENDPOINT = 'https://formspree.io/f/xrerllze';
+
+  if (form) {
+    function fieldOf(id: string) {
+      return document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | null;
+    }
+
+    function showFieldError(field: HTMLElement, msg: string) {
+      const errSpan = field.parentElement?.querySelector('.form-field-error');
+      if (errSpan) errSpan.textContent = msg;
+      field.classList.add('form-input--error');
+    }
+
+    function clearFieldError(field: HTMLElement) {
+      const errSpan = field.parentElement?.querySelector('.form-field-error');
+      if (errSpan) errSpan.textContent = '';
+      field.classList.remove('form-input--error');
+    }
+
+    function validate() {
+      const name = fieldOf('formName')!;
+      const email = fieldOf('formEmail')!;
+      const message = fieldOf('formMessage')!;
+      let valid = true;
+
+      const nameVal = name.value.trim();
+      if (!nameVal) {
+        showFieldError(name, 'This field is required');
+        valid = false;
+      } else if (nameVal.length < 3 || !/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]{3,50}$/.test(nameVal)) {
+        showFieldError(name, 'Please enter a valid name');
+        valid = false;
+      } else {
+        clearFieldError(name);
+      }
+
+      const emailVal = email.value.trim();
+      if (!emailVal) {
+        showFieldError(email, 'This field is required');
+        valid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+        showFieldError(email, 'Please enter a valid email address');
+        valid = false;
+      } else {
+        clearFieldError(email);
+      }
+
+      const msgVal = message.value.trim();
+      if (!msgVal) {
+        showFieldError(message, 'This field is required');
+        valid = false;
+      } else if (msgVal.length < 20) {
+        showFieldError(message, 'Message too short — tell me a little more');
+        valid = false;
+      } else if (msgVal.length > 500) {
+        showFieldError(message, 'Message too long');
+        valid = false;
+      } else {
+        clearFieldError(message);
+      }
+
+      return valid;
+    }
+
+    ['formName', 'formEmail', 'formMessage'].forEach((id) => {
+      const el = fieldOf(id);
+      el?.addEventListener('input', () => clearFieldError(el));
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+
+      const submitBtn = form.querySelector('[type="submit"]') as HTMLButtonElement | null;
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form),
+        });
+
+        if (res.ok) {
+          successEl?.removeAttribute('hidden');
+          errorEl?.setAttribute('hidden', '');
+          form.reset();
+          setTimeout(() => successEl?.setAttribute('hidden', ''), 6000);
+        } else {
+          throw new Error('non-ok');
+        }
+      } catch {
+        errorEl?.removeAttribute('hidden');
+        successEl?.setAttribute('hidden', '');
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  }
+</script>

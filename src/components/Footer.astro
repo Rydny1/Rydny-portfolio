@@ -1,0 +1,90 @@
+---
+const year = new Date().getFullYear();
+
+const socials = [
+  { label: 'GitHub', href: 'https://github.com/Rydny1', icon: 'github' },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/rydny-ihims', icon: 'linkedin' },
+  { label: 'Email', href: 'mailto:rydny01@gmail.com', icon: 'email' },
+];
+---
+
+<footer class="footer theme-dark">
+  <div class="container footer__inner">
+    <p class="footer__copy">Designed &amp; built by Rydny Ihims &mdash; &copy; {year}</p>
+    <div class="footer__socials">
+      {
+        socials.map((s) => (
+          <a
+            href={s.href}
+            class="footer__icon"
+            target={s.href.startsWith('http') ? '_blank' : undefined}
+            rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            aria-label={s.label}>
+            {s.icon === 'github' && (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 0C5.37 0 0 5.5 0 12.29c0 5.43 3.44 10.03 8.21 11.66.6.11.82-.27.82-.6 0-.29-.01-1.26-.02-2.29-3.34.75-4.04-1.45-4.04-1.45-.55-1.44-1.34-1.82-1.34-1.82-1.09-.77.08-.76.08-.76 1.21.09 1.85 1.28 1.85 1.28 1.07 1.87 2.81 1.33 3.49 1.02.11-.79.42-1.33.76-1.64-2.67-.31-5.47-1.38-5.47-6.15 0-1.36.47-2.47 1.24-3.34-.12-.31-.54-1.57.12-3.28 0 0 1.01-.33 3.3 1.28a11.2 11.2 0 0 1 6.01 0c2.29-1.6 3.3-1.28 3.3-1.28.66 1.71.24 2.97.12 3.28.77.87 1.24 1.98 1.24 3.34 0 4.78-2.81 5.83-5.49 6.14.43.38.81 1.13.81 2.28 0 1.65-.01 2.98-.01 3.38 0 .33.21.72.83.6C20.57 22.31 24 17.71 24 12.29 24 5.5 18.63 0 12 0Z" />
+              </svg>
+            )}
+            {s.icon === 'linkedin' && (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45Z" />
+              </svg>
+            )}
+            {s.icon === 'email' && (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <rect x="2.5" y="4.5" width="19" height="15" rx="1.5" />
+                <path d="M3.5 6.5 12 13l8.5-6.5" />
+              </svg>
+            )}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--hairline);
+    padding-block: 32px;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .footer__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer__copy {
+    font-size: var(--fs-14);
+    color: var(--text-secondary);
+  }
+
+  .footer__socials {
+    display: flex;
+    gap: 12px;
+  }
+
+  .footer__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--hairline-strong);
+    color: var(--text);
+    transition:
+      border-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+  }
+
+  .footer__icon:hover {
+    border-color: var(--brushed);
+    color: var(--brushed);
+  }
+</style>

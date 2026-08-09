@@ -1,0 +1,84 @@
+---
+const columns = [
+  {
+    category: 'Frontend',
+    items: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Tailwind CSS', 'Responsive Design'],
+  },
+  {
+    category: 'Backend',
+    items: ['PHP', 'Python', 'MySQL', 'Laravel'],
+  },
+  {
+    category: 'Tools & Other',
+    items: ['Git', 'GitHub', 'VS Code', 'Figma', 'Prompt Engineering', 'RESTful APIs'],
+  },
+];
+---
+
+<section class="skills section" id="skills">
+  <div class="hairline-draw" aria-hidden="true"></div>
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Tech Stack</span>
+      <h2 class="section-heading">What I Work With</h2>
+    </div>
+
+    <div class="skills__grid">
+      {
+        columns.map((col) => (
+          <div class="skills__column reveal">
+            <h3 class="skills__category">{col.category}</h3>
+            <ul class="skills__list">
+              {col.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-header {
+    margin-bottom: 56px;
+  }
+
+  .skills__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  @media (min-width: 768px) {
+    .skills__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .skills__column {
+    border-top: 3px solid var(--accent-ui);
+    padding-top: 20px;
+  }
+
+  .skills__category {
+    font-size: var(--fs-14);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .skills__list li {
+    font-size: var(--fs-16);
+    color: var(--text-secondary);
+    padding-block: 12px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .skills__list li:first-child {
+    border-top: 1px solid var(--hairline);
+  }
+</style>

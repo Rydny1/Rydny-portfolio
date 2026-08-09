@@ -1,0 +1,318 @@
+/* ============================================================
+   DESIGN TOKENS — engineered restraint ("Mercedes") direction
+============================================================ */
+:root {
+  /* dark tones */
+  --graphite: #1b1d1f;
+  --anthracite: #2a2d30;
+
+  /* light tone */
+  --porcelain: #f1efea;
+
+  /* neutral text */
+  --pewter: #8b8880;
+  --ink-on-dark: #a6a399;
+  --ink-on-light: #5b584f;
+
+  /* the one accent — rules, labels, numerals. never a fill, never a glow. */
+  --brushed: #c2b59b;
+  /* UI-functional variant (borders, focus rings, underlines) — raw --brushed
+     only hits 1.76:1 against porcelain, well under the 3:1 floor for
+     interactive indicators. This darker bronze clears 3.6:1 on light,
+     and --brushed itself already clears 8.36:1 on dark, so contexts pick
+     the right one via the --accent-ui alias below. */
+  --brushed-on-light: #8f7a5a;
+
+  /* semantic — forms only */
+  --oxide: #b4472f;
+  --moss: #5f6f52;
+
+  /* glass — reserved for primary CTA buttons only, nowhere else */
+  --glass-bg-on-light: rgba(27, 29, 31, 0.05);
+  --glass-bg-on-dark: rgba(241, 239, 234, 0.08);
+  --glass-border-on-light: rgba(27, 29, 31, 0.16);
+  --glass-border-on-dark: rgba(241, 239, 234, 0.24);
+  --glass-highlight: rgba(255, 255, 255, 0.55);
+
+  /* type */
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Clash Display', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --fs-12: 0.75rem;
+  --fs-14: 0.875rem;
+  --fs-16: 1rem;
+  --fs-18: 1.125rem;
+  --fs-22: 1.375rem;
+  --fs-28: 1.75rem;
+  --fs-40: 2.5rem;
+  --fs-56: 3.5rem;
+  --fs-76: 4.75rem;
+
+  /* radius — moderate rounding on controls (MBUX-style: rounded touch
+     controls, sharp-edged content), full pill reserved only for nav chrome */
+  --radius-control: 14px;
+  --radius-pill: 999px;
+  --radius-image: 0px;
+
+  /* motion */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 400ms;
+  --dur-base: 900ms;
+  --dur-slow: 1100ms;
+
+  --nav-h: 76px;
+  --container-max: 1280px;
+  --container-pad: 24px;
+
+  /* theme-scoped semantic aliases — default: light */
+  --bg: var(--porcelain);
+  --text: var(--graphite);
+  --text-secondary: var(--ink-on-light);
+  --hairline: rgba(27, 29, 31, 0.14);
+  --hairline-strong: rgba(27, 29, 31, 0.3);
+  --glass-bg: var(--glass-bg-on-light);
+  --glass-border: var(--glass-border-on-light);
+  --accent-ui: var(--brushed-on-light);
+}
+
+/* Dark band — hero, footer, contact intro. Applied to a section, cascades
+   to everything inside via the same var names. Hard edge between bands,
+   no gradient fade. */
+.theme-dark {
+  --bg: var(--graphite);
+  --text: var(--porcelain);
+  --text-secondary: var(--ink-on-dark);
+  --hairline: rgba(241, 239, 234, 0.14);
+  --hairline-strong: rgba(241, 239, 234, 0.3);
+  --glass-bg: var(--glass-bg-on-dark);
+  --glass-border: var(--glass-border-on-dark);
+  --accent-ui: var(--brushed);
+}
+
+/* IMPORTANT: .theme-dark/.theme-light only redefine the custom properties
+   above — they do NOT paint anything themselves. Every real section
+   (Hero, Footer, any full-bleed band) must explicitly declare its own
+   `background: var(--bg); color: var(--text);` in its own stylesheet.
+   (This was a real bug once: dark-themed text over a section that never
+   painted var(--bg) rendered porcelain-on-porcelain, invisible.)
+   Deliberately NOT baked in here as a blanket rule, because some
+   elements — the navbar's floating pills — need the variable cascade
+   WITHOUT the paint, since they already have their own translucent glass
+   background and would otherwise get papered over with an opaque one. */
+
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--fs-16);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  border-radius: var(--radius-image);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-body);
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--oxide);
+  outline-offset: 2px;
+}
+
+/* Any button/link acting as a focusable control gets the brushed ring
+   instead of the error-toned default above — oxide is reserved for form
+   errors, brushed for interactive focus. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline-color: var(--accent-ui);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   LAYOUT UTILITY
+============================================================ */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: 64px;
+  }
+}
+
+.section {
+  padding-block: 96px;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-block: 160px;
+  }
+}
+
+.section-label {
+  display: inline-block;
+  font-size: var(--fs-12);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: var(--fs-40);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .section-heading {
+    font-size: var(--fs-56);
+  }
+}
+
+.hairline {
+  border: none;
+  border-top: 1px solid var(--hairline);
+}
+
+/* Placeholder baselines — upgraded to the real IntersectionObserver-driven
+   scroll reveal / hairline-draw system in the dedicated motion pass. Kept
+   visible/static here so content isn't invisible in the meantime. */
+.reveal {
+  opacity: 1;
+}
+
+.hairline-draw {
+  border: none;
+  border-top: 1px solid var(--hairline);
+}
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+/* Ghost / secondary — hairline, transparent. The default button. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-size: var(--fs-14);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: var(--radius-control);
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+  white-space: nowrap;
+}
+
+.btn--ghost {
+  background: transparent;
+  border: 1px solid var(--hairline-strong);
+  color: var(--text);
+}
+
+.btn--ghost:hover {
+  border-color: var(--accent-ui);
+  background: var(--glass-bg);
+}
+
+/* Primary — the one place glass lives on this site. Reserved for the
+   single highest-priority action per view (hero CTA, form submit, the
+   nav "Hire me"). Not used for anything else. */
+.btn--glass {
+  position: relative;
+  overflow: hidden;
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  box-shadow: inset 0 1px 0 var(--glass-highlight);
+}
+
+.btn--glass:hover {
+  border-color: var(--accent-ui);
+}
+
+.btn--glass .btn__label {
+  position: relative;
+  display: inline-block;
+}
+
+/* The animated shine sweep itself is driven by Framer Motion
+   (see src/components/GlassButton.tsx) — this file only owns the
+   static glass surface (background/border/blur/highlight) so the
+   same look is reachable from any React island. */
+.btn--glass__shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    var(--glass-highlight) 50%,
+    transparent 60%
+  );
+}
