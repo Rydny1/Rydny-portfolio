@@ -1,6 +1,7 @@
 ---
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer.astro';
+import ScrollToTop from '../components/ScrollToTop';
 import '../styles/global.css';
 // Self-hosted fonts (performance brief: self-hosted or fast CDN, font-display: swap —
 // fontsource ships font-display: swap by default). No external font requests.
@@ -42,6 +43,7 @@ const { title, description = 'Rydny Ihims. Full-stack developer and AI builder.'
       <slot />
     </main>
     <Footer />
+    <ScrollToTop client:visible />
 
     <script>
       import Lenis from 'lenis';

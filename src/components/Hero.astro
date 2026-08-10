@@ -29,7 +29,7 @@ const bgShapes = [
     }
   </div>
   <div class="container hero__inner">
-    <div class="hero__content">
+    <div class="hero__content" style="animation-delay: 1.5s;">
       <p class="hero__badge reveal">Available for work. Riga and remote.</p>
 
       <h1 class="hero__name reveal">Rydny Ihims</h1>
@@ -55,10 +55,10 @@ const bgShapes = [
 <style>
   .hero {
     position: relative;
-    min-height: 100svh;
+    min-height: 90svh;
     display: flex;
     align-items: center;
-    padding-top: var(--nav-h);
+    padding-top: calc(var(--nav-h) + 16px);
     overflow: hidden;
     background: var(--bg);
     color: var(--text);
@@ -226,8 +226,8 @@ const bgShapes = [
      spaced-out feel entirely. */
   @media (max-width: 480px) {
     .hero {
-      min-height: 100svh;
-      padding-top: calc(var(--nav-h) + 16px);
+      min-height: 90svh;
+      padding-top: calc(var(--nav-h) + 8px);
     }
 
     .hero__inner {
