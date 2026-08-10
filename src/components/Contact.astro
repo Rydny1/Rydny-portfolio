@@ -1,11 +1,9 @@
 ---
 import GlassButton from './GlassButton';
-import { withBase } from '../lib/base';
 
 const socials = [
   { label: 'GitHub', href: 'https://github.com/Rydny1' },
   { label: 'LinkedIn', href: 'https://linkedin.com/in/rydny-ihims' },
-  { label: 'WhatsApp', href: 'https://wa.me/37125737618' },
 ];
 ---
 
@@ -14,8 +12,7 @@ const socials = [
     <div class="hairline-draw" aria-hidden="true"></div>
     <div class="container contact__intro-inner reveal">
       <span class="section-label">Get In Touch</span>
-      <h2 class="section-heading">Let's Build Something</h2>
-      <p class="contact__sub">Open to freelance projects, collaborations, and full-time opportunities.</p>
+      <h2 class="section-heading">Got something to build? Tell me about it.</h2>
       <a href="mailto:rydny01@gmail.com" class="contact__email">rydny01@gmail.com</a>
       <div class="contact__socials">
         {
@@ -56,12 +53,11 @@ const socials = [
 
         <div class="contact__form-actions">
           <GlassButton type="submit" client:visible>Send Message</GlassButton>
-          <a href={withBase('/assets/Rydny_Ihims_CV.pdf')} download class="btn btn--ghost">Download CV</a>
         </div>
 
-        <p class="form-success" id="formSuccess" role="status" aria-live="polite" hidden>Message sent! I'll be in touch soon.</p>
+        <p class="form-success" id="formSuccess" role="status" aria-live="polite" hidden>Message sent. I'll be in touch soon.</p>
         <p class="form-error-msg" id="formError" role="alert" aria-live="polite" hidden>
-          Something went wrong — email me directly at
+          Something went wrong. Email me directly at
           <a href="mailto:rydny01@gmail.com">rydny01@gmail.com</a>
         </p>
       </form>
@@ -258,7 +254,7 @@ const socials = [
         showFieldError(message, 'This field is required');
         valid = false;
       } else if (msgVal.length < 20) {
-        showFieldError(message, 'Message too short — tell me a little more');
+        showFieldError(message, 'Message too short. Tell me a little more.');
         valid = false;
       } else if (msgVal.length > 500) {
         showFieldError(message, 'Message too long');

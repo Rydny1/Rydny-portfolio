@@ -1,42 +1,57 @@
 /* ============================================================
-   DESIGN TOKENS — engineered restraint ("Mercedes") direction
+   DESIGN TOKENS — v2, "warm premium" direction
+   Source of truth: portfolio-design-system brief. Legacy variable names
+   from the earlier "engineered restraint" pass (--graphite, --porcelain,
+   --pewter, --brushed, --ink-on-*) are kept as ALIASES below so existing
+   component CSS keeps working without a file-by-file rewrite — only the
+   values changed, not the names those files reference.
 ============================================================ */
 :root {
-  /* dark tones */
-  --graphite: #1b1d1f;
-  --anthracite: #2a2d30;
+  /* warm blacks — never cool, never pure #000 */
+  --bg-dark: #0f0e0d;
+  --bg-dark-elev: #1a1815;
+  --border-dark: #2a2621;
 
-  /* light tone */
-  --porcelain: #f1efea;
+  /* sand and cream — faded/muted rather than a saturated tan */
+  --bg-light: #efebe2;
+  --bg-light-elev: #f5f2ea;
+  --border-light: #ddd5c4;
 
-  /* neutral text */
-  --pewter: #8b8880;
-  --ink-on-dark: #a6a399;
-  --ink-on-light: #5b584f;
+  /* the one accent — matte gold. never decoration, never a glow fill. */
+  --accent: #b8935b;
+  --accent-deep: #78614a;
 
-  /* the one accent — rules, labels, numerals. never a fill, never a glow. */
-  --brushed: #c2b59b;
-  /* UI-functional variant (borders, focus rings, underlines) — raw --brushed
-     only hits 1.76:1 against porcelain, well under the 3:1 floor for
-     interactive indicators. This darker bronze clears 3.6:1 on light,
-     and --brushed itself already clears 8.36:1 on dark, so contexts pick
-     the right one via the --accent-ui alias below. */
-  --brushed-on-light: #8f7a5a;
+  /* text */
+  --text-on-dark: #f5f1e8;
+  --text-on-dark-mute: #8a857d;
+  --text-on-light: #1a1815;
+  --text-on-light-mute: #5c574d;
 
   /* semantic — forms only */
   --oxide: #b4472f;
   --moss: #5f6f52;
 
-  /* glass — reserved for primary CTA buttons only, nowhere else */
-  --glass-bg-on-light: rgba(27, 29, 31, 0.05);
-  --glass-bg-on-dark: rgba(241, 239, 234, 0.08);
-  --glass-border-on-light: rgba(27, 29, 31, 0.16);
-  --glass-border-on-dark: rgba(241, 239, 234, 0.24);
-  --glass-highlight: rgba(255, 255, 255, 0.55);
+  /* legacy aliases — do not add new usages of these names, use the
+     tokens above directly in new code */
+  --graphite: var(--bg-dark);
+  --anthracite: var(--bg-dark-elev);
+  --porcelain: var(--text-on-dark);
+  --pewter: var(--text-on-dark-mute);
+  --ink-on-dark: var(--text-on-dark-mute);
+  --ink-on-light: var(--text-on-light-mute);
+  --brushed: var(--accent);
+  --brushed-on-light: var(--accent-deep);
 
-  /* type */
+  /* glass — reserved for primary CTA buttons only, nowhere else */
+  --glass-bg-on-light: rgba(26, 24, 21, 0.05);
+  --glass-bg-on-dark: rgba(245, 241, 232, 0.08);
+  --glass-border-on-light: rgba(26, 24, 21, 0.16);
+  --glass-border-on-dark: rgba(245, 241, 232, 0.24);
+  --glass-highlight: rgba(255, 255, 255, 0.5);
+
+  /* type — Fraunces (display, self-hosted variable) + Plus Jakarta Sans (body) */
   --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-display: 'Clash Display', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
   --fs-12: 0.75rem;
   --fs-14: 0.875rem;
   --fs-16: 1rem;
@@ -46,10 +61,14 @@
   --fs-40: 2.5rem;
   --fs-56: 3.5rem;
   --fs-76: 4.75rem;
+  /* display clamps, exact scale from the brief */
+  --fs-hero: clamp(3.5rem, 8vw, 6.5rem);
+  --fs-h1: clamp(2.5rem, 5vw, 4rem);
+  --fs-h2: clamp(1.75rem, 3vw, 2.5rem);
 
-  /* radius — moderate rounding on controls (MBUX-style: rounded touch
-     controls, sharp-edged content), full pill reserved only for nav chrome */
-  --radius-control: 14px;
+  /* radius — tighter than the previous pass, warm-premium rather than
+     app-control. Pill reserved for nav chrome only. */
+  --radius-control: 8px;
   --radius-pill: 999px;
   --radius-image: 0px;
 
@@ -60,32 +79,32 @@
   --dur-slow: 1100ms;
 
   --nav-h: 76px;
-  --container-max: 1280px;
+  --container-max: 1200px;
   --container-pad: 24px;
 
   /* theme-scoped semantic aliases — default: light */
-  --bg: var(--porcelain);
-  --text: var(--graphite);
-  --text-secondary: var(--ink-on-light);
-  --hairline: rgba(27, 29, 31, 0.14);
-  --hairline-strong: rgba(27, 29, 31, 0.3);
+  --bg: var(--bg-light);
+  --text: var(--text-on-light);
+  --text-secondary: var(--text-on-light-mute);
+  --hairline: var(--border-light);
+  --hairline-strong: rgba(26, 24, 21, 0.3);
   --glass-bg: var(--glass-bg-on-light);
   --glass-border: var(--glass-border-on-light);
-  --accent-ui: var(--brushed-on-light);
+  --accent-ui: var(--accent-deep);
 }
 
 /* Dark band — hero, footer, contact intro. Applied to a section, cascades
    to everything inside via the same var names. Hard edge between bands,
    no gradient fade. */
 .theme-dark {
-  --bg: var(--graphite);
-  --text: var(--porcelain);
-  --text-secondary: var(--ink-on-dark);
-  --hairline: rgba(241, 239, 234, 0.14);
-  --hairline-strong: rgba(241, 239, 234, 0.3);
+  --bg: var(--bg-dark);
+  --text: var(--text-on-dark);
+  --text-secondary: var(--text-on-dark-mute);
+  --hairline: var(--border-dark);
+  --hairline-strong: rgba(245, 241, 232, 0.3);
   --glass-bg: var(--glass-bg-on-dark);
   --glass-border: var(--glass-border-on-dark);
-  --accent-ui: var(--brushed);
+  --accent-ui: var(--accent);
 }
 
 /* IMPORTANT: .theme-dark/.theme-light only redefine the custom properties
@@ -114,9 +133,8 @@
   display: none !important;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* No native scroll-behavior: smooth — Lenis (see BaseLayout.astro) owns
+   smooth scrolling so the two don't fight each other. */
 
 body {
   background: var(--bg);
@@ -234,16 +252,43 @@ textarea:focus-visible {
   border-top: 1px solid var(--hairline);
 }
 
-/* Placeholder baselines — upgraded to the real IntersectionObserver-driven
-   scroll reveal / hairline-draw system in the dedicated motion pass. Kept
-   visible/static here so content isn't invisible in the meantime. */
+/* Scroll reveal — fade + 12px upward translate, staggered by ~40ms per
+   sibling group (see the shared observer script in BaseLayout.astro).
+   Re-triggers both directions: fades out on leaving the viewport too, so
+   it can replay rather than firing once and being done. Never a bounce. */
 .reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 500ms var(--ease),
+    transform 500ms var(--ease);
+  transition-delay: var(--stagger, 0ms);
+}
+
+.reveal.is-visible {
   opacity: 1;
+  transform: translateY(0);
 }
 
 .hairline-draw {
   border: none;
   border-top: 1px solid var(--hairline);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms var(--ease);
+}
+
+.hairline-draw.is-visible {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hairline-draw {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* ============================================================
@@ -261,10 +306,15 @@ textarea:focus-visible {
   letter-spacing: 0.02em;
   border-radius: var(--radius-control);
   transition:
-    background var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+    background 200ms ease-out,
+    border-color 200ms ease-out,
+    color 200ms ease-out,
+    transform 120ms ease-out;
   white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 .btn--ghost {
@@ -275,25 +325,25 @@ textarea:focus-visible {
 
 .btn--ghost:hover {
   border-color: var(--accent-ui);
-  background: var(--glass-bg);
+  background: color-mix(in srgb, var(--text) 8%, transparent);
 }
 
-/* Primary — the one place glass lives on this site. Reserved for the
-   single highest-priority action per view (hero CTA, form submit, the
-   nav "Hire me"). Not used for anything else. */
+/* Primary CTA — solid warm-gold fill. No blur, no glass: the brief rules
+   out heavy blur outright, and a confident solid button reads clearer to
+   a business-owner audience than a translucent one anyway. Reserved for
+   the single highest-priority action per view (hero CTA, form submit,
+   the nav "Hire me"). */
 .btn--glass {
   position: relative;
   overflow: hidden;
-  background: var(--glass-bg);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid var(--glass-border);
-  color: var(--text);
-  box-shadow: inset 0 1px 0 var(--glass-highlight);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: var(--bg-dark);
 }
 
 .btn--glass:hover {
-  border-color: var(--accent-ui);
+  background: var(--accent-deep);
+  border-color: var(--accent-deep);
 }
 
 .btn--glass .btn__label {

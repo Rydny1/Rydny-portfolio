@@ -12,7 +12,7 @@ const stats = [
   <div class="container about__inner">
     <div class="about__photo reveal">
       <img
-        src={withBase('/assets/linkdin-profile.jpg')}
+        src={withBase('/assets/linkdin-profile.webp')}
         alt="Rydny Ihims"
         width="480"
         height="600"
@@ -22,18 +22,31 @@ const stats = [
 
     <div class="about__content reveal">
       <span class="section-label">About Me</span>
-      <h2 class="section-heading">The Story So Far</h2>
+
+      <blockquote class="about__epigraph">
+        <p class="about__epigraph-fr">
+          "Pour ce qui est de l'avenir, il ne s'agit pas de le prevoir, mais de le rendre
+          possible."
+        </p>
+        <p class="about__epigraph-en">
+          As for the future, your job is not to predict it. Your job is to make it possible.
+        </p>
+        <cite class="about__epigraph-cite">Antoine de Saint-Exupery</cite>
+      </blockquote>
 
       <p class="about__bio">
-        I'm a full-stack developer living in Riga, Latvia, working toward a BSc in Computer
-        Science at the University of Latvia. I spent three years building client projects in
-        Dubai — e-commerce, hospitality, events — and learned that clean code is only half the
-        job. The other half is understanding what the business actually needs.
+        My name is Rydny. I build and ship web products and AI systems that work. From Cameroon to
+        Dubai, now studying Computer Science at the University of Latvia in Riga. I communicate in
+        English and French.
       </p>
       <p class="about__bio">
-        I'm sharpening my computer science fundamentals while still shipping real products, with a
-        growing focus on AI and how it fits into practical business tools. If it needs to work
-        well and look good, I want to build it.
+        I focus on efficiency, optimization, conversion, and getting the details right. I move
+        fast with direction. If it goes live, it is polished.
+      </p>
+      <p class="about__bio">
+        New city, new skill, new angle on a problem. I left home early, built in the intensity of
+        Dubai, moved to Europe and started learning a completely different way of thinking. I move
+        between Dubai and Riga now, and I am still going.
       </p>
 
       <div class="about__stats">
@@ -64,9 +77,8 @@ const stats = [
 
   @media (min-width: 900px) {
     .about__inner {
-      grid-template-columns: 0.75fr 1.25fr;
+      grid-template-columns: 0.7fr 1.3fr;
       gap: 80px;
-      align-items: center;
     }
   }
 
@@ -78,17 +90,49 @@ const stats = [
     border: 1px solid var(--hairline-strong);
   }
 
+  .about__epigraph {
+    border-left: 2px solid var(--accent-ui);
+    padding-left: 20px;
+    margin: 24px 0 32px;
+  }
+
+  .about__epigraph-fr {
+    font-family: var(--font-display);
+    font-size: var(--fs-22);
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .about__epigraph-en {
+    font-size: var(--fs-14);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .about__epigraph-cite {
+    display: block;
+    font-size: var(--fs-12);
+    font-style: normal;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
   .about__bio {
     color: var(--text-secondary);
-    line-height: 1.8;
-    margin-bottom: 20px;
-    max-width: 60ch;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    max-width: 65ch;
   }
 
   .about__stats {
     display: flex;
     gap: 48px;
-    margin-top: 36px;
+    margin-top: 32px;
     padding-top: 28px;
     border-top: 1px solid var(--hairline);
   }
@@ -102,7 +146,7 @@ const stats = [
   .stat-row__number {
     font-family: var(--font-display);
     font-size: var(--fs-40);
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1;
     color: var(--text);
     font-variant-numeric: tabular-nums;

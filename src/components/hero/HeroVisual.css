@@ -17,51 +17,20 @@
   outline-offset: 6px;
 }
 
-.hero-visual__caption {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 4px;
-  font-size: var(--fs-12);
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-on-dark);
-  transition: color var(--dur-fast) var(--ease);
-}
-
-.hero-visual__caption-rule {
-  display: inline-block;
-  width: 24px;
-  height: 1px;
-  background: var(--brushed);
-  transition: width var(--dur-fast) var(--ease);
-}
-
-.hero-visual__caption:hover,
-.hero-visual__caption:focus-visible {
-  color: var(--brushed);
-}
-
-.hero-visual__caption:hover .hero-visual__caption-rule,
-.hero-visual__caption:focus-visible .hero-visual__caption-rule {
-  width: 40px;
-}
-
 .hero-visual__stage canvas {
   touch-action: none;
 }
 
 .hero-visual__fallback {
-  background: linear-gradient(155deg, #2a2d30 0%, #1b1d1f 55%, #232527 100%);
-  border: 1px solid rgba(241, 239, 234, 0.14);
+  background: linear-gradient(155deg, var(--bg-dark-elev) 0%, var(--bg-dark) 55%, var(--bg-dark-elev) 100%);
+  border: 1px solid var(--border-dark);
   overflow: hidden;
 }
 
 .hero-visual__sheen {
   position: absolute;
   inset: -20%;
-  background: linear-gradient(115deg, transparent 42%, rgba(194, 181, 155, 0.45) 50%, transparent 58%);
+  background: linear-gradient(115deg, transparent 42%, rgba(184, 147, 91, 0.45) 50%, transparent 58%);
   background-size: 260% 100%;
   background-position: 140% 0;
   animation: sheen-sweep 2.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s 1 forwards;
