@@ -263,18 +263,18 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
     // (the carved groove) and a crisp light rim offset up-left (the
     // catch-light on the cut edge), both tight to the letterforms so
     // they read as depth, not a double-printed smear.
-    ctx.shadowColor = 'rgba(0,0,0,0.9)';
-    ctx.shadowBlur = 6;
-    ctx.shadowOffsetX = 3;
-    ctx.shadowOffsetY = 4;
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 2;
+    ctx.shadowOffsetX = 1.5;
+    ctx.shadowOffsetY = 2;
     ctx.fillStyle = 'rgba(6,5,4,0.95)';
     ctx.fillText('إتقان', x, y);
     ctx.shadowColor = 'transparent';
     ctx.shadowBlur = 0;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
-    ctx.fillStyle = 'rgba(214,204,188,0.5)';
-    ctx.fillText('إتقان', x - 1.5, y - 1.5);
+    ctx.fillStyle = 'rgba(214,204,188,0.3)';
+    ctx.fillText('إتقان', x - 0.7, y - 0.7);
   }, '175px "Noto Naskh Arabic"');
 
   const monogramTexture = useMarbleTextTexture((ctx, w, h) => {

@@ -91,10 +91,10 @@ const { title, description = 'Rydny Ihims. Full-stack developer and AI builder.'
       // could sit fully out of view with is-visible still true. Reading
       // getBoundingClientRect() on the same tick Lenis uses to paint
       // removes that gap entirely.
-      const revealEls = Array.from(document.querySelectorAll<HTMLElement>('.reveal, .hairline-draw'));
+      const revealEls = Array.from(document.querySelectorAll<HTMLElement>('.reveal, .fade-only, .hairline-draw'));
       const groups = new Map<Element, HTMLElement[]>();
       revealEls.forEach((el) => {
-        if (!el.classList.contains('reveal')) return;
+        if (!el.classList.contains('reveal') && !el.classList.contains('fade-only')) return;
         const parent = el.parentElement;
         if (!parent) return;
         if (!groups.has(parent)) groups.set(parent, []);

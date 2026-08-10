@@ -30,29 +30,23 @@ const bgShapes = [
   </div>
   <div class="container hero__inner">
     <div class="hero__content">
-      <p class="hero__badge load-reveal" style="--delay: 0ms">Available for work. Riga and remote.</p>
+      <p class="hero__badge reveal">Available for work. Riga and remote.</p>
 
-      <h1 class="hero__name">
-        <span class="load-reveal-mask" style="--delay: 60ms"><span class="load-reveal-text">Rydny Ihims</span></span>
-      </h1>
+      <h1 class="hero__name reveal">Rydny Ihims</h1>
 
-      <p class="hero__role">
-        <span class="load-reveal-mask" style="--delay: 200ms"
-          ><span class="load-reveal-text">I build web products and AI systems</span></span
-        >
-      </p>
+      <p class="hero__role reveal">I build web products and AI systems</p>
 
-      <p class="hero__bio load-reveal" style="--delay: 320ms">
+      <p class="hero__bio reveal">
         Full-stack developer and AI builder. I take an idea and turn it into a working product.
       </p>
 
-      <div class="hero__cta load-reveal" style="--delay: 400ms">
-        <GlassButton href="#work" client:visible>See the work</GlassButton>
+      <div class="hero__cta fade-only">
+        <GlassButton href="#work" client:visible>See my work</GlassButton>
         <a href="mailto:rydny01@gmail.com" class="hero__email-link">Or email me</a>
       </div>
     </div>
 
-    <div class="hero__visual load-reveal" style="--delay: 260ms">
+    <div class="hero__visual fade-only">
       <HeroVisual client:visible />
     </div>
   </div>
@@ -158,10 +152,10 @@ const bgShapes = [
     padding-block: 64px;
   }
 
-  @media (min-width: 900px) {
+  @media (min-width: 768px) {
     .hero__inner {
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 40px;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
     }
   }
 
@@ -273,50 +267,4 @@ const bgShapes = [
     }
   }
 
-  /* ============================================================
-     ONE-TIME LOAD REVEAL — "instrument settle". Plays once on
-     first paint only; nothing here ever loops.
-  ============================================================ */
-  .load-reveal {
-    opacity: 0;
-    transform: translateY(14px);
-    animation: reveal-fade 1800ms var(--ease) forwards;
-    animation-delay: var(--delay, 0ms);
-  }
-
-  .load-reveal-mask {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: top;
-  }
-
-  .load-reveal-text {
-    display: inline-block;
-    clip-path: inset(0 100% 0 0);
-    animation: reveal-wipe 1800ms var(--ease) forwards;
-    animation-delay: var(--delay, 0ms);
-  }
-
-  @keyframes reveal-fade {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes reveal-wipe {
-    to {
-      clip-path: inset(0 0 0 0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .load-reveal,
-    .load-reveal-text {
-      animation: none;
-      opacity: 1;
-      transform: none;
-      clip-path: inset(0 0 0 0);
-    }
-  }
 </style>

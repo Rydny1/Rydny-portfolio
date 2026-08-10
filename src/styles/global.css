@@ -280,6 +280,21 @@ textarea:focus-visible {
   transition-delay: var(--stagger, 0ms);
 }
 
+/* Same viewport-triggered fade as .reveal, opacity only — for elements
+   that already carry their own transform (Framer Motion buttons,
+   hover-scaled cards). A translateY here would fight an inline
+   transform Framer sets on the same element and never actually move. */
+.fade-only {
+  opacity: 0;
+  transition: opacity 1800ms var(--ease);
+  transition-delay: 0ms;
+}
+
+.fade-only.is-visible {
+  opacity: 1;
+  transition-delay: var(--stagger, 0ms);
+}
+
 .hairline-draw {
   border: none;
   border-top: 1px solid var(--hairline);
