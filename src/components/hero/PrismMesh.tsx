@@ -4,49 +4,187 @@ import { useTexture, Environment, Lightformer } from '@react-three/drei';
 import * as THREE from 'three';
 import { withBase } from '../../lib/base';
 
-const STONE = '#24262a';
 const SILVER = '#c3c1b8';
+const MARBLE_BASE = '#1b1714';
 
-// Landscape faces matching the real screenshots (~2.15:1) almost exactly,
-// so cover-fit barely has to crop anything.
-const SIDE = 2.8;
+// ============================================================
+// GEOMETRY — a real triangular prism, ONE continuous solid.
+//
+// Earlier attempts built this from 3 separate box slabs plus 2
+// hand-placed triangle caps. Getting all 5 pieces' vertices to land on
+// exactly the same edge, every time, at every angle, turned out to be
+// impossible to keep aligned — the result always read as separate
+// panels glued together, not stone. A THREE.CylinderGeometry with
+// radialSegments=3 IS a triangular prism: the sides and both caps are
+// vertices of a single BufferGeometry, so there is no seam to
+// misalign in the first place.
+// ============================================================
+const CIRCUM_RADIUS = 1.62;
 const HEIGHT = 1.3;
-const DEPTH = SIDE * 0.13;
-const IN_RADIUS = SIDE / (2 * Math.sqrt(3));
-const CIRCUM_RADIUS = SIDE / Math.sqrt(3);
-const FACE_ANGLES = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
 const BASE_TILT = 0.5;
 const BASE_SCALE = 1.0;
+// CylinderGeometry maps V (0-1) across HEIGHT and U across the
+// circumference, so each side face's true on-mesh aspect is
+// (triangle side length) / HEIGHT, not square. Drawing the atlas at a
+// mismatched aspect was why screenshots looked cropped almost to
+// nothing — the canvas region was square, Three.js then stretched
+// that square into a ~2.15:1 rectangle, so a cover-fit that looked
+// right in the square source cut off most of the width on the mesh.
+const FACE_ASPECT = (2 * CIRCUM_RADIUS * Math.sin(Math.PI / 3)) / HEIGHT;
+const ATLAS_H = 512;
+const ATLAS_SEG = Math.round(ATLAS_H * FACE_ASPECT);
+const ATLAS_W = ATLAS_SEG * 3;
+const SEAM = ATLAS_SEG * 0.02;
 
-const stoneMaterial = new THREE.MeshPhysicalMaterial({
-  color: STONE,
-  roughness: 0.35,
-  metalness: 0.4,
-  clearcoat: 0.5,
-  clearcoatRoughness: 0.28,
-});
-
-// Fully invisible — used on the box slabs' own top/bottom faces so
-// there is nothing there to peek out from behind the cap or fight it
-// for the same pixels. The cap sits flush at the true height with zero
-// gap, and this is the only way to guarantee nothing else is there.
-const invisibleMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
-
-function coverFit(tex: THREE.Texture, planeAspect: number) {
-  const img = tex.image as { width: number; height: number } | undefined;
-  if (!img?.width) return;
-  const imgAspect = img.width / img.height;
-  if (imgAspect > planeAspect) {
-    tex.repeat.set(planeAspect / imgAspect, 1);
-    tex.offset.set((1 - planeAspect / imgAspect) / 2, 0);
-  } else {
-    tex.repeat.set(1, imgAspect / planeAspect);
-    tex.offset.set(0, (1 - imgAspect / planeAspect) / 2);
+// ============================================================
+// MARBLE — procedural, canvas-based. Real dark marble reads as close
+// to a uniform near-black base with a handful of sparse, thin,
+// wandering veins — not a dense network of hard scratches.
+// ============================================================
+function smoothPath(ctx: CanvasRenderingContext2D, points: [number, number][]) {
+  if (points.length < 2) return;
+  ctx.moveTo(points[0][0], points[0][1]);
+  for (let i = 1; i < points.length - 1; i++) {
+    const midX = (points[i][0] + points[i + 1][0]) / 2;
+    const midY = (points[i][1] + points[i + 1][1]) / 2;
+    ctx.quadraticCurveTo(points[i][0], points[i][1], midX, midY);
   }
-  tex.needsUpdate = true;
+  const last = points[points.length - 1];
+  ctx.lineTo(last[0], last[1]);
 }
 
-function useTextTexture(draw: (ctx: CanvasRenderingContext2D, w: number, h: number) => void, font: string) {
+function randomWanderingPath(startX: number, startY: number, endX: number, endY: number, steps: number, jitter: number): [number, number][] {
+  const pts: [number, number][] = [[startX, startY]];
+  for (let i = 1; i < steps; i++) {
+    const t = i / steps;
+    const bx = startX + (endX - startX) * t;
+    const by = startY + (endY - startY) * t;
+    pts.push([bx + (Math.random() - 0.5) * jitter, by + (Math.random() - 0.5) * jitter]);
+  }
+  pts.push([endX, endY]);
+  return pts;
+}
+
+function drawVein(ctx: CanvasRenderingContext2D, points: [number, number][], baseWidth: number, color: string, alpha: number) {
+  const passes = 3;
+  for (let p = 0; p < passes; p++) {
+    ctx.beginPath();
+    smoothPath(ctx, points);
+    ctx.lineWidth = baseWidth * (1 - p / passes) + 0.4;
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = alpha * (1 - p / (passes + 1));
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 2.5 + p;
+    ctx.stroke();
+  }
+}
+
+function drawMarble(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, veinCount: number) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+
+  ctx.shadowBlur = 0;
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = MARBLE_BASE;
+  ctx.fillRect(x, y, w, h);
+
+  for (let i = 0; i < 3; i++) {
+    const cx = x + Math.random() * w;
+    const cy = y + Math.random() * h;
+    const r = w * (0.3 + Math.random() * 0.3);
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    grad.addColorStop(0, 'rgba(15,13,11,0.28)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, y, w, h);
+  }
+
+  const veinColors = ['rgba(196,186,169,1)', 'rgba(150,140,124,1)'];
+  for (let i = 0; i < veinCount; i++) {
+    const fromLeft = Math.random() < 0.5;
+    const startX = fromLeft ? x - 20 : x + w + 20;
+    const startY = y + Math.random() * h * 0.8 + h * 0.05;
+    const endX = fromLeft ? x + w + 20 : x - 20;
+    const endY = y + Math.random() * h * 0.8 + h * 0.05;
+    const path = randomWanderingPath(startX, startY, endX, endY, 6, h * 0.14);
+    const color = veinColors[i % veinColors.length];
+    drawVein(ctx, path, 1.6 + Math.random() * 1.0, color, 0.42 + Math.random() * 0.15);
+
+    if (path.length > 4 && Math.random() < 0.6) {
+      const branchStart = path[2 + Math.floor(Math.random() * 2)];
+      const branchEnd: [number, number] = [
+        branchStart[0] + (Math.random() - 0.5) * w * 0.3,
+        branchStart[1] + (Math.random() - 0.5) * h * 0.3,
+      ];
+      const branchPath = randomWanderingPath(branchStart[0], branchStart[1], branchEnd[0], branchEnd[1], 4, h * 0.08);
+      drawVein(ctx, branchPath, 0.6 + Math.random() * 0.4, color, 0.22);
+    }
+  }
+
+  ctx.globalAlpha = 1;
+  ctx.shadowBlur = 0;
+
+  const gloss = ctx.createRadialGradient(x + w * 0.28, y + h * 0.24, 0, x + w * 0.28, y + h * 0.24, w * 0.55);
+  gloss.addColorStop(0, 'rgba(120,110,98,0.14)');
+  gloss.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = gloss;
+  ctx.fillRect(x, y, w, h);
+
+  const vignette = ctx.createRadialGradient(x + w / 2, y + h / 2, w * 0.2, x + w / 2, y + h / 2, w * 0.72);
+  vignette.addColorStop(0, 'rgba(0,0,0,0)');
+  vignette.addColorStop(1, 'rgba(0,0,0,0.45)');
+  ctx.fillStyle = vignette;
+  ctx.fillRect(x, y, w, h);
+
+  ctx.restore();
+}
+
+function coverDraw(ctx: CanvasRenderingContext2D, img: HTMLImageElement, dx: number, dy: number, dw: number, dh: number) {
+  const srcAspect = img.width / img.height;
+  const dstAspect = dw / dh;
+  let sx = 0,
+    sy = 0,
+    sw = img.width,
+    sh = img.height;
+  if (srcAspect > dstAspect) {
+    sw = img.height * dstAspect;
+    sx = (img.width - sw) / 2;
+  } else {
+    sh = img.width / dstAspect;
+    sy = (img.height - sh) / 2;
+  }
+  ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+}
+
+// A single canvas holding the marble base for the whole lateral
+// surface, with the three screenshots inset into it. CylinderGeometry
+// maps U 0→1 around the circumference in three equal thirds when
+// radialSegments=3, so each 1/3 slice of this canvas lands on exactly
+// one face — the marble strip left showing at each edge is the seam,
+// and because it's the same mesh as the caps, there is no gap for it
+// to misalign against.
+function useSideAtlas(images: HTMLImageElement[]) {
+  return useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = ATLAS_W;
+    canvas.height = ATLAS_H;
+    const ctx = canvas.getContext('2d')!;
+    drawMarble(ctx, 0, 0, ATLAS_W, ATLAS_H, 6);
+    images.forEach((img, i) => {
+      const segX = i * ATLAS_SEG;
+      coverDraw(ctx, img, segX + SEAM, 0, ATLAS_SEG - SEAM * 2, ATLAS_H);
+    });
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.wrapS = THREE.RepeatWrapping;
+    return tex;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [images]);
+}
+
+function useMarbleTextTexture(draw: (ctx: CanvasRenderingContext2D, w: number, h: number) => void, font: string) {
   const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null);
 
   useEffect(() => {
@@ -58,11 +196,10 @@ function useTextTexture(draw: (ctx: CanvasRenderingContext2D, w: number, h: numb
       .then(() => {
         if (cancelled) return;
         const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 512;
+        canvas.width = 1024;
+        canvas.height = 1024;
         const ctx = canvas.getContext('2d')!;
-        ctx.fillStyle = STONE;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        drawMarble(ctx, 0, 0, canvas.width, canvas.height, 2);
         draw(ctx, canvas.width, canvas.height);
         const tex = new THREE.CanvasTexture(canvas);
         tex.colorSpace = THREE.SRGBColorSpace;
@@ -77,88 +214,6 @@ function useTextTexture(draw: (ctx: CanvasRenderingContext2D, w: number, h: numb
   return texture;
 }
 
-// A real box with depth, not a paper-thin plane — reads as a solid slab.
-// Screenshot on the outward face only; the other five faces are plain
-// polished stone.
-function Face({ angle, texture }: { angle: number; texture: THREE.Texture }) {
-  const pos: [number, number, number] = [Math.sin(angle) * IN_RADIUS, 0, Math.cos(angle) * IN_RADIUS];
-  const geo = useMemo(() => new THREE.BoxGeometry(SIDE * 0.99, HEIGHT, DEPTH), []);
-
-  useEffect(() => {
-    coverFit(texture, SIDE / HEIGHT);
-  }, [texture]);
-
-  const frontMaterial = useMemo(
-    () =>
-      new THREE.MeshPhysicalMaterial({
-        map: texture,
-        emissiveMap: texture,
-        emissive: new THREE.Color('#ffffff'),
-        emissiveIntensity: 0.12,
-        roughness: 0.45,
-        metalness: 0.05,
-        clearcoat: 0.35,
-        clearcoatRoughness: 0.3,
-      }),
-    [texture]
-  );
-
-  // BoxGeometry face order: +X, -X, +Y, -Y, +Z, -Z. Local +Z is the
-  // outward-facing side once rotated by `angle` around Y. Top/bottom
-  // (+Y/-Y) are invisible — the cap sits flush there instead, and three
-  // separate rotated rectangles never form one clean triangular plane
-  // on their own, which is what read as a "sub-triangle" before.
-  const materials = useMemo(
-    () => [stoneMaterial, stoneMaterial, invisibleMaterial, invisibleMaterial, frontMaterial, stoneMaterial],
-    [frontMaterial]
-  );
-
-  return (
-    <group position={pos} rotation={[0, angle, 0]}>
-      <mesh geometry={geo} material={materials} />
-    </group>
-  );
-}
-
-function makeCapGeometry() {
-  const geo = new THREE.BufferGeometry();
-  const edgeAngles = [Math.PI / 3, Math.PI, (5 * Math.PI) / 3];
-  // Full circumradius, matching the actual triangular cross-section
-  // exactly — a smaller radius here was the visible "child triangle"
-  // step/gap between the cap and the slabs.
-  const verts = edgeAngles.flatMap((a) => [Math.sin(a) * CIRCUM_RADIUS * 0.99, 0, Math.cos(a) * CIRCUM_RADIUS * 0.99]);
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
-  geo.setAttribute('uv', new THREE.Float32BufferAttribute([0.5, 1, 0, 0, 1, 0], 2));
-  geo.setIndex([0, 1, 2]);
-  geo.computeVertexNormals();
-  return geo;
-}
-
-// Both caps are the stone itself — same material as the sides, just
-// with an engraved mark. No separate shiny plate, so it reads correctly
-// as "dark stone" regardless of which cap happens to face the camera at
-// a given moment in the rotation.
-// Fully matte on purpose — metalness/clearcoat here kept blowing out to
-// a flat white glare under the environment lighting, hiding the engraved
-// texture entirely. A plain diffuse material can only get as bright as
-// the actual light hitting it, so the dark engraving always stays dark.
-function Cap({ y, texture }: { y: number; texture: THREE.Texture | null }) {
-  const geo = useMemo(() => makeCapGeometry(), []);
-  return (
-    <group position={[0, y, 0]}>
-      <mesh geometry={geo}>
-        <meshStandardMaterial
-          map={texture ?? undefined}
-          color={texture ? '#ffffff' : STONE}
-          roughness={0.95}
-          metalness={0}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-    </group>
-  );
-}
-
 export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
   const group = useRef<THREE.Group>(null);
   const [hovering, setHovering] = useState(false);
@@ -171,42 +226,110 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
     withBase('/assets/APEX_hompage.webp'),
     withBase('/assets/Eclat_heroimg.webp'),
   ]);
-  [altays, apex, eclat].forEach((t) => {
-    t.colorSpace = THREE.SRGBColorSpace;
-  });
+  const images = useMemo(
+    () => [altays.image as HTMLImageElement, apex.image as HTMLImageElement, eclat.image as HTMLImageElement],
+    [altays, apex, eclat]
+  );
+
+  const sideAtlas = useSideAtlas(images);
+  const cylinderGeo = useMemo(() => new THREE.CylinderGeometry(CIRCUM_RADIUS, CIRCUM_RADIUS, HEIGHT, 3, 1, false), []);
+
+  const sideMaterial = useMemo(
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        map: sideAtlas,
+        emissiveMap: sideAtlas,
+        emissive: new THREE.Color('#ffffff'),
+        emissiveIntensity: 0.1,
+        roughness: 0.55,
+        metalness: 0,
+        clearcoat: 0.35,
+        clearcoatRoughness: 0.3,
+        envMapIntensity: 0.12,
+      }),
+    [sideAtlas]
+  );
 
   // One strong word, engraved: "itqan" — mastery, doing a craft to
-  // perfection. Drawn as a genuine emboss (dark shadow + light highlight
-  // offset either side of a recessed base tone) so it reads as carved
-  // into the stone rather than printed on it.
-  const arabicTexture = useTextTexture((ctx, w, h) => {
+  // perfection.
+  const arabicTexture = useMarbleTextTexture((ctx, w, h) => {
     ctx.direction = 'rtl';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '175px "Noto Naskh Arabic", serif';
+    ctx.font = `${Math.round(w * 0.32)}px "Noto Naskh Arabic", serif`;
     const x = w / 2;
-    const y = h / 2 + 24;
-    ctx.fillStyle = 'rgba(0,0,0,0.8)';
-    ctx.fillText('إتقان', x + 4, y + 4);
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.fillText('إتقان', x - 3, y - 3);
-    ctx.fillStyle = '#0c0d0e';
+    const y = h / 2 + h * 0.03;
+    // Recessed-engraving look: a soft dark shadow offset down-right
+    // (the carved groove) and a crisp light rim offset up-left (the
+    // catch-light on the cut edge), both tight to the letterforms so
+    // they read as depth, not a double-printed smear.
+    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+    ctx.shadowBlur = 6;
+    ctx.shadowOffsetX = 3;
+    ctx.shadowOffsetY = 4;
+    ctx.fillStyle = 'rgba(6,5,4,0.95)';
     ctx.fillText('إتقان', x, y);
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.fillStyle = 'rgba(214,204,188,0.5)';
+    ctx.fillText('إتقان', x - 1.5, y - 1.5);
   }, '175px "Noto Naskh Arabic"');
 
-  const monogramTexture = useTextTexture((ctx, w, h) => {
+  const monogramTexture = useMarbleTextTexture((ctx, w, h) => {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '150px "Fraunces Variable", Georgia, serif';
+    ctx.font = `${Math.round(w * 0.26)}px "Fraunces Variable", Georgia, serif`;
     const x = w / 2;
-    const y = h / 2 + 10;
-    ctx.fillStyle = 'rgba(0,0,0,0.8)';
-    ctx.fillText('RI', x + 4, y + 4);
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.fillText('RI', x - 3, y - 3);
-    ctx.fillStyle = '#0c0d0e';
+    const y = h / 2 + h * 0.02;
+    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+    ctx.shadowBlur = 6;
+    ctx.shadowOffsetX = 3;
+    ctx.shadowOffsetY = 4;
+    ctx.fillStyle = 'rgba(6,5,4,0.95)';
     ctx.fillText('RI', x, y);
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.fillStyle = 'rgba(214,204,188,0.5)';
+    ctx.fillText('RI', x - 1.5, y - 1.5);
   }, '150px "Fraunces Variable"');
+
+  const capMaterialProps = {
+    roughness: 0.82,
+    metalness: 0,
+    clearcoat: 0.55,
+    clearcoatRoughness: 0.28,
+    // Zero, deliberately: this near-horizontal surface faces the
+    // overhead Lightformer almost head-on, and any IBL contribution
+    // (which also drives the clearcoat reflection) blows it out to
+    // flat white. Verified by direct screenshot comparison — do not
+    // raise this without re-checking visually.
+    envMapIntensity: 0,
+  };
+
+  const topMaterial = useMemo(
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        ...capMaterialProps,
+        map: arabicTexture ?? undefined,
+        color: arabicTexture ? '#ffffff' : MARBLE_BASE,
+      }),
+    [arabicTexture]
+  );
+  const bottomMaterial = useMemo(
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        ...capMaterialProps,
+        map: monogramTexture ?? undefined,
+        color: monogramTexture ? '#ffffff' : MARBLE_BASE,
+      }),
+    [monogramTexture]
+  );
+
+  const materials = useMemo(() => [sideMaterial, topMaterial, bottomMaterial], [sideMaterial, topMaterial, bottomMaterial]);
 
   useFrame((state, delta) => {
     if (!group.current) return;
@@ -230,20 +353,16 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
 
   return (
     <group ref={group} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[2, 3, 3]} intensity={0.6} />
+      <ambientLight intensity={0.55} />
+      <directionalLight position={[2, 3, 3]} intensity={0.65} />
       <directionalLight position={[-2, 1, -2]} intensity={0.25} color={SILVER} />
       <Environment resolution={128}>
-        <Lightformer intensity={1.1} color="white" position={[0, 3, -3]} scale={[7, 3, 1]} />
-        <Lightformer intensity={0.7} color="white" position={[-3, 1, 2]} rotation={[0, Math.PI / 2, 0]} scale={[3, 2, 1]} />
-        <Lightformer intensity={0.7} color={SILVER} position={[3, 0.5, 2]} rotation={[0, -Math.PI / 2, 0]} scale={[3, 2, 1]} />
+        <Lightformer intensity={0.45} color="white" position={[0, 3, -3]} scale={[7, 3, 1]} />
+        <Lightformer intensity={0.3} color="white" position={[-3, 1, 2]} rotation={[0, Math.PI / 2, 0]} scale={[3, 2, 1]} />
+        <Lightformer intensity={0.3} color={SILVER} position={[3, 0.5, 2]} rotation={[0, -Math.PI / 2, 0]} scale={[3, 2, 1]} />
       </Environment>
 
-      <Face angle={FACE_ANGLES[0]} texture={altays} />
-      <Face angle={FACE_ANGLES[1]} texture={apex} />
-      <Face angle={FACE_ANGLES[2]} texture={eclat} />
-      <Cap y={HEIGHT / 2} texture={arabicTexture} />
-      <Cap y={-HEIGHT / 2} texture={monogramTexture} />
+      <mesh geometry={cylinderGeo} material={materials} />
     </group>
   );
 }

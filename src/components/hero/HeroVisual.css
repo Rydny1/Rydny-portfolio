@@ -12,9 +12,22 @@
   cursor: pointer;
 }
 
+.hero-visual__shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  width: 62%;
+  height: 14%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 72%);
+  pointer-events: none;
+  z-index: -1;
+}
+
 @media (max-width: 480px) {
   .hero-visual {
-    max-width: 230px;
+    width: 80%;
+    max-width: 420px;
   }
 }
 

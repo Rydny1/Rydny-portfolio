@@ -64,6 +64,7 @@ export default function HeroVisual() {
               <PrismMesh reduceMotion={reduceMotion} />
             </Suspense>
           </Canvas>
+          <div className="hero-visual__shadow" aria-hidden="true" />
         </div>
       ) : (
         <MetalSurfaceFallback onClick={scrollToWork} />

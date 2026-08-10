@@ -265,14 +265,19 @@ textarea:focus-visible {
   opacity: 0;
   transform: translateY(12px);
   transition:
-    opacity 500ms var(--ease),
-    transform 500ms var(--ease);
-  transition-delay: var(--stagger, 0ms);
+    opacity 1000ms var(--ease),
+    transform 1000ms var(--ease);
+  /* Stagger only applies going IN (below, on .is-visible) — leaving it on
+     the base rule delayed exits too, so a fast scroll made fade-out look
+     laggy/backwards relative to fade-in. Exits should react immediately
+     to leaving the viewport, in either scroll direction. */
+  transition-delay: 0ms;
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+  transition-delay: var(--stagger, 0ms);
 }
 
 .hairline-draw {
