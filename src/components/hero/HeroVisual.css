@@ -1,15 +1,21 @@
 .hero-visual {
   position: relative;
   width: 100%;
-  max-width: 500px;
+  max-width: 520px;
   margin-inline: auto;
 }
 
 .hero-visual__stage {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 11;
   cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .hero-visual {
+    max-width: 260px;
+  }
 }
 
 .hero-visual__stage:focus-visible {

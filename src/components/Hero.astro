@@ -7,11 +7,11 @@ import GlassButton from './GlassButton';
 // enough in number to respect the ~3-moving-elements motion budget as a
 // single "atmosphere" effect rather than a competing one.
 const bgShapes = [
-  { top: '8%', left: '3%', w: 90, h: 90, color: 'pewter', op: 0.16, dur: 16, delay: -2, lightDur: 9, lightDelay: -1 },
-  { top: '78%', left: '5%', w: 150, h: 95, color: 'pewter', op: 0.14, dur: 19, delay: -9, lightDur: 12, lightDelay: -6 },
-  { top: '6%', left: '90%', w: 70, h: 70, color: 'brushed', op: 0.15, dur: 14, delay: -4, lightDur: 8, lightDelay: -3 },
-  { top: '85%', left: '88%', w: 110, h: 70, color: 'pewter', op: 0.13, dur: 22, delay: -15, lightDur: 17, lightDelay: -13 },
-  { top: '45%', left: '1%', w: 60, h: 60, color: 'brushed', op: 0.14, dur: 17, delay: -7, lightDur: 10, lightDelay: -5 },
+  { top: '8%', left: '3%', w: 90, h: 90, color: 'pewter', op: 0.32, dur: 16, delay: -2, lightDur: 9, lightDelay: -1 },
+  { top: '78%', left: '5%', w: 150, h: 95, color: 'pewter', op: 0.28, dur: 19, delay: -9, lightDur: 12, lightDelay: -6 },
+  { top: '6%', left: '90%', w: 70, h: 70, color: 'brushed', op: 0.3, dur: 14, delay: -4, lightDur: 8, lightDelay: -3 },
+  { top: '85%', left: '88%', w: 110, h: 70, color: 'pewter', op: 0.26, dur: 22, delay: -15, lightDur: 17, lightDelay: -13 },
+  { top: '45%', left: '1%', w: 60, h: 60, color: 'brushed', op: 0.28, dur: 17, delay: -7, lightDur: 10, lightDelay: -5 },
 ];
 ---
 
@@ -26,8 +26,6 @@ const bgShapes = [
       ))
     }
   </div>
-  <div class="hero__vignette" aria-hidden="true"></div>
-
   <div class="container hero__inner">
     <div class="hero__content">
       <p class="hero__badge load-reveal" style="--delay: 0ms">Available for work. Riga and remote.</p>
@@ -148,14 +146,6 @@ const bgShapes = [
     }
   }
 
-  .hero__vignette {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background: radial-gradient(120% 80% at 30% 40%, var(--graphite) 0%, rgba(27, 29, 31, 0) 70%);
-  }
-
   .hero__inner {
     position: relative;
     z-index: 2;
@@ -233,6 +223,46 @@ const bgShapes = [
 
   .hero__visual {
     order: -1;
+  }
+
+  /* Mobile — fit the entire hero in one viewport on load, no scroll
+     needed to see the CTA. Compacts spacing/type rather than hiding
+     content. */
+  @media (max-width: 480px) {
+    .hero {
+      height: 100svh;
+      padding-top: calc(var(--nav-h) + 8px);
+    }
+
+    .hero__inner {
+      gap: 14px;
+      padding-block: 10px;
+    }
+
+    .hero__badge {
+      font-size: 10px;
+      margin-bottom: 8px;
+    }
+
+    .hero__name {
+      font-size: 2.15rem;
+      margin-bottom: 6px;
+    }
+
+    .hero__role {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .hero__bio {
+      font-size: 13px;
+      line-height: 1.4;
+      margin-bottom: 14px;
+    }
+
+    .hero__cta {
+      gap: 12px;
+    }
   }
 
   @media (min-width: 900px) {
