@@ -57,7 +57,7 @@ export default function HeroVisual() {
           <Canvas
             dpr={isNarrow ? [1, 1.5] : [1, 2]}
             gl={{ antialias: true, alpha: true }}
-            camera={{ position: [0, 0, 4.2], fov: 32 }}
+            camera={{ position: [0, 0, 5], fov: 36 }}
             style={{ background: 'transparent' }}>
             <ToneMapping />
             <Suspense fallback={null}>
