@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../lib/base';
+
 const year = new Date().getFullYear();
 
 const socials = [
@@ -10,7 +12,8 @@ const socials = [
 
 <footer class="footer theme-dark">
   <div class="container footer__inner">
-    <p class="footer__copy">Designed &amp; built by Rydny Ihims &mdash; &copy; {year}</p>
+    <p class="footer__copy">Designed and built by Rydny Ihims. &copy; {year}</p>
+    <a href={withBase('/assets/Rydny_Ihims_CV.pdf')} download class="footer__cv">Download CV</a>
     <div class="footer__socials">
       {
         socials.map((s) => (
@@ -62,6 +65,20 @@ const socials = [
   .footer__copy {
     font-size: var(--fs-14);
     color: var(--text-secondary);
+  }
+
+  .footer__cv {
+    font-size: var(--fs-14);
+    color: var(--text-secondary);
+    border-bottom: 1px solid transparent;
+    transition:
+      color var(--dur-fast) var(--ease),
+      border-color var(--dur-fast) var(--ease);
+  }
+
+  .footer__cv:hover {
+    color: var(--text);
+    border-color: var(--accent-ui);
   }
 
   .footer__socials {

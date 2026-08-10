@@ -2,6 +2,14 @@
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+// Self-hosted fonts (performance brief: self-hosted or fast CDN, font-display: swap —
+// fontsource ships font-display: swap by default). No external font requests.
+import '@fontsource-variable/fraunces';
+import '@fontsource/plus-jakarta-sans/400.css';
+import '@fontsource/plus-jakarta-sans/500.css';
+import '@fontsource/plus-jakarta-sans/600.css';
+import '@fontsource/plus-jakarta-sans/700.css';
+import '@fontsource/noto-naskh-arabic/400.css';
 import { withBase } from '../lib/base';
 
 interface Props {
@@ -9,7 +17,7 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Rydny Ihims — Full-Stack Developer & Web Engineer.' } = Astro.props;
+const { title, description = 'Rydny Ihims. Full-stack developer and AI builder.' } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,24 +28,155 @@ const { title, description = 'Rydny Ihims — Full-Stack Developer & Web Enginee
     <meta name="description" content={description} />
     <link rel="icon" type="image/png" href={withBase('/assets/Rydny_logo.png')} />
     <title>{title}</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="preconnect" href="https://api.fontshare.com" />
-    <link
-      href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
-    <Navbar currentPath={Astro.url.pathname} client:load />
+    <div class="page-intro" id="pageIntro" aria-hidden="true">
+      <div class="page-intro__mark">
+        <span class="page-intro__line"></span>
+        <span class="page-intro__text">RYDNY IHIMS</span>
+      </div>
+    </div>
+
+    <Navbar client:load />
     <main>
       <slot />
     </main>
     <Footer />
+
+    <script>
+      import Lenis from 'lenis';
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!reduceMotion) {
+        const lenis = new Lenis({
+          duration: 1.0,
+          smoothWheel: true,
+        });
+        (window as any).__lenis = lenis;
+
+        function raf(time: number) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Route same-page hash links through Lenis so anchor jumps match
+        // the wheel-scroll feel instead of snapping natively.
+        document.addEventListener('click', (e) => {
+          const link = (e.target as HTMLElement)?.closest('a[href*="#"]');
+          if (!link) return;
+          const href = link.getAttribute('href') || '';
+          const hashIndex = href.indexOf('#');
+          if (hashIndex === -1) return;
+          const hash = href.slice(hashIndex);
+          const path = href.slice(0, hashIndex);
+          if (path && path !== window.location.pathname) return;
+          const target = document.querySelector(hash);
+          if (!target) return;
+          e.preventDefault();
+          lenis.scrollTo(target as HTMLElement, { duration: 1.0 });
+        });
+      }
+
+      // Scroll reveal — fades in AND out as elements cross the viewport
+      // (re-triggers both directions, never fire-once). Siblings sharing
+      // a parent stagger by 40ms.
+      const groups = new Map<Element, Element[]>();
+      document.querySelectorAll('.reveal').forEach((el) => {
+        const parent = el.parentElement;
+        if (!parent) return;
+        if (!groups.has(parent)) groups.set(parent, []);
+        groups.get(parent)!.push(el);
+      });
+      groups.forEach((children) => {
+        children.forEach((el, i) => {
+          (el as HTMLElement).style.setProperty('--stagger', `${i * 40}ms`);
+        });
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle('is-visible', entry.isIntersecting);
+          });
+        },
+        { threshold: 0.15 }
+      );
+      document.querySelectorAll('.reveal, .hairline-draw').forEach((el) => observer.observe(el));
+    </script>
   </body>
 </html>
+
+<style>
+  /* Page-load intro — pure CSS, no JS dependency, so it can never be the
+     thing that makes the site feel slow. Skips entirely for
+     prefers-reduced-motion, and blocks interaction only for its own
+     brief run (visibility: hidden at the end removes it from hit-testing). */
+  .page-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-dark);
+    animation: intro-fade 1.7s var(--ease) forwards;
+  }
+
+  .page-intro__mark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .page-intro__line {
+    display: block;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    animation: intro-line 0.7s var(--ease) 0.15s forwards;
+  }
+
+  .page-intro__text {
+    font-size: var(--fs-14);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--text-on-dark);
+    opacity: 0;
+    transform: translateY(8px);
+    animation: intro-text 0.6s var(--ease) 0.5s forwards;
+  }
+
+  @keyframes intro-line {
+    to {
+      width: 64px;
+    }
+  }
+
+  @keyframes intro-text {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes intro-fade {
+    0%,
+    65% {
+      opacity: 1;
+      visibility: visible;
+    }
+    100% {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-intro {
+      display: none;
+    }
+  }
+</style>

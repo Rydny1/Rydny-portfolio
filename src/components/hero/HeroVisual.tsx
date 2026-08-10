@@ -1,8 +1,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import ControlMesh from './ControlMesh';
-import { withBase } from '../../lib/base';
+import PrismMesh from './PrismMesh';
 import './HeroVisual.css';
 
 function supportsWebGL() {
@@ -23,6 +22,10 @@ function ToneMapping() {
   return null;
 }
 
+function scrollToWork() {
+  document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' });
+}
+
 export default function HeroVisual() {
   const [ready, setReady] = useState(false);
   const [canRender3D, setCanRender3D] = useState(false);
@@ -37,10 +40,6 @@ export default function HeroVisual() {
     setReady(true);
   }, []);
 
-  function goToProjects() {
-    window.location.href = withBase('/projects');
-  }
-
   if (!ready) {
     return <div className="hero-visual__stage" aria-hidden="true" />;
   }
@@ -52,27 +51,23 @@ export default function HeroVisual() {
           className="hero-visual__stage"
           role="button"
           tabIndex={0}
-          aria-label="View projects"
-          onClick={goToProjects}
-          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && goToProjects()}>
+          aria-label="See the work"
+          onClick={scrollToWork}
+          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && scrollToWork()}>
           <Canvas
             dpr={isNarrow ? [1, 1.5] : [1, 2]}
             gl={{ antialias: true, alpha: true }}
-            camera={{ position: [0, 0.3, 3.2], fov: 30 }}
+            camera={{ position: [0, 0, 4.2], fov: 32 }}
             style={{ background: 'transparent' }}>
             <ToneMapping />
             <Suspense fallback={null}>
-              <ControlMesh reduceMotion={reduceMotion} />
+              <PrismMesh reduceMotion={reduceMotion} />
             </Suspense>
           </Canvas>
         </div>
       ) : (
-        <MetalSurfaceFallback onClick={goToProjects} />
+        <MetalSurfaceFallback onClick={scrollToWork} />
       )}
-      <a href={withBase('/projects')} className="hero-visual__caption">
-        <span className="hero-visual__caption-rule" aria-hidden="true" />
-        Selected work
-      </a>
     </div>
   );
 }
@@ -83,7 +78,7 @@ function MetalSurfaceFallback({ onClick }: { onClick: () => void }) {
       className="hero-visual__stage hero-visual__fallback"
       role="button"
       tabIndex={0}
-      aria-label="View projects"
+      aria-label="See the work"
       onClick={onClick}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick()}>
       <div className="hero-visual__sheen" />

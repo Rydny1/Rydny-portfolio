@@ -1,31 +1,17 @@
 ---
 import HeroVisual from './hero/HeroVisual';
 import GlassButton from './GlassButton';
-import { withBase } from '../lib/base';
 
-const socials = [
-  { label: 'GitHub', href: 'https://github.com/Rydny1' },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/rydny-ihims' },
-  { label: 'Email', href: 'mailto:rydny01@gmail.com' },
-];
-
-// Breathing ambient background — stroke-only rectangles, 9 pewter + 2
-// brushed, each on its own non-synced timer (negative delays). A second,
-// independent timer sweeps a bright light segment around each shape's
-// own perimeter — different shapes light up at different, uncoordinated
-// moments so it never reads as one synchronized effect.
+// Breathing ambient background — kept to the page edges/corners so it
+// stays visible without sitting behind the text or the Prism, and small
+// enough in number to respect the ~3-moving-elements motion budget as a
+// single "atmosphere" effect rather than a competing one.
 const bgShapes = [
-  { top: '10%', left: '6%', w: 96, h: 96, color: 'pewter', op: 0.12, dur: 16, delay: -2, lightDur: 9, lightDelay: -1 },
-  { top: '68%', left: '10%', w: 160, h: 100, color: 'pewter', op: 0.1, dur: 19, delay: -9, lightDur: 12, lightDelay: -6 },
-  { top: '22%', left: '30%', w: 64, h: 64, color: 'pewter', op: 0.15, dur: 14, delay: -4, lightDur: 7, lightDelay: -3 },
-  { top: '78%', left: '38%', w: 220, h: 130, color: 'pewter', op: 0.09, dur: 21, delay: -12, lightDur: 15, lightDelay: -11 },
-  { top: '4%', left: '52%', w: 120, h: 76, color: 'brushed', op: 0.16, dur: 18, delay: -6, lightDur: 10, lightDelay: -8 },
-  { top: '46%', left: '4%', w: 72, h: 72, color: 'pewter', op: 0.13, dur: 15, delay: -1, lightDur: 8, lightDelay: -5 },
-  { top: '85%', left: '68%', w: 100, h: 100, color: 'pewter', op: 0.12, dur: 17, delay: -8, lightDur: 11, lightDelay: -2 },
-  { top: '14%', left: '80%', w: 280, h: 160, color: 'pewter', op: 0.08, dur: 22, delay: -15, lightDur: 17, lightDelay: -13 },
-  { top: '58%', left: '85%', w: 68, h: 68, color: 'brushed', op: 0.14, dur: 16.5, delay: -3, lightDur: 9.5, lightDelay: -7 },
-  { top: '32%', left: '62%', w: 140, h: 90, color: 'pewter', op: 0.1, dur: 20, delay: -18, lightDur: 13, lightDelay: -4 },
-  { top: '2%', left: '22%', w: 84, h: 130, color: 'pewter', op: 0.13, dur: 15.5, delay: -10, lightDur: 10.5, lightDelay: -9 },
+  { top: '8%', left: '3%', w: 90, h: 90, color: 'pewter', op: 0.16, dur: 16, delay: -2, lightDur: 9, lightDelay: -1 },
+  { top: '78%', left: '5%', w: 150, h: 95, color: 'pewter', op: 0.14, dur: 19, delay: -9, lightDur: 12, lightDelay: -6 },
+  { top: '6%', left: '90%', w: 70, h: 70, color: 'brushed', op: 0.15, dur: 14, delay: -4, lightDur: 8, lightDelay: -3 },
+  { top: '85%', left: '88%', w: 110, h: 70, color: 'pewter', op: 0.13, dur: 22, delay: -15, lightDur: 17, lightDelay: -13 },
+  { top: '45%', left: '1%', w: 60, h: 60, color: 'brushed', op: 0.14, dur: 17, delay: -7, lightDur: 10, lightDelay: -5 },
 ];
 ---
 
@@ -44,7 +30,7 @@ const bgShapes = [
 
   <div class="container hero__inner">
     <div class="hero__content">
-      <p class="hero__badge load-reveal" style="--delay: 0ms">AVAILABLE FOR WORK — RIGA / REMOTE</p>
+      <p class="hero__badge load-reveal" style="--delay: 0ms">Available for work. Riga and remote.</p>
 
       <h1 class="hero__name">
         <span class="load-reveal-mask" style="--delay: 60ms"><span class="load-reveal-text">Rydny Ihims</span></span>
@@ -52,33 +38,17 @@ const bgShapes = [
 
       <p class="hero__role">
         <span class="load-reveal-mask" style="--delay: 200ms"
-          ><span class="load-reveal-text">I build full-stack web products.</span></span
+          ><span class="load-reveal-text">I build websites and AI systems</span></span
         >
       </p>
 
       <p class="hero__bio load-reveal" style="--delay: 320ms">
-        Based in Riga. Previously building client projects in Dubai. Clean, functional products —
-        from e-commerce platforms to AI-driven analysis tools.
+        Full-stack developer and AI builder. I take an idea and turn it into a working product.
       </p>
 
       <div class="hero__cta load-reveal" style="--delay: 400ms">
-        <GlassButton href={withBase('/projects')} client:visible>View My Work</GlassButton>
-        <a href={withBase('/assets/Rydny_Ihims_CV.pdf')} download class="btn btn--ghost">Download CV</a>
-      </div>
-
-      <div class="hero__socials load-reveal" style="--delay: 460ms">
-        {
-          socials.map((s) => (
-            <a
-              href={s.href}
-              class="hero__social"
-              target={s.href.startsWith('http') ? '_blank' : undefined}
-              rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              aria-label={s.label}>
-              {s.label}
-            </a>
-          ))
-        }
+        <GlassButton href="#work" client:visible>See the work</GlassButton>
+        <a href="mailto:rydny01@gmail.com" class="hero__email-link">Or email me</a>
       </div>
     </div>
 
@@ -215,44 +185,38 @@ const bgShapes = [
 
   .hero__name {
     font-family: var(--font-display);
-    font-size: clamp(2.75rem, 5.5vw + 1rem, var(--fs-76));
-    font-weight: 600;
+    font-size: var(--fs-hero);
+    font-weight: 500;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--text);
     margin-bottom: 20px;
   }
 
   .hero__role {
-    font-size: clamp(var(--fs-18), 2vw + 0.5rem, var(--fs-28));
-    font-weight: 300;
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-22), 2vw + 0.5rem, var(--fs-28));
+    font-weight: 500;
     color: var(--text-secondary);
-    margin-bottom: 28px;
+    margin-bottom: 20px;
   }
 
   .hero__bio {
     font-size: var(--fs-16);
+    line-height: 1.6;
     color: var(--text-secondary);
-    max-width: 46ch;
-    line-height: 1.75;
+    max-width: 60ch;
     margin-bottom: 40px;
   }
 
   .hero__cta {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
     flex-wrap: wrap;
-    margin-bottom: 40px;
   }
 
-  .hero__socials {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .hero__social {
+  .hero__email-link {
     font-size: var(--fs-14);
     color: var(--text-secondary);
     border-bottom: 1px solid transparent;
@@ -262,7 +226,7 @@ const bgShapes = [
       border-color var(--dur-fast) var(--ease);
   }
 
-  .hero__social:hover {
+  .hero__email-link:hover {
     color: var(--text);
     border-color: var(--accent-ui);
   }

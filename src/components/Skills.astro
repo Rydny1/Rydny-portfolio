@@ -1,16 +1,16 @@
 ---
 const columns = [
   {
-    category: 'Frontend',
-    items: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Tailwind CSS', 'Responsive Design'],
+    category: 'Building',
+    items: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
   },
   {
-    category: 'Backend',
-    items: ['PHP', 'Python', 'MySQL', 'Laravel'],
+    category: 'Data and Backend',
+    items: ['PHP + Laravel', 'MySQL', 'Python', 'Git'],
   },
   {
-    category: 'Tools & Other',
-    items: ['Git', 'GitHub', 'VS Code', 'Figma', 'Prompt Engineering', 'RESTful APIs'],
+    category: 'AI and Systems',
+    items: ['Claude API', 'Prompt Engineering', 'REST APIs', 'System Design'],
   },
 ];
 ---
@@ -37,6 +37,8 @@ const columns = [
         ))
       }
     </div>
+
+    <p class="skills__languages reveal">Languages: English and French, both fluent.</p>
   </div>
 </section>
 
@@ -80,5 +82,11 @@ const columns = [
 
   .skills__list li:first-child {
     border-top: 1px solid var(--hairline);
+  }
+
+  .skills__languages {
+    margin-top: 40px;
+    font-size: var(--fs-14);
+    color: var(--text-secondary);
   }
 </style>
