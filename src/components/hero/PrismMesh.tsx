@@ -4,19 +4,28 @@ import { useTexture, Environment, Lightformer } from '@react-three/drei';
 import * as THREE from 'three';
 import { withBase } from '../../lib/base';
 
-const STONE = '#0f0e0d';
+const STONE = '#141210';
 const BRONZE = '#b8935b';
 
-// Landscape side faces — matches real screenshot aspect (~16:10) so the
-// cover-fit crop below stays minimal instead of chopping the image up.
-const SIDE = 2.5;
-const HEIGHT = 1.55;
+// Landscape faces matching the real screenshots (~2.15:1) almost exactly,
+// so cover-fit barely has to crop anything.
+const SIDE = 2.8;
+const HEIGHT = 1.3;
+const DEPTH = SIDE * 0.13;
 const IN_RADIUS = SIDE / (2 * Math.sqrt(3));
 const CIRCUM_RADIUS = SIDE / Math.sqrt(3);
 const FACE_ANGLES = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
 const EDGE_ANGLES = [Math.PI / 3, Math.PI, (5 * Math.PI) / 3];
-const BASE_TILT = 0.55;
-const BASE_SCALE = 0.72;
+const BASE_TILT = 0.5;
+const BASE_SCALE = 0.68;
+
+const stoneMaterial = new THREE.MeshPhysicalMaterial({
+  color: STONE,
+  roughness: 0.32,
+  metalness: 0.35,
+  clearcoat: 0.6,
+  clearcoatRoughness: 0.25,
+});
 
 function coverFit(tex: THREE.Texture, planeAspect: number) {
   const img = tex.image as { width: number; height: number } | undefined;
@@ -63,48 +72,59 @@ function useTextTexture(draw: (ctx: CanvasRenderingContext2D, w: number, h: numb
   return texture;
 }
 
+// A real box with depth, not a paper-thin plane — this is what actually
+// reads as a solid slab rather than a card. Screenshot on the outward
+// face only; the other five faces are plain polished stone.
 function Face({ angle, texture }: { angle: number; texture: THREE.Texture }) {
   const pos: [number, number, number] = [Math.sin(angle) * IN_RADIUS, 0, Math.cos(angle) * IN_RADIUS];
-  const geo = useMemo(() => new THREE.PlaneGeometry(SIDE * 0.985, HEIGHT * 0.985), []);
+  const geo = useMemo(() => new THREE.BoxGeometry(SIDE * 0.99, HEIGHT * 0.99, DEPTH), []);
 
   useEffect(() => {
     coverFit(texture, SIDE / HEIGHT);
   }, [texture]);
 
+  const frontMaterial = useMemo(
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        map: texture,
+        emissiveMap: texture,
+        emissive: new THREE.Color('#ffffff'),
+        emissiveIntensity: 0.12,
+        roughness: 0.45,
+        metalness: 0.05,
+        clearcoat: 0.35,
+        clearcoatRoughness: 0.3,
+      }),
+    [texture]
+  );
+
+  // BoxGeometry face order: +X, -X, +Y, -Y, +Z, -Z. Local +Z is the
+  // outward-facing side once rotated by `angle` around Y.
+  const materials = useMemo(
+    () => [stoneMaterial, stoneMaterial, stoneMaterial, stoneMaterial, frontMaterial, stoneMaterial],
+    [frontMaterial]
+  );
+
   return (
     <group position={pos} rotation={[0, angle, 0]}>
-      <mesh geometry={geo}>
-        <meshStandardMaterial
-          map={texture}
-          emissiveMap={texture}
-          emissive="#ffffff"
-          emissiveIntensity={0.12}
-          roughness={0.6}
-          metalness={0}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
+      <mesh geometry={geo} material={materials} />
     </group>
   );
 }
 
 function EdgeRod({ angle }: { angle: number }) {
-  const pos: [number, number, number] = [Math.sin(angle) * IN_RADIUS, 0, Math.cos(angle) * IN_RADIUS];
-  const geo = useMemo(() => new THREE.CylinderGeometry(SIDE * 0.03, SIDE * 0.03, HEIGHT, 12), []);
+  const pos: [number, number, number] = [Math.sin(angle) * CIRCUM_RADIUS * 0.72, 0, Math.cos(angle) * CIRCUM_RADIUS * 0.72];
+  const geo = useMemo(() => new THREE.CylinderGeometry(DEPTH * 0.55, DEPTH * 0.55, HEIGHT * 0.99, 16), []);
   return (
     <mesh position={pos} geometry={geo}>
-      <meshStandardMaterial color={STONE} metalness={0.15} roughness={0.65} />
+      <meshPhysicalMaterial color={BRONZE} metalness={0.75} roughness={0.28} clearcoat={0.5} clearcoatRoughness={0.2} />
     </mesh>
   );
 }
 
-// Built from the exact same angle system as the side faces (their
-// shared edges, EDGE_ANGLES) instead of relying on CircleGeometry's own
-// rotation convention lining up by coincidence — that mismatch is the
-// most likely cause of the stray wedge shape seen in testing.
 function makeCapGeometry() {
   const geo = new THREE.BufferGeometry();
-  const verts = EDGE_ANGLES.flatMap((a) => [Math.sin(a) * CIRCUM_RADIUS * 0.98, 0, Math.cos(a) * CIRCUM_RADIUS * 0.98]);
+  const verts = EDGE_ANGLES.flatMap((a) => [Math.sin(a) * CIRCUM_RADIUS * 0.75, 0, Math.cos(a) * CIRCUM_RADIUS * 0.75]);
   geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
   geo.setAttribute('uv', new THREE.Float32BufferAttribute([0.5, 1, 0, 0, 1, 0], 2));
   geo.setIndex([0, 1, 2]);
@@ -118,9 +138,9 @@ function Cap({ y, texture }: { y: number; texture: THREE.Texture | null }) {
     <group position={[0, y, 0]}>
       <mesh geometry={geo}>
         {texture ? (
-          <meshStandardMaterial map={texture} roughness={0.55} metalness={0} color="#ffffff" side={THREE.DoubleSide} />
+          <meshPhysicalMaterial map={texture} roughness={0.4} metalness={0.1} clearcoat={0.4} color="#ffffff" side={THREE.DoubleSide} />
         ) : (
-          <meshStandardMaterial color={STONE} roughness={0.6} metalness={0} side={THREE.DoubleSide} />
+          <meshPhysicalMaterial color={STONE} roughness={0.4} metalness={0.3} side={THREE.DoubleSide} />
         )}
       </mesh>
     </group>
@@ -143,14 +163,15 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
     t.colorSpace = THREE.SRGBColorSpace;
   });
 
+  // One strong word: "itqan" (mastery / excellence, done to perfection).
   const arabicTexture = useTextTexture((ctx, w, h) => {
     ctx.direction = 'rtl';
     ctx.fillStyle = '#f5f1e8';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '150px "Noto Naskh Arabic", serif';
-    ctx.fillText('إتقان', w / 2, h / 2 + 20);
-  }, '150px "Noto Naskh Arabic"');
+    ctx.font = '170px "Noto Naskh Arabic", serif';
+    ctx.fillText('إتقان', w / 2, h / 2 + 24);
+  }, '170px "Noto Naskh Arabic"');
 
   const monogramTexture = useTextTexture((ctx, w, h) => {
     ctx.fillStyle = '#f5f1e8';
@@ -181,16 +202,14 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
   });
 
   return (
-    <group
-      ref={group}
-      onPointerEnter={() => setHovering(true)}
-      onPointerLeave={() => setHovering(false)}>
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[2, 3, 3]} intensity={0.55} />
-      <directionalLight position={[-2, 1, -2]} intensity={0.2} color={BRONZE} />
-      <Environment resolution={64}>
-        <Lightformer intensity={0.6} color="white" position={[0, 3, -3]} scale={[6, 3, 1]} />
-        <Lightformer intensity={0.4} color={BRONZE} position={[3, 0.5, 2]} rotation={[0, -Math.PI / 2, 0]} scale={[3, 2, 1]} />
+    <group ref={group} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[2, 3, 3]} intensity={0.6} />
+      <directionalLight position={[-2, 1, -2]} intensity={0.25} color={BRONZE} />
+      <Environment resolution={128}>
+        <Lightformer intensity={1.1} color="white" position={[0, 3, -3]} scale={[7, 3, 1]} />
+        <Lightformer intensity={0.7} color="white" position={[-3, 1, 2]} rotation={[0, Math.PI / 2, 0]} scale={[3, 2, 1]} />
+        <Lightformer intensity={0.8} color={BRONZE} position={[3, 0.5, 2]} rotation={[0, -Math.PI / 2, 0]} scale={[3, 2, 1]} />
       </Environment>
 
       <Face angle={FACE_ANGLES[0]} texture={altays} />
@@ -199,8 +218,8 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
       <EdgeRod angle={EDGE_ANGLES[0]} />
       <EdgeRod angle={EDGE_ANGLES[1]} />
       <EdgeRod angle={EDGE_ANGLES[2]} />
-      <Cap y={HEIGHT / 2} texture={arabicTexture} />
-      <Cap y={-HEIGHT / 2} texture={monogramTexture} />
+      <Cap y={HEIGHT / 2 + DEPTH * 0.1} texture={arabicTexture} />
+      <Cap y={-HEIGHT / 2 - DEPTH * 0.1} texture={monogramTexture} />
     </group>
   );
 }

@@ -7,10 +7,12 @@
    values changed, not the names those files reference.
 ============================================================ */
 :root {
-  /* warm blacks — never cool, never pure #000 */
-  --bg-dark: #0f0e0d;
-  --bg-dark-elev: #1a1815;
-  --border-dark: #2a2621;
+  /* warm blacks — never cool, never pure #000. Lightened slightly from
+     the brief's literal #0F0E0D, which read as near-black rather than a
+     visible warm tone once actually on screen. */
+  --bg-dark: #191510;
+  --bg-dark-elev: #241f18;
+  --border-dark: #3a3226;
 
   /* sand and cream — faded/muted rather than a saturated tan */
   --bg-light: #efebe2;
