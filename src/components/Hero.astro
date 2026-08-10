@@ -2,16 +2,18 @@
 import HeroVisual from './hero/HeroVisual';
 import GlassButton from './GlassButton';
 
-// Breathing ambient background — kept to the page edges/corners so it
-// stays visible without sitting behind the text or the Prism, and small
-// enough in number to respect the ~3-moving-elements motion budget as a
-// single "atmosphere" effect rather than a competing one.
+// Breathing ambient background — spread across the edges/corners so it
+// stays visible without sitting behind the text or the Prism.
 const bgShapes = [
-  { top: '8%', left: '3%', w: 90, h: 90, color: 'pewter', op: 0.32, dur: 16, delay: -2, lightDur: 9, lightDelay: -1 },
-  { top: '78%', left: '5%', w: 150, h: 95, color: 'pewter', op: 0.28, dur: 19, delay: -9, lightDur: 12, lightDelay: -6 },
-  { top: '6%', left: '90%', w: 70, h: 70, color: 'brushed', op: 0.3, dur: 14, delay: -4, lightDur: 8, lightDelay: -3 },
-  { top: '85%', left: '88%', w: 110, h: 70, color: 'pewter', op: 0.26, dur: 22, delay: -15, lightDur: 17, lightDelay: -13 },
-  { top: '45%', left: '1%', w: 60, h: 60, color: 'brushed', op: 0.28, dur: 17, delay: -7, lightDur: 10, lightDelay: -5 },
+  { top: '8%', left: '3%', w: 90, h: 90, color: 'pewter', op: 0.34, dur: 16, delay: -2, lightDur: 9, lightDelay: -1 },
+  { top: '78%', left: '5%', w: 150, h: 95, color: 'pewter', op: 0.3, dur: 19, delay: -9, lightDur: 12, lightDelay: -6 },
+  { top: '6%', left: '90%', w: 70, h: 70, color: 'brushed', op: 0.32, dur: 14, delay: -4, lightDur: 8, lightDelay: -3 },
+  { top: '85%', left: '88%', w: 110, h: 70, color: 'pewter', op: 0.28, dur: 22, delay: -15, lightDur: 17, lightDelay: -13 },
+  { top: '45%', left: '1%', w: 60, h: 60, color: 'brushed', op: 0.3, dur: 17, delay: -7, lightDur: 10, lightDelay: -5 },
+  { top: '30%', left: '96%', w: 55, h: 55, color: 'pewter', op: 0.3, dur: 15, delay: -5, lightDur: 8.5, lightDelay: -2 },
+  { top: '92%', left: '40%', w: 85, h: 85, color: 'brushed', op: 0.28, dur: 20, delay: -11, lightDur: 13, lightDelay: -8 },
+  { top: '2%', left: '45%', w: 65, h: 65, color: 'pewter', op: 0.26, dur: 18, delay: -3, lightDur: 11, lightDelay: -6 },
+  { top: '55%', left: '94%', w: 100, h: 65, color: 'pewter', op: 0.27, dur: 21, delay: -16, lightDur: 14, lightDelay: -10 },
 ];
 ---
 
@@ -103,18 +105,18 @@ const bgShapes = [
     inset: -1px;
     --angle: 0deg;
     padding: 1.5px;
-    background: conic-gradient(from var(--angle), transparent 0deg, var(--porcelain) 9deg, transparent 21deg);
+    background: conic-gradient(from var(--angle), transparent 0deg, var(--porcelain) 11deg, transparent 24deg);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     opacity: 1;
-    filter: drop-shadow(0 0 2px rgba(241, 239, 234, 0.95)) drop-shadow(0 0 6px rgba(241, 239, 234, 0.65));
+    filter: drop-shadow(0 0 3px rgba(245, 241, 232, 1)) drop-shadow(0 0 9px rgba(245, 241, 232, 0.8));
     animation: light-travel var(--light-dur) linear var(--light-delay) infinite;
   }
 
   .bg-shape--brushed::before {
-    background: conic-gradient(from var(--angle), transparent 0deg, var(--brushed) 9deg, transparent 21deg);
-    filter: drop-shadow(0 0 2px rgba(194, 181, 155, 1)) drop-shadow(0 0 6px rgba(194, 181, 155, 0.7));
+    background: conic-gradient(from var(--angle), transparent 0deg, var(--brushed) 11deg, transparent 24deg);
+    filter: drop-shadow(0 0 3px rgba(180, 184, 188, 1)) drop-shadow(0 0 9px rgba(180, 184, 188, 0.8));
   }
 
   @keyframes bg-breathe {
@@ -225,43 +227,43 @@ const bgShapes = [
     order: -1;
   }
 
-  /* Mobile — fit the entire hero in one viewport on load, no scroll
-     needed to see the CTA. Compacts spacing/type rather than hiding
-     content. */
+  /* Mobile — close to one viewport on load without cramming everything
+     together. A little scroll is better than losing the organized,
+     spaced-out feel entirely. */
   @media (max-width: 480px) {
     .hero {
-      height: 100svh;
-      padding-top: calc(var(--nav-h) + 8px);
+      min-height: 100svh;
+      padding-top: calc(var(--nav-h) + 16px);
     }
 
     .hero__inner {
-      gap: 14px;
-      padding-block: 10px;
+      gap: 28px;
+      padding-block: 24px;
     }
 
     .hero__badge {
-      font-size: 10px;
-      margin-bottom: 8px;
-    }
-
-    .hero__name {
-      font-size: 2.15rem;
-      margin-bottom: 6px;
-    }
-
-    .hero__role {
-      font-size: 1rem;
-      margin-bottom: 6px;
-    }
-
-    .hero__bio {
-      font-size: 13px;
-      line-height: 1.4;
+      font-size: 11px;
       margin-bottom: 14px;
     }
 
+    .hero__name {
+      font-size: 2.6rem;
+      margin-bottom: 14px;
+    }
+
+    .hero__role {
+      font-size: 1.05rem;
+      margin-bottom: 12px;
+    }
+
+    .hero__bio {
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+
     .hero__cta {
-      gap: 12px;
+      gap: 16px;
     }
   }
 
