@@ -10,19 +10,22 @@ const socials = [
 ];
 
 // Breathing ambient background — stroke-only rectangles, 9 pewter + 2
-// brushed, each on its own non-synced timer (negative delays).
+// brushed, each on its own non-synced timer (negative delays). A second,
+// independent timer sweeps a bright light segment around each shape's
+// own perimeter — different shapes light up at different, uncoordinated
+// moments so it never reads as one synchronized effect.
 const bgShapes = [
-  { top: '10%', left: '6%', w: 96, h: 96, color: 'pewter', op: 0.07, dur: 16, delay: -2 },
-  { top: '68%', left: '10%', w: 160, h: 100, color: 'pewter', op: 0.06, dur: 19, delay: -9 },
-  { top: '22%', left: '30%', w: 64, h: 64, color: 'pewter', op: 0.09, dur: 14, delay: -4 },
-  { top: '78%', left: '38%', w: 220, h: 130, color: 'pewter', op: 0.05, dur: 21, delay: -12 },
-  { top: '4%', left: '52%', w: 120, h: 76, color: 'brushed', op: 0.1, dur: 18, delay: -6 },
-  { top: '46%', left: '4%', w: 72, h: 72, color: 'pewter', op: 0.08, dur: 15, delay: -1 },
-  { top: '85%', left: '68%', w: 100, h: 100, color: 'pewter', op: 0.07, dur: 17, delay: -8 },
-  { top: '14%', left: '80%', w: 280, h: 160, color: 'pewter', op: 0.05, dur: 22, delay: -15 },
-  { top: '58%', left: '85%', w: 68, h: 68, color: 'brushed', op: 0.08, dur: 16.5, delay: -3 },
-  { top: '32%', left: '62%', w: 140, h: 90, color: 'pewter', op: 0.06, dur: 20, delay: -18 },
-  { top: '2%', left: '22%', w: 84, h: 130, color: 'pewter', op: 0.08, dur: 15.5, delay: -10 },
+  { top: '10%', left: '6%', w: 96, h: 96, color: 'pewter', op: 0.12, dur: 16, delay: -2, lightDur: 9, lightDelay: -1 },
+  { top: '68%', left: '10%', w: 160, h: 100, color: 'pewter', op: 0.1, dur: 19, delay: -9, lightDur: 12, lightDelay: -6 },
+  { top: '22%', left: '30%', w: 64, h: 64, color: 'pewter', op: 0.15, dur: 14, delay: -4, lightDur: 7, lightDelay: -3 },
+  { top: '78%', left: '38%', w: 220, h: 130, color: 'pewter', op: 0.09, dur: 21, delay: -12, lightDur: 15, lightDelay: -11 },
+  { top: '4%', left: '52%', w: 120, h: 76, color: 'brushed', op: 0.16, dur: 18, delay: -6, lightDur: 10, lightDelay: -8 },
+  { top: '46%', left: '4%', w: 72, h: 72, color: 'pewter', op: 0.13, dur: 15, delay: -1, lightDur: 8, lightDelay: -5 },
+  { top: '85%', left: '68%', w: 100, h: 100, color: 'pewter', op: 0.12, dur: 17, delay: -8, lightDur: 11, lightDelay: -2 },
+  { top: '14%', left: '80%', w: 280, h: 160, color: 'pewter', op: 0.08, dur: 22, delay: -15, lightDur: 17, lightDelay: -13 },
+  { top: '58%', left: '85%', w: 68, h: 68, color: 'brushed', op: 0.14, dur: 16.5, delay: -3, lightDur: 9.5, lightDelay: -7 },
+  { top: '32%', left: '62%', w: 140, h: 90, color: 'pewter', op: 0.1, dur: 20, delay: -18, lightDur: 13, lightDelay: -4 },
+  { top: '2%', left: '22%', w: 84, h: 130, color: 'pewter', op: 0.13, dur: 15.5, delay: -10, lightDur: 10.5, lightDelay: -9 },
 ];
 ---
 
@@ -32,7 +35,7 @@ const bgShapes = [
       bgShapes.map((s) => (
         <div
           class={`bg-shape bg-shape--${s.color}`}
-          style={`top:${s.top}; left:${s.left}; width:${s.w}px; height:${s.h}px; --op:${s.op}; --dur:${s.dur}s; --delay:${s.delay}s;`}
+          style={`top:${s.top}; left:${s.left}; width:${s.w}px; height:${s.h}px; --op:${s.op}; --dur:${s.dur}s; --delay:${s.delay}s; --light-dur:${s.lightDur}s; --light-delay:${s.lightDelay}s;`}
         />
       ))
     }
@@ -105,6 +108,12 @@ const bgShapes = [
     pointer-events: none;
   }
 
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
   .bg-shape {
     position: absolute;
     border: 1px solid var(--pewter);
@@ -115,6 +124,27 @@ const bgShapes = [
 
   .bg-shape--brushed {
     border-color: var(--brushed);
+  }
+
+  /* A bright segment travels once around this shape's own perimeter,
+     independently timed per shape — light passing through the line,
+     not a synchronized sweep across all of them. */
+  .bg-shape::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    --angle: 0deg;
+    padding: 1px;
+    background: conic-gradient(from var(--angle), transparent 0deg, var(--porcelain) 6deg, transparent 22deg);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.85;
+    animation: light-travel var(--light-dur) linear var(--light-delay) infinite;
+  }
+
+  .bg-shape--brushed::before {
+    background: conic-gradient(from var(--angle), transparent 0deg, var(--brushed) 6deg, transparent 22deg);
   }
 
   @keyframes bg-breathe {
@@ -128,10 +158,21 @@ const bgShapes = [
     }
   }
 
+  @keyframes light-travel {
+    to {
+      --angle: 360deg;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .bg-shape {
       animation: none;
       opacity: calc(var(--op) * 0.7);
+    }
+
+    .bg-shape::before {
+      animation: none;
+      opacity: 0;
     }
   }
 
