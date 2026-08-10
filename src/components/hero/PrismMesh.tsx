@@ -87,40 +87,31 @@ function drawMarble(ctx: CanvasRenderingContext2D, x: number, y: number, w: numb
 
   ctx.shadowBlur = 0;
   ctx.globalAlpha = 1;
-  ctx.fillStyle = MARBLE_BASE;
+  ctx.fillStyle = '#0d0b0a'; // Darker base
   ctx.fillRect(x, y, w, h);
 
-  for (let i = 0; i < 3; i++) {
+  // Add more subtle clouding for depth
+  for (let i = 0; i < 5; i++) {
     const cx = x + Math.random() * w;
     const cy = y + Math.random() * h;
-    const r = w * (0.3 + Math.random() * 0.3);
+    const r = w * (0.4 + Math.random() * 0.4);
     const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-    grad.addColorStop(0, 'rgba(15,13,11,0.28)');
+    grad.addColorStop(0, 'rgba(25,23,21,0.25)');
     grad.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = grad;
     ctx.fillRect(x, y, w, h);
   }
 
-  const veinColors = ['rgba(196,186,169,1)', 'rgba(150,140,124,1)'];
-  for (let i = 0; i < veinCount; i++) {
+  const veinColors = ['rgba(160,150,135,0.7)', 'rgba(100,90,80,0.8)']; // Muted veins
+  for (let i = 0; i < veinCount + 4; i++) {
     const fromLeft = Math.random() < 0.5;
     const startX = fromLeft ? x - 20 : x + w + 20;
-    const startY = y + Math.random() * h * 0.8 + h * 0.05;
+    const startY = y + Math.random() * h;
     const endX = fromLeft ? x + w + 20 : x - 20;
-    const endY = y + Math.random() * h * 0.8 + h * 0.05;
-    const path = randomWanderingPath(startX, startY, endX, endY, 6, h * 0.14);
+    const endY = y + Math.random() * h;
+    const path = randomWanderingPath(startX, startY, endX, endY, 8, h * 0.2);
     const color = veinColors[i % veinColors.length];
-    drawVein(ctx, path, 1.6 + Math.random() * 1.0, color, 0.42 + Math.random() * 0.15);
-
-    if (path.length > 4 && Math.random() < 0.6) {
-      const branchStart = path[2 + Math.floor(Math.random() * 2)];
-      const branchEnd: [number, number] = [
-        branchStart[0] + (Math.random() - 0.5) * w * 0.3,
-        branchStart[1] + (Math.random() - 0.5) * h * 0.3,
-      ];
-      const branchPath = randomWanderingPath(branchStart[0], branchStart[1], branchEnd[0], branchEnd[1], 4, h * 0.08);
-      drawVein(ctx, branchPath, 0.6 + Math.random() * 0.4, color, 0.22);
-    }
+    drawVein(ctx, path, 0.8 + Math.random() * 1.5, color, 0.3 + Math.random() * 0.2);
   }
 
   ctx.globalAlpha = 1;
