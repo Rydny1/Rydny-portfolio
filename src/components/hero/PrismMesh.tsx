@@ -22,7 +22,7 @@ const MARBLE_BASE = '#1b1714';
 const CIRCUM_RADIUS = 1.62;
 const HEIGHT = 1.3;
 const BASE_TILT = 0.5;
-const BASE_SCALE = 1.0;
+const BASE_SCALE = 0.82; // Reduced by ~18% (1.0 * 0.82)
 // CylinderGeometry maps V (0-1) across HEIGHT and U across the
 // circumference, so each side face's true on-mesh aspect is
 // (triangle side length) / HEIGHT, not square. Drawing the atlas at a
@@ -247,9 +247,9 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
     ctx.direction = 'rtl';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = `${Math.round(w * 0.32)}px "Noto Naskh Arabic", serif`;
+    ctx.font = `${Math.round(w * 0.22)}px "Noto Naskh Arabic", serif`; // Reduced scale from 0.32
     const x = w / 2;
-    const y = h / 2 + h * 0.03;
+    const y = h / 2 + h * 0.02; // Adjusted position
     // Recessed-engraving look: a soft dark shadow offset down-right
     // (the carved groove) and a crisp light rim offset up-left (the
     // catch-light on the cut edge), both tight to the letterforms so
