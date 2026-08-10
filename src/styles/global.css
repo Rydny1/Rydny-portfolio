@@ -7,21 +7,24 @@
    values changed, not the names those files reference.
 ============================================================ */
 :root {
-  /* warm blacks — never cool, never pure #000. Lightened slightly from
-     the brief's literal #0F0E0D, which read as near-black rather than a
-     visible warm tone once actually on screen. */
-  --bg-dark: #191510;
-  --bg-dark-elev: #241f18;
-  --border-dark: #3a3226;
+  /* graphite / metallic-grey — cool neutral dark, not warm black */
+  --bg-dark: #1e1f21;
+  --bg-dark-elev: #2a2c2f;
+  --border-dark: #3d4044;
 
   /* sand and cream — faded/muted rather than a saturated tan */
   --bg-light: #efebe2;
   --bg-light-elev: #f5f2ea;
   --border-light: #ddd5c4;
 
-  /* the one accent — matte gold. never decoration, never a glow fill. */
-  --accent: #b8935b;
-  --accent-deep: #78614a;
+  /* the one accent — brushed aluminum. Neutral-to-very-slightly-warm
+     grey, deliberately NOT cool/blue (that reads as chrome-plastic, not
+     metal). --accent is the light tone used as button fills and as
+     text/rules on dark; --accent-deep is a darker gunmetal for
+     borders/focus rings on light backgrounds (raw --accent only hits
+     ~1.7:1 there, same problem the gold token had). */
+  --accent: #c3c1b8;
+  --accent-deep: #6f6d64;
 
   /* text */
   --text-on-dark: #f5f1e8;
