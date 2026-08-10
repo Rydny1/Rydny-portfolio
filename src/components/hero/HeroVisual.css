@@ -1,13 +1,20 @@
 .hero-visual {
   position: relative;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .hero-visual__stage {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 11;
+  max-width: 500px;
+  aspect-ratio: 1 / 1;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .hero-visual__shadow {
