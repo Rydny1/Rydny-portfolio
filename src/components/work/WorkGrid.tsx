@@ -63,7 +63,7 @@ export default function WorkGrid() {
           <motion.article
             key={project.title}
             layout
-            className={`work-card${dimmed ? ' work-card--dimmed' : ''}${peerFaded ? ' work-card--peer-faded' : ''}`}
+            className={`work-card fade-only${dimmed ? ' work-card--dimmed' : ''}${peerFaded ? ' work-card--peer-faded' : ''}`}
             transition={{ layout: { duration: 0.5, ease: EASE }, scale: { duration: 0.25, ease: EASE } }}
             whileHover={expandedIndex === null ? { scale: 1.02 } : undefined}
             onHoverStart={() => setHoveredIndex(i)}

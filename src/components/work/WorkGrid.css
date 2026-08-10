@@ -14,9 +14,11 @@
 .work-card {
   border: 1px solid var(--hairline);
   background: var(--bg-light-elev);
-  transition:
-    opacity var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease);
+  /* Opacity's own transition timing belongs to .fade-only (global.css) —
+     declaring it again here as part of this shorthand would silently
+     replace that 1800ms viewport fade with this 400ms one, since
+     `transition` sets the whole list, not just the property named. */
+  transition: border-color var(--dur-fast) var(--ease);
 }
 
 .work-card:hover {
@@ -105,7 +107,7 @@
 .tag {
   font-size: var(--fs-12);
   padding: 5px 12px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-control);
   border: 1px solid var(--hairline-strong);
   color: var(--text-secondary);
 }
