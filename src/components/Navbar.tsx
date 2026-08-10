@@ -94,7 +94,7 @@ export default function Navbar() {
 
         <div className="navbar__right">
           <GlassButton href={withBase('/#contact')} className="navbar__cta">
-            Hire Me
+            Get in touch
           </GlassButton>
           <button
             className={`hamburger${menuOpen ? ' hamburger--open' : ''}`}

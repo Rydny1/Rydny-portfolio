@@ -47,16 +47,17 @@ const { title, description = 'Rydny Ihims. Full-stack developer and AI builder.'
       import Lenis from 'lenis';
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let lenis: Lenis | null = null;
 
       if (!reduceMotion) {
-        const lenis = new Lenis({
+        lenis = new Lenis({
           duration: 1.0,
           smoothWheel: true,
         });
         (window as any).__lenis = lenis;
 
         function raf(time: number) {
-          lenis.raf(time);
+          lenis!.raf(time);
           requestAnimationFrame(raf);
         }
         requestAnimationFrame(raf);
@@ -75,15 +76,25 @@ const { title, description = 'Rydny Ihims. Full-stack developer and AI builder.'
           const target = document.querySelector(hash);
           if (!target) return;
           e.preventDefault();
-          lenis.scrollTo(target as HTMLElement, { duration: 1.0 });
+          lenis!.scrollTo(target as HTMLElement, { duration: 1.0 });
         });
       }
 
       // Scroll reveal — fades in AND out as elements cross the viewport
       // (re-triggers both directions, never fire-once). Siblings sharing
-      // a parent stagger by 40ms.
-      const groups = new Map<Element, Element[]>();
-      document.querySelectorAll('.reveal').forEach((el) => {
+      // a parent stagger by 40ms on the way in only.
+      //
+      // Driven by rect checks on Lenis's own scroll tick rather than an
+      // IntersectionObserver: Lenis animates scroll independently of
+      // native window.scrollY, and the observer's callback timing could
+      // land out of step with what Lenis had actually drawn — an element
+      // could sit fully out of view with is-visible still true. Reading
+      // getBoundingClientRect() on the same tick Lenis uses to paint
+      // removes that gap entirely.
+      const revealEls = Array.from(document.querySelectorAll<HTMLElement>('.reveal, .hairline-draw'));
+      const groups = new Map<Element, HTMLElement[]>();
+      revealEls.forEach((el) => {
+        if (!el.classList.contains('reveal')) return;
         const parent = el.parentElement;
         if (!parent) return;
         if (!groups.has(parent)) groups.set(parent, []);
@@ -91,19 +102,25 @@ const { title, description = 'Rydny Ihims. Full-stack developer and AI builder.'
       });
       groups.forEach((children) => {
         children.forEach((el, i) => {
-          (el as HTMLElement).style.setProperty('--stagger', `${i * 40}ms`);
+          el.style.setProperty('--stagger', `${i * 40}ms`);
         });
       });
 
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            entry.target.classList.toggle('is-visible', entry.isIntersecting);
-          });
-        },
-        { threshold: 0.15 }
-      );
-      document.querySelectorAll('.reveal, .hairline-draw').forEach((el) => observer.observe(el));
+      function checkReveal() {
+        const vh = window.innerHeight;
+        revealEls.forEach((el) => {
+          const rect = el.getBoundingClientRect();
+          const visible = rect.top < vh * 0.85 && rect.bottom > vh * 0.15;
+          el.classList.toggle('is-visible', visible);
+        });
+      }
+      checkReveal();
+      if (lenis) {
+        lenis.on('scroll', checkReveal);
+      } else {
+        window.addEventListener('scroll', checkReveal, { passive: true });
+      }
+      window.addEventListener('resize', checkReveal);
     </script>
   </body>
 </html>

@@ -51,18 +51,24 @@ const PROJECTS: Project[] = [
 
 export default function WorkGrid() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <div className="work-grid">
       {PROJECTS.map((project, i) => {
         const expanded = expandedIndex === i;
         const dimmed = expandedIndex !== null && !expanded;
+        const peerFaded = expandedIndex === null && hoveredIndex !== null && hoveredIndex !== i;
         return (
           <motion.article
             key={project.title}
             layout
-            className={`work-card${dimmed ? ' work-card--dimmed' : ''}`}
-            transition={{ layout: { duration: 0.5, ease: EASE } }}>
+            className={`work-card${dimmed ? ' work-card--dimmed' : ''}${peerFaded ? ' work-card--peer-faded' : ''}`}
+            transition={{ layout: { duration: 0.5, ease: EASE }, scale: { duration: 0.25, ease: EASE } }}
+            whileHover={expandedIndex === null ? { scale: 1.02 } : undefined}
+            onHoverStart={() => setHoveredIndex(i)}
+            onHoverEnd={() => setHoveredIndex(null)}
+            style={{ transformOrigin: 'center' }}>
             <motion.div layout="position" className="work-card__media">
               <div className="work-card__chrome" aria-hidden="true">
                 <span className="work-card__dot" />
