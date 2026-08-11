@@ -112,7 +112,15 @@ const { title, description = 'Rydny Ihims. Full-stack developer and AI builder.'
         const vh = window.innerHeight;
         revealEls.forEach((el) => {
           const rect = el.getBoundingClientRect();
-          const visible = rect.top < vh * 0.85 && rect.bottom > vh * 0.15;
+          // Plain "is any part of this on screen" — the earlier version
+          // required an element to already be within the top 85% of the
+          // viewport, meant to give scroll-triggered reveals a little
+          // lead-in. It had a real side effect: anything sitting in the
+          // bottom 15% of the viewport AT LOAD (the hero's CTA row on a
+          // full-height hero, for instance) started hidden and only
+          // appeared once the user scrolled it up past that line —
+          // above-the-fold content should never need a scroll to show up.
+          const visible = rect.bottom > 0 && rect.top < vh;
           el.classList.toggle('is-visible', visible);
         });
       }

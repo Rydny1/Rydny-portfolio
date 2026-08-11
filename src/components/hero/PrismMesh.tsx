@@ -316,7 +316,7 @@ function coverDraw(ctx: CanvasRenderingContext2D, img: HTMLImageElement, dx: num
 // one face — the marble strip left showing at each edge is the seam,
 // and because it's the same mesh as the caps, there is no gap for it
 // to misalign against.
-function useSideAtlas(images: HTMLImageElement[]) {
+function useSideAtlas(images: (HTMLImageElement | null)[]) {
   return useMemo(() => {
     const canvas = document.createElement('canvas');
     canvas.width = ATLAS_W;
@@ -324,6 +324,10 @@ function useSideAtlas(images: HTMLImageElement[]) {
     const ctx = canvas.getContext('2d')!;
     drawMarble(ctx, 0, 0, ATLAS_W, ATLAS_H, 6);
     images.forEach((img, i) => {
+      // No image yet for this face (e.g. a project waiting on a real
+      // screenshot) — leave the marble showing rather than repeat
+      // another project's image or show a broken one.
+      if (!img) return;
       const segX = i * ATLAS_SEG;
       coverDraw(ctx, img, segX + SEAM, 0, ATLAS_SEG - SEAM * 2, ATLAS_H);
     });
@@ -372,14 +376,14 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
   const settleRef = useRef(0);
   const startTime = useRef<number | null>(null);
 
-  const [altays, apex, eclat] = useTexture([
-    withBase('/assets/ALTAYS_heroimg.webp'),
-    withBase('/assets/APEX_hompage.webp'),
-    withBase('/assets/Eclat_heroimg.webp'),
-  ]);
+  const [altays, apex] = useTexture([withBase('/assets/ALTAYS_heroimg.webp'), withBase('/assets/APEX_hompage.webp')]);
+  // Third face intentionally has no image yet — CLIENT TO SUPPLY a real
+  // QuickList screenshot; see the matching note in WorkGrid.tsx. Left as
+  // plain polished stone rather than repeating a project image or
+  // showing the dropped Eclat one.
   const images = useMemo(
-    () => [altays.image as HTMLImageElement, apex.image as HTMLImageElement, eclat.image as HTMLImageElement],
-    [altays, apex, eclat]
+    () => [altays.image as HTMLImageElement, apex.image as HTMLImageElement, null],
+    [altays, apex]
   );
 
   const sideAtlas = useSideAtlas(images);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { withBase } from '../../lib/base';
 import './WorkGrid.css';
@@ -7,7 +7,7 @@ const EASE = [0.22, 0.61, 0.36, 1] as const;
 
 type Project = {
   title: string;
-  image: string;
+  image: string | null;
   oneLiner: string;
   longDesc: string;
   tags: string[];
@@ -40,18 +40,65 @@ const PROJECTS: Project[] = [
     live: 'https://altaystradingllc.com',
   },
   {
-    title: 'Eclat',
-    image: withBase('/assets/Eclat_heroimg.webp'),
-    oneLiner: 'A cosmetics client site. Full details coming soon.',
-    longDesc: 'Details coming soon.',
-    tags: ['Web'],
-    placeholder: true,
+    // CLIENT TO SUPPLY: a real screenshot of QuickList. No fabricated
+    // placeholder image — the media area below shows an honest
+    // "coming soon" state instead until one exists.
+    title: 'QuickList: a classified ads platform',
+    image: null,
+    oneLiner: 'Users post listings — events, items, services — and browse what others have posted.',
+    longDesc:
+      'Each listing pins to a location on Google Maps. An admin panel controls who can do what: manage permissions, review flagged content, soft-delete posts, and track every action through an activity log. Built lean as a solo full-stack project.',
+    tags: ['Laravel', 'MySQL', 'Blade', 'Google Maps API'],
+    accentTag: 'Laravel',
+    github: 'https://github.com/Rydny1/quicklist',
   },
 ];
+
+function useLenisVisibility<T extends HTMLElement>(count: number) {
+  const refs = useRef<(T | null)[]>([]);
+  const [visible, setVisible] = useState<boolean[]>(() => new Array(count).fill(false));
+
+  useEffect(() => {
+    // Same reasoning as BaseLayout's reveal script: Lenis animates
+    // scroll independently of native window.scrollY, and a plain
+    // native 'scroll' listener can read stale positions mid-animation.
+    // Hooking Lenis's own tick keeps this in sync with what's drawn.
+    function check() {
+      const vh = window.innerHeight;
+      setVisible((prev) => {
+        let changed = false;
+        const next = refs.current.map((el, i) => {
+          if (!el) return prev[i] ?? false;
+          const rect = el.getBoundingClientRect();
+          const v = rect.bottom > 0 && rect.top < vh;
+          if (v !== prev[i]) changed = true;
+          return v;
+        });
+        return changed ? next : prev;
+      });
+    }
+    check();
+    const lenis = (window as any).__lenis;
+    if (lenis) {
+      lenis.on('scroll', check);
+    } else {
+      window.addEventListener('scroll', check, { passive: true });
+    }
+    window.addEventListener('resize', check);
+    return () => {
+      if (lenis) lenis.off('scroll', check);
+      else window.removeEventListener('scroll', check);
+      window.removeEventListener('resize', check);
+    };
+  }, []);
+
+  return { refs, visible };
+}
 
 export default function WorkGrid() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { refs, visible } = useLenisVisibility<HTMLElement>(PROJECTS.length);
 
   return (
     <div className="work-grid">
@@ -62,8 +109,9 @@ export default function WorkGrid() {
         return (
           <motion.article
             key={project.title}
+            ref={(el) => (refs.current[i] = el)}
             layout
-            className={`work-card fade-only${dimmed ? ' work-card--dimmed' : ''}${peerFaded ? ' work-card--peer-faded' : ''}`}
+            className={`work-card${visible[i] ? ' is-visible' : ''}${dimmed ? ' work-card--dimmed' : ''}${peerFaded ? ' work-card--peer-faded' : ''}`}
             transition={{ layout: { duration: 0.5, ease: EASE }, scale: { duration: 0.2, ease: EASE } }}
             whileHover={expandedIndex === null ? { scale: 1.02 } : undefined}
             onHoverStart={() => setHoveredIndex(i)}
@@ -76,7 +124,11 @@ export default function WorkGrid() {
                 <span className="work-card__dot" />
                 <span className="work-card__url" />
               </div>
-              <img src={project.image} alt={`${project.title} screenshot`} loading="lazy" />
+              {project.image ? (
+                <img src={project.image} alt={`${project.title} screenshot`} loading="lazy" />
+              ) : (
+                <div className="work-card__media-pending">Screenshot coming soon</div>
+              )}
             </motion.div>
 
             <motion.div layout="position" className="work-card__body">

@@ -14,22 +14,32 @@
 .work-card {
   border: 1px solid var(--hairline);
   background: var(--bg-light-elev);
-  /* Opacity's own transition timing belongs to .fade-only (global.css) —
-     declaring it again here as part of this shorthand would silently
-     replace that 1800ms viewport fade with this 400ms one, since
-     `transition` sets the whole list, not just the property named. */
-  transition: border-color var(--dur-fast) var(--ease);
+  /* Visibility is tracked in React state (WorkGrid.tsx), not toggled by
+     an external script — an outside script mutating classList on a
+     component that re-renders on its own (hover, expand) gets its
+     change silently wiped the next time React re-renders that
+     className from scratch. This was the "card disappears on hover"
+     bug: hovering set React state, which re-rendered the className
+     without the is-visible an external script had added. */
+  opacity: 0;
+  transition:
+    opacity var(--dur-base) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.work-card.is-visible {
+  opacity: 1;
 }
 
 .work-card:hover {
   border-color: var(--accent-ui);
 }
 
-.work-card--dimmed {
+.work-card.work-card--dimmed {
   opacity: 0.45;
 }
 
-.work-card--peer-faded {
+.work-card.work-card--peer-faded {
   opacity: 0.55;
 }
 
@@ -62,12 +72,25 @@
   opacity: 0.6;
 }
 
-.work-card__media img {
+.work-card__media img,
+.work-card__media-pending {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  /* Matches the screenshots' own aspect (~2.15:1) — 16:10 was cropping
+     roughly a third of the width off both sides of every screenshot,
+     cutting the headline text visible in the source images. */
+  aspect-ratio: 2.15;
   object-fit: cover;
   object-position: center top;
+}
+
+.work-card__media-pending {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-dark-elev);
+  color: var(--text-on-dark-mute);
+  font-size: var(--fs-14);
 }
 
 .work-card__body {
