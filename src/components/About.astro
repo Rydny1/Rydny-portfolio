@@ -1,10 +1,5 @@
 ---
 import { withBase } from '../lib/base';
-
-const stats = [
-  { number: '3+', label: 'Years Experience' },
-  { number: '5+', label: 'Projects Delivered' },
-];
 ---
 
 <section class="about section" id="about">
@@ -36,29 +31,13 @@ const stats = [
 
       <p class="about__bio">
         My name is Rydny. I build and ship web products and AI systems that work. From Cameroon to
-        Dubai, now studying Computer Science at the University of Latvia in Riga. I communicate in
+        Dubai, now pursuing a Computer Science degree at the University of Latvia. I communicate in
         English and French.
       </p>
       <p class="about__bio">
         I focus on efficiency, optimization, conversion, and getting the details right. I move
         fast with direction. If it goes live, it is polished.
       </p>
-      <p class="about__bio">
-        New city, new skill, new angle on a problem. I left home early, built in the intensity of
-        Dubai, moved to Europe and started learning a completely different way of thinking. I move
-        between Dubai and Riga now, and I am still going.
-      </p>
-
-      <div class="about__stats">
-        {
-          stats.map((s) => (
-            <div class="stat-row">
-              <span class="stat-row__number">{s.number}</span>
-              <span class="stat-row__label">{s.label}</span>
-            </div>
-          ))
-        }
-      </div>
     </div>
   </div>
 </section>
@@ -129,34 +108,4 @@ const stats = [
     max-width: 65ch;
   }
 
-  .about__stats {
-    display: flex;
-    gap: 48px;
-    margin-top: 32px;
-    padding-top: 28px;
-    border-top: 1px solid var(--hairline);
-  }
-
-  .stat-row {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .stat-row__number {
-    font-family: var(--font-display);
-    font-size: var(--fs-40);
-    font-weight: 500;
-    line-height: 1;
-    color: var(--text);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .stat-row__label {
-    font-size: var(--fs-12);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-  }
 </style>

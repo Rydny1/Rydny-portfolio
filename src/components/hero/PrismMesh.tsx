@@ -10,19 +10,20 @@ const MARBLE_BASE = '#1b1714';
 // ============================================================
 // GEOMETRY — a real triangular prism, ONE continuous solid.
 //
-// Earlier attempts built this from 3 separate box slabs plus 2
-// hand-placed triangle caps. Getting all 5 pieces' vertices to land on
-// exactly the same edge, every time, at every angle, turned out to be
-// impossible to keep aligned — the result always read as separate
-// panels glued together, not stone. A THREE.CylinderGeometry with
-// radialSegments=3 IS a triangular prism: the sides and both caps are
-// vertices of a single BufferGeometry, so there is no seam to
-// misalign in the first place.
+// Earlier attempts built this from separate pieces (box slabs plus
+// hand-placed triangle caps, then later three.js's CylinderGeometry).
+// Getting separately-built pieces' vertices to land on exactly the
+// same edge, every time, at every angle, turned out to be impossible
+// to keep aligned — the result always read as panels glued together,
+// not stone. buildPrismGeometry() (below) constructs sides and both
+// caps from ONE shared vertex ring, so there is no seam to misalign in
+// the first place — same property CylinderGeometry had, but with an
+// arbitrary (rounded-corner) cross-section instead of a regular N-gon.
 // ============================================================
 const CIRCUM_RADIUS = 1.62;
 const HEIGHT = 1.3;
 const BASE_TILT = 0.5;
-const BASE_SCALE = 0.82; // Reduced by ~18% (1.0 * 0.82)
+const BASE_SCALE = 0.82;
 // CylinderGeometry maps V (0-1) across HEIGHT and U across the
 // circumference, so each side face's true on-mesh aspect is
 // (triangle side length) / HEIGHT, not square. Drawing the atlas at a
@@ -34,7 +35,152 @@ const FACE_ASPECT = (2 * CIRCUM_RADIUS * Math.sin(Math.PI / 3)) / HEIGHT;
 const ATLAS_H = 512;
 const ATLAS_SEG = Math.round(ATLAS_H * FACE_ASPECT);
 const ATLAS_W = ATLAS_SEG * 3;
-const SEAM = ATLAS_SEG * 0.02;
+// Wider than before: the rounded corners now live right at each atlas
+// third's boundary (see buildPrismGeometry below), so the seam needs to
+// comfortably clear the corner's own arc-length share of the UV range,
+// not just look good as a hairline.
+const SEAM = ATLAS_SEG * 0.045;
+
+// Soft edges: bevel radius is 3% of the shortest edge (HEIGHT), 4
+// segments per corner — the corners of the triangle get a small rounded
+// fillet instead of a knife edge. Built as one continuous polygon ring
+// extruded into sides + two fan caps (not three.js's CylinderGeometry,
+// which only supports a regular N-gon — a triangle with rounded-but-
+// still-90°-ish corners needs an arbitrary cross-section), so side
+// walls and both caps still share exactly the same vertices at the rim
+// — there is still no seam for the pieces to misalign against.
+const BEVEL_RADIUS = HEIGHT * 0.03;
+const BEVEL_SEGMENTS = 4;
+
+type Pt = [number, number];
+
+function buildRoundedTriangleRing(radius: number, cornerRadius: number, segments: number): Pt[] {
+  const cornerAngles = [Math.PI / 3, Math.PI, (5 * Math.PI) / 3];
+  const interiorHalf = Math.PI / 6; // half of the triangle's 60° interior angle
+  const centerDist = cornerRadius / Math.sin(interiorHalf);
+  const sweep = (Math.PI * 2) / 3; // 120°, the exterior turn angle at each corner
+  const points: Pt[] = [];
+  for (const a of cornerAngles) {
+    const vx = Math.sin(a) * radius;
+    const vz = Math.cos(a) * radius;
+    const cx = vx - Math.sin(a) * centerDist;
+    const cz = vz - Math.cos(a) * centerDist;
+    const baseAngle = Math.atan2(vx - cx, vz - cz);
+    for (let s = 0; s <= segments; s++) {
+      const ang = baseAngle - sweep / 2 + (sweep * s) / segments;
+      points.push([cx + Math.sin(ang) * cornerRadius, cz + Math.cos(ang) * cornerRadius]);
+    }
+  }
+  return points;
+}
+
+// Per-vertex normal = average of its two adjacent edge normals — this
+// alone is what makes the corner read as a smooth curve instead of a
+// hard crease; the straight runs get the same (coplanar) normal on
+// both sides so they still read flat.
+function ringVertexNormals(ring: Pt[]): Pt[] {
+  const n = ring.length;
+  const edgeNormals: Pt[] = [];
+  for (let i = 0; i < n; i++) {
+    const p1 = ring[i];
+    const p2 = ring[(i + 1) % n];
+    const dx = p2[0] - p1[0];
+    const dz = p2[1] - p1[1];
+    let nx = dz;
+    let nz = -dx;
+    const len = Math.hypot(nx, nz) || 1;
+    nx /= len;
+    nz /= len;
+    const midX = (p1[0] + p2[0]) / 2;
+    const midZ = (p1[1] + p2[1]) / 2;
+    if (nx * midX + nz * midZ < 0) {
+      nx = -nx;
+      nz = -nz;
+    }
+    edgeNormals.push([nx, nz]);
+  }
+  return ring.map((_, i) => {
+    const e1 = edgeNormals[(i - 1 + n) % n];
+    const e2 = edgeNormals[i];
+    const nx = e1[0] + e2[0];
+    const nz = e1[1] + e2[1];
+    const len = Math.hypot(nx, nz) || 1;
+    return [nx / len, nz / len] as Pt;
+  });
+}
+
+function buildPrismGeometry(radius: number, height: number, cornerRadius: number, segments: number) {
+  const ring = buildRoundedTriangleRing(radius, cornerRadius, segments);
+  const normals2D = ringVertexNormals(ring);
+  const n = ring.length;
+
+  // Arc-length U, not per-vertex-index U: the straight runs (where the
+  // screenshots live) are most of the perimeter, the rounded corners
+  // are a sliver — U needs to reflect that or the screenshots stretch.
+  const cumulative: number[] = [0];
+  for (let i = 0; i < n; i++) {
+    const p1 = ring[i];
+    const p2 = ring[(i + 1) % n];
+    cumulative.push(cumulative[i] + Math.hypot(p2[0] - p1[0], p2[1] - p1[1]));
+  }
+  const perimeter = cumulative[n];
+
+  const positions: number[] = [];
+  const normals: number[] = [];
+  const uvs: number[] = [];
+  const indices: number[] = [];
+
+  for (let i = 0; i <= n; i++) {
+    const p = ring[i % n];
+    const nrm = normals2D[i % n];
+    const u = cumulative[i] / perimeter;
+    positions.push(p[0], -height / 2, p[1], p[0], height / 2, p[1]);
+    normals.push(nrm[0], 0, nrm[1], nrm[0], 0, nrm[1]);
+    uvs.push(u, 0, u, 1);
+  }
+  for (let i = 0; i < n; i++) {
+    const a = i * 2;
+    const b = i * 2 + 1;
+    const c = (i + 1) * 2;
+    const d = (i + 1) * 2 + 1;
+    indices.push(a, c, b, b, c, d);
+  }
+  const sideVertCount = indices.length;
+
+  function buildCap(y: number, flip: boolean) {
+    const startIndex = positions.length / 3;
+    positions.push(0, y, 0);
+    normals.push(0, flip ? -1 : 1, 0);
+    uvs.push(0.5, 0.5);
+    for (const p of ring) {
+      positions.push(p[0], y, p[1]);
+      normals.push(0, flip ? -1 : 1, 0);
+      uvs.push(p[0] / (2 * radius) + 0.5, p[1] / (2 * radius) + 0.5);
+    }
+    const capIndices: number[] = [];
+    for (let i = 0; i < n; i++) {
+      const cur = startIndex + 1 + i;
+      const next = startIndex + 1 + ((i + 1) % n);
+      if (flip) capIndices.push(startIndex, next, cur);
+      else capIndices.push(startIndex, cur, next);
+    }
+    indices.push(...capIndices);
+    return capIndices.length;
+  }
+
+  const topCount = buildCap(height / 2, false);
+  const bottomCount = buildCap(-height / 2, true);
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geo.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+  geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  geo.setIndex(indices);
+  geo.addGroup(0, sideVertCount, 0);
+  geo.addGroup(sideVertCount, topCount, 1);
+  geo.addGroup(sideVertCount + topCount, bottomCount, 2);
+  return geo;
+}
 
 // ============================================================
 // MARBLE — procedural, canvas-based. Real dark marble reads as close
@@ -87,31 +233,45 @@ function drawMarble(ctx: CanvasRenderingContext2D, x: number, y: number, w: numb
 
   ctx.shadowBlur = 0;
   ctx.globalAlpha = 1;
-  ctx.fillStyle = '#0d0b0a'; // Darker base
+  ctx.fillStyle = MARBLE_BASE;
   ctx.fillRect(x, y, w, h);
 
-  // Add more subtle clouding for depth
-  for (let i = 0; i < 5; i++) {
+  // Soft tonal clouding underneath the veins — this is what keeps a
+  // marble surface from looking like a flat cutout.
+  for (let i = 0; i < 4; i++) {
     const cx = x + Math.random() * w;
     const cy = y + Math.random() * h;
-    const r = w * (0.4 + Math.random() * 0.4);
+    const r = w * (0.3 + Math.random() * 0.3);
     const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-    grad.addColorStop(0, 'rgba(25,23,21,0.25)');
+    grad.addColorStop(0, 'rgba(15,13,11,0.28)');
     grad.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = grad;
     ctx.fillRect(x, y, w, h);
   }
 
-  const veinColors = ['rgba(160,150,135,0.7)', 'rgba(100,90,80,0.8)']; // Muted veins
-  for (let i = 0; i < veinCount + 4; i++) {
+  // A handful of elegant, sparse veins with short branches — real dark
+  // marble reads as mostly uniform with a few wandering threads, not a
+  // dense network of scratches.
+  const veinColors = ['rgba(196,186,169,1)', 'rgba(150,140,124,1)'];
+  for (let i = 0; i < veinCount; i++) {
     const fromLeft = Math.random() < 0.5;
     const startX = fromLeft ? x - 20 : x + w + 20;
-    const startY = y + Math.random() * h;
+    const startY = y + Math.random() * h * 0.8 + h * 0.05;
     const endX = fromLeft ? x + w + 20 : x - 20;
-    const endY = y + Math.random() * h;
-    const path = randomWanderingPath(startX, startY, endX, endY, 8, h * 0.2);
+    const endY = y + Math.random() * h * 0.8 + h * 0.05;
+    const path = randomWanderingPath(startX, startY, endX, endY, 6, h * 0.14);
     const color = veinColors[i % veinColors.length];
-    drawVein(ctx, path, 0.8 + Math.random() * 1.5, color, 0.3 + Math.random() * 0.2);
+    drawVein(ctx, path, 1.6 + Math.random() * 1.0, color, 0.42 + Math.random() * 0.15);
+
+    if (path.length > 4 && Math.random() < 0.6) {
+      const branchStart = path[2 + Math.floor(Math.random() * 2)];
+      const branchEnd: [number, number] = [
+        branchStart[0] + (Math.random() - 0.5) * w * 0.3,
+        branchStart[1] + (Math.random() - 0.5) * h * 0.3,
+      ];
+      const branchPath = randomWanderingPath(branchStart[0], branchStart[1], branchEnd[0], branchEnd[1], 4, h * 0.08);
+      drawVein(ctx, branchPath, 0.6 + Math.random() * 0.4, color, 0.22);
+    }
   }
 
   ctx.globalAlpha = 1;
@@ -223,7 +383,7 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
   );
 
   const sideAtlas = useSideAtlas(images);
-  const cylinderGeo = useMemo(() => new THREE.CylinderGeometry(CIRCUM_RADIUS, CIRCUM_RADIUS, HEIGHT, 3, 1, false), []);
+  const prismGeo = useMemo(() => buildPrismGeometry(CIRCUM_RADIUS, HEIGHT, BEVEL_RADIUS, BEVEL_SEGMENTS), []);
 
   const sideMaterial = useMemo(
     () =>
@@ -237,6 +397,10 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
         clearcoat: 0.35,
         clearcoatRoughness: 0.3,
         envMapIntensity: 0.12,
+        // Hand-rolled geometry — DoubleSide is a deliberate safety net
+        // against a winding-order mistake rather than a look we need;
+        // negligible cost on an object this small.
+        side: THREE.DoubleSide,
       }),
     [sideAtlas]
   );
@@ -247,25 +411,25 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
     ctx.direction = 'rtl';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = `${Math.round(w * 0.22)}px "Noto Naskh Arabic", serif`; // Reduced scale from 0.32
+    ctx.font = `${Math.round(w * 0.32)}px "Noto Naskh Arabic", serif`;
     const x = w / 2;
-    const y = h / 2 + h * 0.02; // Adjusted position
+    const y = h / 2;
     // Recessed-engraving look: a soft dark shadow offset down-right
     // (the carved groove) and a crisp light rim offset up-left (the
     // catch-light on the cut edge), both tight to the letterforms so
     // they read as depth, not a double-printed smear.
-    ctx.shadowColor = 'rgba(0,0,0,0.6)';
-    ctx.shadowBlur = 2;
-    ctx.shadowOffsetX = 1.5;
-    ctx.shadowOffsetY = 2;
+    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+    ctx.shadowBlur = 6;
+    ctx.shadowOffsetX = 3;
+    ctx.shadowOffsetY = 4;
     ctx.fillStyle = 'rgba(6,5,4,0.95)';
     ctx.fillText('إتقان', x, y);
     ctx.shadowColor = 'transparent';
     ctx.shadowBlur = 0;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
-    ctx.fillStyle = 'rgba(214,204,188,0.3)';
-    ctx.fillText('إتقان', x - 0.7, y - 0.7);
+    ctx.fillStyle = 'rgba(214,204,188,0.5)';
+    ctx.fillText('إتقان', x - 1.5, y - 1.5);
   }, '175px "Noto Naskh Arabic"');
 
   const monogramTexture = useMarbleTextTexture((ctx, w, h) => {
@@ -299,6 +463,7 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
     // flat white. Verified by direct screenshot comparison — do not
     // raise this without re-checking visually.
     envMapIntensity: 0,
+    side: THREE.DoubleSide,
   };
 
   const topMaterial = useMemo(
@@ -353,7 +518,7 @@ export default function PrismMesh({ reduceMotion }: { reduceMotion: boolean }) {
         <Lightformer intensity={0.3} color={SILVER} position={[3, 0.5, 2]} rotation={[0, -Math.PI / 2, 0]} scale={[3, 2, 1]} />
       </Environment>
 
-      <mesh geometry={cylinderGeo} material={materials} />
+      <mesh geometry={prismGeo} material={materials} />
     </group>
   );
 }
