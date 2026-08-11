@@ -23,13 +23,13 @@ const bgShapes = [
       bgShapes.map((s) => (
         <div
           class={`bg-shape bg-shape--${s.color}`}
-          style={`top:${s.top}; left:${s.left}; width:${s.w}px; height:${s.h}px; --op:${s.op}; --dur:${s.dur}s; --delay:${s.delay}s; --light-dur:${s.lightDur}s; --light-delay:${s.lightDelay}s;`}
+          style={`top:${s.top}; left:${s.left}; width:${s.w}px; height:${s.h}px; --dur:${s.dur}s; --delay:${s.delay}s; --light-dur:${s.lightDur}s; --light-delay:${s.lightDelay}s;`}
         />
       ))
     }
   </div>
   <div class="container hero__inner">
-    <div class="hero__content" style="animation-delay: 1.5s;">
+    <div class="hero__content">
       <p class="hero__badge reveal">Available for work. Riga and remote.</p>
 
       <h1 class="hero__name reveal">Rydny Ihims</h1>
@@ -80,14 +80,19 @@ const bgShapes = [
 
   .bg-shape {
     position: absolute;
-    border: 1px solid var(--pewter);
-    opacity: var(--op);
+    /* Grid line itself stays near-invisible (3-5%) — the light-sweep
+       below is what actually carries this element, and it lives on a
+       ::before child, so it must NOT inherit this via the parent's
+       `opacity` (that would dim the sweep by the same amount). Alpha
+       goes on the border color directly instead. */
+    border: 1px solid color-mix(in srgb, var(--pewter) 4%, transparent);
+    opacity: 1;
     animation: bg-breathe var(--dur) ease-in-out var(--delay) infinite alternate;
-    will-change: opacity, transform;
+    will-change: transform;
   }
 
   .bg-shape--brushed {
-    border-color: var(--brushed);
+    border-color: color-mix(in srgb, var(--brushed) 4%, transparent);
   }
 
   /* A bright segment travels once around this shape's own perimeter,
@@ -115,11 +120,9 @@ const bgShapes = [
 
   @keyframes bg-breathe {
     from {
-      opacity: calc(var(--op) * 0.35);
       transform: scale(1);
     }
     to {
-      opacity: var(--op);
       transform: scale(1.035);
     }
   }
@@ -133,7 +136,6 @@ const bgShapes = [
   @media (prefers-reduced-motion: reduce) {
     .bg-shape {
       animation: none;
-      opacity: calc(var(--op) * 0.7);
     }
 
     .bg-shape::before {
@@ -175,7 +177,7 @@ const bgShapes = [
     font-weight: 500;
     line-height: 1;
     letter-spacing: -0.01em;
-    color: var(--text);
+    color: #f5f1e8;
     margin-bottom: 20px;
   }
 
@@ -183,7 +185,7 @@ const bgShapes = [
     font-family: var(--font-display);
     font-size: clamp(var(--fs-22), 2vw + 0.5rem, var(--fs-28));
     font-weight: 500;
-    color: var(--text-secondary);
+    color: rgba(245, 241, 232, 0.8);
     margin-bottom: 20px;
   }
 
@@ -221,18 +223,16 @@ const bgShapes = [
     order: -1;
   }
 
-  /* Mobile — close to one viewport on load without cramming everything
-     together. A little scroll is better than losing the organized,
-     spaced-out feel entirely. */
+  /* Mobile — the whole hero must fit in one viewport height, no scroll. */
   @media (max-width: 480px) {
     .hero {
-      min-height: 90svh;
-      padding-top: calc(var(--nav-h) + 8px);
+      min-height: 100svh;
+      padding-top: calc(var(--nav-h) + 5px);
     }
 
     .hero__inner {
-      gap: 40px;
-      padding-block: 24px;
+      gap: 28px;
+      padding-block: 14px;
     }
 
     .hero__badge {
@@ -261,7 +261,7 @@ const bgShapes = [
     }
   }
 
-  @media (min-width: 900px) {
+  @media (min-width: 768px) {
     .hero__visual {
       order: 0;
     }

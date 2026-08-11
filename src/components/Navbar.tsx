@@ -129,7 +129,7 @@ export default function Navbar() {
                 </motion.a>
               ))}
               <GlassButton href={withBase('/#contact')} className="mobile-nav__cta">
-                Hire Me
+                Get in touch
               </GlassButton>
             </nav>
           </motion.div>

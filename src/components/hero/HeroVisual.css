@@ -31,6 +31,14 @@
 
 
 
+@media (max-width: 480px) {
+  .hero-visual__stage {
+    width: 30vh;
+    max-width: 30vh;
+    height: 30vh;
+  }
+}
+
 .hero-visual__stage:focus-visible {
   outline: 2px solid var(--brushed);
   outline-offset: 6px;
