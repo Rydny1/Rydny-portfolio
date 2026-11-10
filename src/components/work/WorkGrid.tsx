@@ -50,7 +50,6 @@ const PROJECTS: Project[] = [
       'Each listing pins to a location on Google Maps. An admin panel controls who can do what: manage permissions, review flagged content, soft-delete posts, and track every action through an activity log. Built lean as a solo full-stack project.',
     tags: ['Laravel', 'MySQL', 'Blade', 'Google Maps API'],
     accentTag: 'Laravel',
-    github: 'https://github.com/Rydny1/quicklist',
   },
 ];
 
