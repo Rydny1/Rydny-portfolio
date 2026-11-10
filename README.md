@@ -2,6 +2,10 @@
 
 **A single page that has to do the work of a first meeting.**
 
+[Live site](https://rydny1.github.io/Rydny-portfolio/)
+
+![Portfolio home](docs/home.png)
+
 It shows three things I have shipped, says who I am in a paragraph, and gets out of the way. Built for the people who decide whether to hire me, not for a general audience.
 
 ## What it is
