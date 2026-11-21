@@ -13,7 +13,7 @@ export const copy = {
       { label: 'About', href: '#about' },
       { label: 'Contact', href: '#contact' },
     ],
-    cta: { label: 'Get in touch', href: '#contact' },
+    cta: { label: "Let's talk", href: '#contact' },
     city: 'Riga',
     skip: 'Skip to content',
   },
@@ -21,8 +21,8 @@ export const copy = {
     line1: 'Find the problem',
     line2: 'Build the fix.',
     lead: 'I turn slow, manual processes into software and automations that run on their own.',
-    primary: { label: 'See the proof', href: '#work' },
-    secondary: { label: "Tell me what you're working on", href: '#contact' },
+    primary: { label: "Let's talk", href: '#contact' },
+    secondary: { label: 'See the work', href: '#work' },
     facts: [
       { title: 'End to end', text: 'Idea, design, build, launch' },
       { title: '5+ products', text: 'Built from zero' },
@@ -34,6 +34,7 @@ export const copy = {
     title: 'Proof.',
     lead: 'Three problems. Three working fixes.',
     labels: { problem: 'Problem', fix: 'Fix', result: 'Result' },
+    ask: { label: "Want something like this? Let's talk.", href: '#contact' },
     more: {
       prefix: 'More:',
       items: [
@@ -67,11 +68,9 @@ export const copy = {
     caption: 'Rydny Ihims, Riga 2026',
     alt: 'Portrait of Rydny Ihims',
     paragraphs: [
-      "I'm Rydny Ihims. I build software and automations.",
-      'The problems I get handed usually start as lost time. Lost money. Someone doing the same task by hand, every day.',
-      'My job: find where it breaks, design the fix, build it, and make sure it keeps running.',
-      'Raised in Cameroon. Lived in Dubai. Now in Riga, studying Computer Science at the University of Latvia. I work in English and French.',
-      'First place at the Global Challenge Hackathon, for a WhatsApp system that sends leftover canteen food to hungry students.',
+      "I'm Rydny. I build software and automations for people whose work has outgrown doing it by hand.",
+      'I start by finding where the time goes. Then I design the fix, build it, and stay with it until it runs on its own.',
+      'I grew up in Cameroon, lived in Dubai, and now study Computer Science at the University of Latvia in Riga. I work in English and French, and I enter hackathons whenever I can.',
     ],
     quote: { text: 'What stands in the way becomes the way.', cite: 'Marcus Aurelius, Meditations' },
     tools: ['React', 'Next.js', 'TypeScript', 'Python', 'Laravel', 'MySQL', 'n8n', 'REST APIs'],

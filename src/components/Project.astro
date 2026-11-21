@@ -24,6 +24,7 @@ const L = copy.proof.labels;
       <dt>{L.result}</dt><dd>{p.result}</dd>
     </dl>
     <MiniFlow steps={p.flow} />
+    <a class="link ask" href={copy.proof.ask.href}>{copy.proof.ask.label}</a>
     {p.links.length > 0 && (
       <ul class="links">
         {p.links.map((l) => (
@@ -40,7 +41,7 @@ const L = copy.proof.labels;
     grid-template-columns: 7fr 5fr;
     gap: var(--s-8);
     align-items: start;
-    padding-block: var(--s-8);
+    padding-block: var(--s-6);
     border-top: 1px solid var(--hairline);
   }
   .shot {
@@ -91,6 +92,10 @@ const L = copy.proof.labels;
   .links {
     display: flex;
     gap: var(--s-3);
+    margin-top: var(--s-3);
+  }
+  .ask {
+    display: inline-block;
     margin-top: var(--s-3);
   }
   @media (max-width: 899px) {

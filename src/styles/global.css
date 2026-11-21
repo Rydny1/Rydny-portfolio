@@ -113,9 +113,8 @@ ul {
   text-decoration: none;
 }
 
-/* Progressive enhancement: only hide for reveals once JS has added .js */
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: no-preference) {
   html {
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
   }
 }
