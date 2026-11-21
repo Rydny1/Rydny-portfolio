@@ -75,6 +75,8 @@ try {
     [360, 640], [375, 667], [390, 844], [393, 852], [412, 915], [430, 932], [844, 390], [667, 375],
     [768, 1024], [820, 1180], [1024, 768], [1024, 1366], [1180, 820],
     [1280, 720], [1280, 800], [1366, 768], [1440, 900], [1536, 864], [1680, 1050], [1920, 1080], [2560, 1440], [3440, 1440],
+    // laptops with the browser UI taken off (Windows scaling): the real CSS viewports
+    [1536, 695], [1366, 657], [1280, 601], [1440, 789], [1920, 969], [2560, 1271],
   ];
   for (const [w, h] of devices) {
     const ctx = await browser.newContext({ viewport: { width: w, height: h }, reducedMotion: 'reduce' });

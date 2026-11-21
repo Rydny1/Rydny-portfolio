@@ -21,7 +21,7 @@ The bright orange (#FF5A1F) reads slightly neon next to the faded vintage green 
 ## 3. Mobile hero fixes (see `mobile-hero-current.png`)
 
 - **The orange node is cut off at the right edge** (about one third of the way down). Every node, pill and the light must stay inside the safe area: at least 16px from every edge. Re-route the curve if needed.
-- **The meta row crowds:** "Software and automation" and "Riga 00:45 GMT+2" nearly touch. On phones, drop it to 12px, show the time as "Riga 00:45" (no GMT), and keep at least 24px between them.
+- **The meta row crowds:** "Software and automation" and "Riga 00:45 GMT+2" nearly touch. **"Software and automation" keeps its current size and weight on phones.** It is Rydny's role and the summary of the whole site, so never shrink or hide it. Make room by shrinking only the time: 11 to 12px, quieter colour (mist), shown as "Riga 00:45" (no GMT). Keep at least 24px between the two. If they still collide at 360px, move the time onto its own line below.
 - With "Remote" removed (pass 5), the facts become two columns with room to breathe.
 - The headline size is right. Do not change it.
 - The line currently stops above "Build" with a loose tail. Make it land on a clear end node, just above and to the left of the "B", lined up with the text's left edge.

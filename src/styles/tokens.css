@@ -80,7 +80,7 @@
   /* layout */
   --max: 1280px;
   --pad: clamp(20px, 5vw, 64px);
-  --section-y: clamp(72px, 12vh, 152px);
+  --section-y: clamp(72px, round(12vh, 8px), 152px);
   --radius-pill: 999px;
   --radius-badge: 4px;
   --measure: 62ch;

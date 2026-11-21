@@ -186,7 +186,10 @@ const { contact: c } = copy;
     display: block;
     font: 500 16px/1.2 var(--font-body);
     letter-spacing: 0;
-    padding: 10px var(--s-2);
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--s-2);
     border: 1px solid rgb(238 233 227 / 0.45);
     border-radius: var(--radius-pill);
     transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
@@ -251,7 +254,7 @@ const { contact: c } = copy;
 
   .big {
     overflow: hidden;
-    padding-bottom: 0.14em;
+    padding-bottom: var(--s-4);
     font-family: var(--font-display);
     font-size: min(14.2vw, 206px);
     font-weight: 380;

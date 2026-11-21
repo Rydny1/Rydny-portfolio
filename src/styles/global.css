@@ -110,7 +110,8 @@ ul {
   overflow: hidden;
   display: inline-flex;
   align-items: center;
-  padding: 14px 40px 14px 24px;
+  min-height: 48px;
+  padding: 0 40px 0 var(--s-3);
   border: 0;
   border-radius: var(--radius-pill);
   background: var(--signal-fill);
@@ -160,7 +161,7 @@ ul {
   }
 }
 
-/* Glass cursor (fine pointers only; the script adds .has-cursor, so nothing is hidden without JS) */
+/* Leaf cursor (fine pointers only; the script adds .has-cursor, so nothing is hidden without JS) */
 html.has-cursor,
 html.has-cursor * {
   cursor: none;
@@ -173,54 +174,59 @@ html.has-cursor :where(input, textarea, select) {
   left: 0;
   top: 0;
   z-index: 9999;
-  width: 64px;
-  height: 64px;
-  margin: -32px 0 0 -32px;
+  width: 0;
+  height: 0;
   pointer-events: none;
   opacity: 0;
+  mix-blend-mode: multiply;
   transition: opacity 0.25s var(--ease);
   will-change: transform;
 }
 .cursor.on {
   opacity: 1;
 }
-.cursor .ring {
+.cursor .leaf {
   position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: rgb(255 255 255 / 0.16);
-  border: 1px solid rgb(255 255 255 / 0.9);
-  box-shadow: 0 0 0 1px rgb(31 32 35 / 0.22), 0 6px 20px rgb(31 32 35 / 0.12);
-  backdrop-filter: blur(6px) saturate(1.7);
-  -webkit-backdrop-filter: blur(6px) saturate(1.7);
-  transform: scale(0.3);
-  transition: transform 0.4s var(--ease), background-color 0.3s var(--ease);
+  left: 0;
+  top: 0;
+  overflow: visible;
+  will-change: transform;
 }
-.cursor.link .ring {
-  transform: scale(0.85);
-  background: rgb(255 255 255 / 0.1);
+.cursor .blade {
+  fill: var(--green);
+  fill-opacity: 0.55;
+  stroke: var(--green);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: fill-opacity 0.3s var(--ease);
 }
-.cursor.view .ring {
-  transform: scale(1.5);
-  background: rgb(255 255 255 / 0.22);
+.cursor .vein {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 1;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.8;
 }
-.cursor.down .ring {
-  transform: scale(0.22);
+.cursor.link .blade {
+  fill-opacity: 0.75;
 }
 .cursor .label {
   position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font: 600 11px/1 var(--font-body);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  left: 16px;
+  top: -9px;
+  white-space: nowrap;
+  font: 600 12px/18px var(--font-body);
+  letter-spacing: 0.04em;
   color: var(--ink);
   opacity: 0;
-  transition: opacity 0.25s var(--ease);
+  transform: translateX(-4px);
+  transition: opacity 0.25s var(--ease), transform 0.3s var(--ease);
 }
 .cursor.view .label {
   opacity: 1;
+  transform: none;
 }
 
 /* Page wire */
