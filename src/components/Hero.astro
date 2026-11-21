@@ -103,7 +103,7 @@ const { hero } = copy;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background: linear-gradient(90deg, rgb(246 241 234 / 0.5), rgb(246 241 234 / 0.2) 60%, transparent 80%);
+    background: linear-gradient(90deg, rgb(246 241 234 / 0.5), rgb(246 241 234 / 0.2) 60%, transparent 80%), rgb(140 160 128 / 0.16);
   }
   .inner {
     position: relative;
@@ -116,6 +116,7 @@ const { hero } = copy;
     flex-direction: column;
   }
   h1 {
+    color: var(--green);
     font-size: var(--fs-hero);
     font-weight: 380;
     letter-spacing: -0.045em;

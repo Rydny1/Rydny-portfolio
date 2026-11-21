@@ -60,10 +60,15 @@ const { nav, contact } = copy;
   /* Progressive blur: two layers, both masked so the blur is strongest at the top and fades to nothing at the
      bottom (the lower third is fully clear). The tint is light, so content scrolling behind stays visible and
      nobody notices a bar. Opacity only toggles on scroll. */
+  .nav {
+    isolation: isolate;
+  }
+  /* z-index -1: the glass is a background only, always behind the logo, links and button */
   .nav::before,
   .nav::after {
     content: '';
     position: absolute;
+    z-index: -1;
     inset: 0 0 auto 0;
     height: 64px;
     opacity: 0;
