@@ -7,11 +7,23 @@ const { proof } = copy;
 
 <section class="proof" id="work" aria-labelledby="proof-title" data-node>
   <div class="wrap">
-    <div class="head" data-reveal>
-      <h2 id="proof-title">{proof.title}<span class="fs">.</span></h2>
-      <p class="lead">{proof.lead}</p>
+    <div class="head">
+      <h2 id="proof-title" data-title>{proof.title}<span class="fs">.</span></h2>
+      <p class="lead" data-reveal data-delay="120">{proof.lead}</p>
     </div>
-    {projects.map((p) => <Project project={p} />)}
+  </div>
+
+  <div class="wrap rail-wrap">
+    <div class="rail" data-rail tabindex="0" role="region" aria-label="Projects, swipe or scroll sideways">
+      {projects.map((p) => <Project project={p} />)}
+    </div>
+    <div class="progress" aria-hidden="true">
+      <span class="count"><b data-rail-now>01</b> / {String(projects.length).padStart(2, '0')}</span>
+      <span class="track"><i data-rail-bar></i></span>
+    </div>
+  </div>
+
+  <div class="wrap">
     <p class="more">
       {proof.more.prefix}{' '}
       {proof.more.items.map((m, i) => (
@@ -45,6 +57,9 @@ const { proof } = copy;
     max-width: 26ch;
     margin-bottom: var(--s-2);
   }
+  .progress {
+    display: none;
+  }
   .more {
     border-top: 1px solid var(--hairline);
     padding-top: var(--s-4);
@@ -54,10 +69,89 @@ const { proof } = copy;
   .more :global(a) {
     color: var(--ink);
   }
+
   @media (max-width: 899px) {
     .head {
       flex-direction: column;
       align-items: flex-start;
+      gap: var(--s-2);
+    }
+    .rail-wrap {
+      padding-inline: 0;
+    }
+    .rail {
+      display: flex;
+      gap: var(--s-2);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--pad);
+      padding-inline: var(--pad);
+      padding-bottom: var(--s-1);
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+    }
+    .rail::-webkit-scrollbar {
+      display: none;
+    }
+    .progress {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      margin: var(--s-3) var(--pad) 0;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--mist);
+    }
+    .count b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .track {
+      position: relative;
+      flex: 1;
+      height: 2px;
+      background: var(--hairline-strong);
+      overflow: hidden;
+    }
+    .track i {
+      position: absolute;
+      inset: 0;
+      background: var(--signal);
+      transform-origin: left;
+      transform: scaleX(0.34);
+      transition: transform 0.2s linear;
+    }
+    .more {
+      margin-top: var(--s-4);
     }
   }
 </style>
+
+<script>
+  // Phones: the orange progress line under the swipe carousel
+  const rail = document.querySelector<HTMLElement>('[data-rail]');
+  const bar = document.querySelector<HTMLElement>('[data-rail-bar]');
+  const now = document.querySelector<HTMLElement>('[data-rail-now]');
+  if (rail && bar && now) {
+    const cards = Array.from(rail.children) as HTMLElement[];
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const max = rail.scrollWidth - rail.clientWidth;
+      const p = max > 0 ? rail.scrollLeft / max : 0;
+      bar.style.transform = `scaleX(${(1 / cards.length + p * (1 - 1 / cards.length)).toFixed(3)})`;
+      now.textContent = String(Math.min(cards.length, Math.round(p * (cards.length - 1)) + 1)).padStart(2, '0');
+    };
+    rail.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
+  }
+</script>

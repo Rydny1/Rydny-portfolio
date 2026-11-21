@@ -1,6 +1,8 @@
 // All project data. To swap a screenshot, change `image` (files live in public/img).
+// `video` stays null until Rydny approves the loop (loops live in _brief/report/loops until then).
 export interface Project {
   slug: string;
+  index: string;
   name: string;
   badge?: string; // ink badge with paper text
   label?: string; // plain small label when there is no badge
@@ -9,12 +11,15 @@ export interface Project {
   result: string;
   flow: [string, string, string];
   links: { label: string; href: string }[];
-  image: { src: string; width: number; height: number; alt: string; position: string };
+  caption: string;
+  image: { src: string; width: number; height: number; alt: string };
+  video: { webm: string; mp4: string } | null;
 }
 
 export const projects: Project[] = [
   {
     slug: 'plateshare',
+    index: '01',
     name: 'PlateShare',
     badge: '1st place · Global Challenge Hackathon',
     problem: 'Campus canteens bin good food at closing. Students go hungry at 5 pm.',
@@ -22,10 +27,13 @@ export const projects: Project[] = [
     result: 'Won first place. The bot runs on a live database.',
     flow: ['Canteen posts', 'Students pinged', 'Meal claimed'],
     links: [{ label: 'GitHub', href: 'https://github.com/Rydny1/PlateShare' }],
-    image: { src: 'plateshare', width: 1440, height: 900, alt: 'PlateShare dashboard showing active food offers and claim progress', position: 'left top' },
+    caption: 'github.com/Rydny1/PlateShare',
+    image: { src: 'plateshare', width: 1440, height: 900, alt: 'PlateShare dashboard showing active food offers and claim progress' },
+    video: null,
   },
   {
     slug: 'apex',
+    index: '02',
     name: 'APEX',
     label: 'Analysis engine',
     problem: 'Bookmakers misprice football matches. Spotting it by hand takes hours every week.',
@@ -36,10 +44,13 @@ export const projects: Project[] = [
       { label: 'Live site', href: 'https://apex-ai-analysis.vercel.app' },
       { label: 'GitHub', href: 'https://github.com/Rydny1/apex-ai-analysis' },
     ],
-    image: { src: 'apex', width: 1200, height: 559, alt: 'APEX homepage: Football, priced before the market catches up', position: 'left center' },
+    caption: 'apex-ai-analysis.vercel.app',
+    image: { src: 'apex', width: 1600, height: 1000, alt: 'APEX homepage: Football, priced before the market catches up' },
+    video: null,
   },
   {
     slug: 'altays',
+    index: '03',
     name: 'Altays',
     label: 'E-commerce rebuild, Dubai',
     problem: 'A Dubai marble furniture brand on a template WordPress site that undersold the product.',
@@ -47,6 +58,8 @@ export const projects: Project[] = [
     result: 'Built and delivered to the client.',
     flow: ['Browse the stone', 'Pick a piece', 'Send an enquiry'],
     links: [], // No live link by instruction.
-    image: { src: 'altays', width: 1200, height: 560, alt: 'Altays marble furniture online store homepage', position: 'center' },
+    caption: 'Client project, Dubai',
+    image: { src: 'altays', width: 1200, height: 560, alt: 'Altays marble furniture online store homepage' },
+    video: null,
   },
 ];

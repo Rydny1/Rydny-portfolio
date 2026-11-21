@@ -9,7 +9,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: auto;
-  scroll-padding-top: var(--s-8);
+  scroll-padding-top: 0;
 }
 body {
   font-family: var(--font-body);
@@ -306,4 +306,44 @@ html.has-cursor :where(input, textarea, select) {
 /* The full stop after a section title: the same orange object everywhere */
 .fs {
   color: var(--signal);
+}
+
+/* Title reveal: words rise from behind a mask, the orange full stop pops in last */
+.tw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.twi {
+  display: inline-block;
+}
+.fs {
+  display: inline-block;
+}
+
+/* Page wire droplet */
+.pw-drop path {
+  fill: var(--signal);
+}
+.pw-drop {
+  filter: drop-shadow(0 0 6px rgb(228 87 46 / 0.25));
+  opacity: 0;
+}
+/* Phones: no vertical line or droplet; a small orange dot beside each section title instead */
+@media (max-width: 599px) {
+  .pw-track,
+  .pw-line,
+  .pw-drop,
+  .pw-node .ring {
+    display: none;
+  }
+  .pw-node .dot {
+    fill: var(--signal);
+    stroke: none;
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0.7);
+  }
 }

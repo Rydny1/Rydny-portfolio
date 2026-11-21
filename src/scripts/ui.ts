@@ -31,7 +31,18 @@ if (fine && !reduced) {
   );
 }
 
-import './cursor';
-import './scroll';
+
+
+// Everything not needed for the first screen waits until after load, then runs when the browser is idle.
+const idle: (fn: () => void) => void = (fn) => ('requestIdleCallback' in window ? (window as Window & { requestIdleCallback: (f: () => void, o?: { timeout: number }) => void }).requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 200));
+const defer = () => {
+  void import('./motion').then((m) => m.initReveals());
+  void import('./flows');
+  void import('./media');
+  void import('./scroll');
+  void import('./cursor');
+};
+if (document.readyState === 'complete') idle(defer);
+else addEventListener('load', () => idle(defer), { once: true });
 
 export {};

@@ -5,13 +5,22 @@ const { fix } = copy;
 
 <section class="fix" id="fix" aria-labelledby="fix-title" data-node>
   <div class="wrap">
-    <h2 id="fix-title" data-reveal>{fix.title}<span class="fs">.</span></h2>
+    <div class="head">
+      <h2 id="fix-title" data-title>{fix.title}<span class="fs">.</span></h2>
+      <p class="lead" data-reveal data-delay="120">{fix.lead}</p>
+    </div>
+
     <ol class="rows">
-      {fix.rows.map((r) => (
-        <li class="row" data-reveal>
-          <span class="n label">{r.n}</span>
-          <h3>{r.title}</h3>
-          <p>{r.text}</p>
+      {fix.rows.map((r, i) => (
+        <li class="row" data-reveal data-delay={i * 70}>
+          <button class="toggle" type="button" aria-expanded="false" aria-controls={`fix-d${i}`} data-hover>
+            <span class="n label" aria-hidden="true">{r.n}</span>
+            <span class="title">{r.title}<span class="dot" aria-hidden="true">.</span></span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </button>
+          <div class="desc" id={`fix-d${i}`}>
+            <p>{r.text}</p>
+          </div>
         </li>
       ))}
     </ol>
@@ -23,37 +32,179 @@ const { fix } = copy;
     padding-block: var(--section-y);
     background: var(--paper-glass);
   }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--s-4);
+    margin-bottom: var(--s-6);
+  }
   h2 {
     font-size: var(--fs-h2);
     line-height: 0.86;
-    margin-bottom: var(--s-8);
+  }
+  .lead {
+    font-size: var(--fs-lead);
+    margin-bottom: var(--s-2);
+    max-width: 30ch;
   }
   .rows {
     list-style: none;
     padding: 0;
+    border-top: 1px solid var(--hairline-strong);
   }
   .row {
+    position: relative;
+    border-bottom: 1px solid var(--hairline-strong);
+  }
+  .toggle {
     display: grid;
-    grid-template-columns: 1fr 5fr 6fr;
-    gap: var(--s-4);
-    align-items: baseline;
-    padding-block: var(--s-6);
-    border-top: 1px solid var(--hairline);
+    grid-template-columns: 96px 1fr auto;
+    align-items: center;
+    column-gap: var(--s-3);
+    width: 100%;
+    min-height: 136px;
+    padding: var(--s-3) 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
   }
-  .row:last-child {
-    border-bottom: 1px solid var(--hairline);
+  .n {
+    font-size: var(--fs-label);
   }
-  h3 {
-    font-size: var(--fs-h3);
-    line-height: 1.05;
+  .title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 4.4vw, 64px);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    max-width: 14em;
+    transition: color 0.4s var(--ease), transform 0.4s var(--ease);
   }
-  p {
-    font-size: var(--fs-body);
+  .dot {
+    color: var(--signal);
+    display: inline-block;
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
   }
-  @media (max-width: 899px) {
-    .row {
-      grid-template-columns: 1fr;
+  .arrow {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 50%;
+    font-size: 16px;
+    transition: background-color 0.4s var(--ease), color 0.4s var(--ease), border-color 0.4s var(--ease), transform 0.4s var(--ease);
+  }
+  .desc {
+    position: absolute;
+    right: calc(40px + var(--s-3) * 2);
+    top: 50%;
+    width: min(340px, 30%);
+    transform: translateY(-50%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease);
+  }
+  .desc p {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* Hover and keyboard focus (fine pointers): green title slides right and gains its full stop, text fades in, arrow fills ink */
+  @media (hover: hover) and (min-width: 900px) {
+    .row:hover .title,
+    .toggle:focus-visible .title,
+    .row.open .title {
+      color: var(--green);
+      transform: translateX(24px);
+    }
+    .row:hover .dot,
+    .toggle:focus-visible .dot,
+    .row.open .dot {
+      opacity: 1;
+      transform: none;
+    }
+    .row:hover .desc,
+    .toggle:focus-visible + .desc,
+    .row.open .desc {
+      opacity: 1;
+    }
+    .row:hover .arrow,
+    .toggle:focus-visible .arrow,
+    .row.open .arrow {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+  }
+
+  /* Touch and narrow screens: an accordion */
+  @media (hover: none), (max-width: 899px) {
+    .toggle {
+      grid-template-columns: 32px 1fr auto;
+      column-gap: var(--s-2);
+      min-height: 96px;
+      padding: var(--s-2) 0;
+    }
+    .title {
+      font-size: clamp(28px, 8vw, 40px);
+    }
+    .desc {
+      position: static;
+      transform: none;
+      width: auto;
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 1;
+      pointer-events: auto;
+      transition: grid-template-rows 0.4s var(--ease);
+    }
+    .desc p {
+      overflow: hidden;
+      min-height: 0;
+      padding: 0 0 0 calc(32px + var(--s-2));
+      max-width: none;
+    }
+    .row.open .desc {
+      grid-template-rows: 1fr;
+    }
+    .row.open .desc p {
+      padding-bottom: var(--s-3);
+    }
+    .row.open .arrow {
+      transform: rotate(90deg);
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+    .row.open .title {
+      color: var(--green);
+    }
+    .row.open .dot {
+      opacity: 1;
+      transform: none;
+    }
+    .head {
+      flex-direction: column;
+      align-items: flex-start;
       gap: var(--s-2);
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.fix .toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('.row');
+      const open = !row?.classList.contains('open');
+      row?.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
+</script>
