@@ -1,53 +1,42 @@
 ---
-import HeroVisual from './hero/HeroVisual';
-import GlassButton from './GlassButton';
-
-// Breathing ambient background — spread across the edges/corners so it
-// stays visible without sitting behind the text or the Prism.
-const bgShapes = [
-  { top: '8%', left: '3%', w: 90, h: 90, color: 'pewter', op: 0.34, dur: 16, delay: -2, lightDur: 9, lightDelay: -1 },
-  { top: '78%', left: '5%', w: 150, h: 95, color: 'pewter', op: 0.3, dur: 19, delay: -9, lightDur: 12, lightDelay: -6 },
-  { top: '6%', left: '90%', w: 70, h: 70, color: 'brushed', op: 0.32, dur: 14, delay: -4, lightDur: 8, lightDelay: -3 },
-  { top: '85%', left: '88%', w: 110, h: 70, color: 'pewter', op: 0.28, dur: 22, delay: -15, lightDur: 17, lightDelay: -13 },
-  { top: '45%', left: '1%', w: 60, h: 60, color: 'brushed', op: 0.3, dur: 17, delay: -7, lightDur: 10, lightDelay: -5 },
-  { top: '30%', left: '96%', w: 55, h: 55, color: 'pewter', op: 0.3, dur: 15, delay: -5, lightDur: 8.5, lightDelay: -2 },
-  { top: '92%', left: '40%', w: 85, h: 85, color: 'brushed', op: 0.28, dur: 20, delay: -11, lightDur: 13, lightDelay: -8 },
-  { top: '2%', left: '45%', w: 65, h: 65, color: 'pewter', op: 0.26, dur: 18, delay: -3, lightDur: 11, lightDelay: -6 },
-  { top: '55%', left: '94%', w: 100, h: 65, color: 'pewter', op: 0.27, dur: 21, delay: -16, lightDur: 14, lightDelay: -10 },
-];
+import { copy } from '../content/copy';
+import Nav from './Nav.astro';
+const { hero } = copy;
 ---
 
-<section class="hero theme-dark" id="home">
-  <div class="hero__ambient" aria-hidden="true">
-    {
-      bgShapes.map((s) => (
-        <div
-          class={`bg-shape bg-shape--${s.color}`}
-          style={`top:${s.top}; left:${s.left}; width:${s.w}px; height:${s.h}px; --dur:${s.dur}s; --delay:${s.delay}s; --light-dur:${s.lightDur}s; --light-delay:${s.lightDelay}s;`}
-        />
-      ))
-    }
-  </div>
-  <div class="container hero__inner">
-    <div class="hero__content">
-      <p class="hero__badge reveal">Available for work. Riga and remote.</p>
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <picture class="poster">
+    <source type="image/avif" srcset="/img/wall-poster-800.avif 800w, /img/wall-poster.avif 1600w" sizes="100vw" />
+    <source type="image/webp" srcset="/img/wall-poster-800.webp 800w, /img/wall-poster.webp 1600w" sizes="100vw" />
+    <img src="/img/wall-poster.jpg" alt="" width="1600" height="900" fetchpriority="high" decoding="async" />
+  </picture>
+  <video class="wall" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" poster="/img/wall-poster.jpg">
+    <source src="/video/wall-light.webm" type="video/webm" />
+    <source src="/video/wall-light.mp4" type="video/mp4" />
+  </video>
+  <div class="veil" aria-hidden="true"></div>
 
-      <h1 class="hero__name reveal">Rydny Ihims</h1>
+  <Nav />
 
-      <p class="hero__role reveal">I build web products and AI systems</p>
+  <div class="inner">
+    <h1 id="hero-title">
+      <span class="l1">{hero.line1}<span class="stop" data-wire-start>.</span></span>
+      <span class="l2"><em><span class="b" data-wire-end>B</span>uild the fix.</em></span>
+    </h1>
 
-      <p class="hero__bio reveal">
-        Full-stack developer and AI builder. I take an idea and turn it into a working product.
-      </p>
-
-      <div class="hero__cta fade-only">
-        <GlassButton href="#work" client:visible>See my work</GlassButton>
-        <a href="mailto:rydny01@gmail.com" class="hero__email-link">Or email me</a>
+    <div class="bottom">
+      <div class="lead-block">
+        <p class="lead">{hero.lead}</p>
+        <div class="cta">
+          <a class="btn" href={hero.primary.href}>{hero.primary.label}</a>
+          <a class="link" href={hero.secondary.href}>{hero.secondary.label}</a>
+        </div>
       </div>
-    </div>
-
-    <div class="hero__visual fade-only">
-      <HeroVisual client:visible />
+      <ul class="facts">
+        {hero.facts.map((f) => (
+          <li><b>{f.title}</b><span>{f.text}</span></li>
+        ))}
+      </ul>
     </div>
   </div>
 </section>
@@ -55,216 +44,148 @@ const bgShapes = [
 <style>
   .hero {
     position: relative;
-    min-height: 90svh;
-    display: flex;
-    align-items: center;
-    padding-top: calc(var(--nav-h) + 16px);
+    min-height: 100svh;
     overflow: hidden;
-    background: var(--bg);
-    color: var(--text);
+    isolation: isolate;
+    background: var(--paper);
   }
-
-  .hero__ambient {
+  .poster,
+  .poster img,
+  .wall {
     position: absolute;
     inset: 0;
-    z-index: 0;
-    overflow: hidden;
-    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
-
-  @property --angle {
-    syntax: '<angle>';
-    initial-value: 0deg;
-    inherits: false;
+  .poster {
+    z-index: -3;
   }
-
-  .bg-shape {
-    position: absolute;
-    /* Grid line itself stays near-invisible (3-5%) — the light-sweep
-       below is what actually carries this element, and it lives on a
-       ::before child, so it must NOT inherit this via the parent's
-       `opacity` (that would dim the sweep by the same amount). Alpha
-       goes on the border color directly instead. */
-    border: 1px solid color-mix(in srgb, var(--pewter) 4%, transparent);
+  .wall {
+    z-index: -2;
+    opacity: 0;
+  }
+  .wall.ready {
     opacity: 1;
-    animation: bg-breathe var(--dur) ease-in-out var(--delay) infinite alternate;
-    will-change: transform;
   }
-
-  .bg-shape--brushed {
-    border-color: color-mix(in srgb, var(--brushed) 4%, transparent);
-  }
-
-  /* A bright segment travels once around this shape's own perimeter,
-     independently timed per shape — light passing through the line,
-     not a synchronized sweep across all of them. */
-  .bg-shape::before {
-    content: '';
+  .veil {
     position: absolute;
-    inset: -1px;
-    --angle: 0deg;
-    padding: 1.5px;
-    background: conic-gradient(from var(--angle), transparent 0deg, var(--porcelain) 11deg, transparent 24deg);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 1;
-    filter: drop-shadow(0 0 3px rgba(245, 241, 232, 1)) drop-shadow(0 0 9px rgba(245, 241, 232, 0.8));
-    animation: light-travel var(--light-dur) linear var(--light-delay) infinite;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgb(246 241 234 / 0.5), rgb(246 241 234 / 0.2) 60%, transparent 80%);
   }
-
-  .bg-shape--brushed::before {
-    background: conic-gradient(from var(--angle), transparent 0deg, var(--brushed) 11deg, transparent 24deg);
-    filter: drop-shadow(0 0 3px rgba(180, 184, 188, 1)) drop-shadow(0 0 9px rgba(180, 184, 188, 0.8));
-  }
-
-  @keyframes bg-breathe {
-    from {
-      transform: scale(1);
-    }
-    to {
-      transform: scale(1.035);
-    }
-  }
-
-  @keyframes light-travel {
-    to {
-      --angle: 360deg;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .bg-shape {
-      animation: none;
-    }
-
-    .bg-shape::before {
-      animation: none;
-      opacity: 0;
-    }
-  }
-
-  .hero__inner {
+  .inner {
     position: relative;
     z-index: 2;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 56px;
-    align-items: center;
-    padding-block: 64px;
-  }
-
-  @media (min-width: 768px) {
-    .hero__inner {
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-    }
-  }
-
-  .hero__badge {
-    display: inline-block;
-    font-size: var(--fs-12);
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    margin-bottom: 24px;
-  }
-
-  .hero__name {
-    font-family: var(--font-display);
-    font-size: var(--fs-hero);
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: -0.01em;
-    color: #f5f1e8;
-    margin-bottom: 20px;
-  }
-
-  .hero__role {
-    font-family: var(--font-display);
-    font-size: clamp(var(--fs-22), 2vw + 0.5rem, var(--fs-28));
-    font-weight: 500;
-    color: rgba(245, 241, 232, 0.8);
-    margin-bottom: 20px;
-  }
-
-  .hero__bio {
-    font-size: var(--fs-16);
-    line-height: 1.6;
-    color: var(--text-secondary);
-    max-width: 60ch;
-    margin-bottom: 40px;
-  }
-
-  .hero__cta {
+    min-height: 100svh;
+    max-width: var(--max);
+    margin-inline: auto;
+    padding: clamp(var(--s-12), 16vh, var(--s-24)) var(--pad) var(--s-6);
     display: flex;
-    align-items: center;
-    gap: 24px;
+    flex-direction: column;
+  }
+  h1 {
+    font-size: var(--fs-hero);
+    font-weight: 380;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-wrap: nowrap;
+  }
+  .l1 {
+    align-self: flex-start;
+  }
+  .l2 {
+    align-self: flex-end;
+    margin-top: clamp(var(--s-8), 14vh, var(--s-24));
+  }
+  .l2 em {
+    font-style: italic;
+    font-weight: 340;
+  }
+  .bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--s-6);
+    margin-top: var(--s-8);
+  }
+  .lead {
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+    max-width: 34ch;
+  }
+  .cta {
+    display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-3) var(--s-4);
+    margin-top: var(--s-3);
+  }
+  .facts {
+    display: flex;
+    gap: var(--s-6);
+  }
+  .facts li {
+    display: flex;
+    flex-direction: column;
+    font-size: var(--fs-meta);
+    font-weight: 500;
+  }
+  .facts b {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--fs-fact);
+    letter-spacing: -0.01em;
   }
 
-  .hero__email-link {
-    font-size: var(--fs-14);
-    color: var(--text-secondary);
-    border-bottom: 1px solid transparent;
-    padding-bottom: 2px;
-    transition:
-      color var(--dur-fast) var(--ease),
-      border-color var(--dur-fast) var(--ease);
-  }
-
-  .hero__email-link:hover {
-    color: var(--text);
-    border-color: var(--accent-ui);
-  }
-
-  .hero__visual {
-    order: -1;
-  }
-
-  /* Mobile — the whole hero must fit in one viewport height, no scroll. */
-  @media (max-width: 480px) {
-    .hero {
-      min-height: 100svh;
-      padding-top: calc(var(--nav-h) + 5px);
+  @media (max-width: 899px) {
+    h1 {
+      font-size: clamp(48px, 14vw, 96px);
+      flex: 0;
+      text-wrap: balance;
     }
-
-    .hero__inner {
-      gap: 28px;
-      padding-block: 14px;
+    .l1,
+    .l2 {
+      align-self: flex-start;
     }
-
-    .hero__badge {
-      font-size: 11px;
-      margin-bottom: 20px;
+    .l2 {
+      margin-top: var(--s-12);
     }
-
-    .hero__name {
-      font-size: 2.6rem;
-      margin-bottom: 20px;
+    .inner {
+      padding-top: var(--s-16);
     }
-
-    .hero__role {
-      font-size: 1.05rem;
-      margin-bottom: 18px;
+    .bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--s-6);
+      margin-top: var(--s-8);
     }
-
-    .hero__bio {
-      font-size: 14px;
-      line-height: 1.6;
-      margin-bottom: 32px;
-    }
-
-    .hero__cta {
-      gap: 20px;
+    .facts {
+      flex-direction: column;
+      gap: var(--s-2);
     }
   }
-
-  @media (min-width: 768px) {
-    .hero__visual {
-      order: 0;
-    }
-  }
-
 </style>
+
+<script>
+  // Play the wall only when on screen and the tab is visible. Skipped for reduced motion (poster only).
+  const v = document.querySelector<HTMLVideoElement>('.hero .wall');
+  if (v && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let visible = true;
+    const sync = () => {
+      if (visible && !document.hidden) v.play().catch(() => {});
+      else v.pause();
+    };
+    v.addEventListener('playing', () => v.classList.add('ready'), { once: true });
+    new IntersectionObserver(([e]) => {
+      visible = !!e?.isIntersecting;
+      sync();
+    }).observe(v);
+    document.addEventListener('visibilitychange', sync);
+    v.load();
+    sync();
+  }
+</script>

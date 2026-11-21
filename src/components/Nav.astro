@@ -1,0 +1,89 @@
+---
+import { copy } from '../content/copy';
+const { nav } = copy;
+---
+
+<header class="nav">
+  <a class="name" href="#top">{nav.name}</a>
+  <span class="role">{nav.role}</span>
+  <nav aria-label="Primary">
+    <ul>
+      {nav.links.map((l) => (
+        <li><a href={l.href}>{l.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+  <span class="clock"
+    >{nav.city} <time id="riga-time" datetime="" data-city={nav.city}></time> <span id="riga-zone">GMT+2</span></span
+  >
+</header>
+
+<style>
+  .nav {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto 1fr;
+    align-items: center;
+    gap: var(--s-3);
+    max-width: var(--max);
+    margin-inline: auto;
+    padding: var(--s-3) var(--pad);
+    font-size: var(--fs-meta);
+    font-weight: 500;
+  }
+  .name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  ul {
+    display: flex;
+    gap: var(--s-4);
+  }
+  nav a {
+    text-decoration: none;
+  }
+  .clock {
+    justify-self: end;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  @media (max-width: 899px) {
+    .nav {
+      grid-template-columns: 1fr auto;
+    }
+    .role {
+      display: none;
+    }
+    nav {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+    .clock {
+      grid-row: 1;
+      grid-column: 2;
+    }
+  }
+</style>
+
+<script>
+  // Live Riga clock, updates every minute. Falls back to the server text if Intl is missing.
+  const t = document.getElementById('riga-time');
+  const z = document.getElementById('riga-zone');
+  const tick = () => {
+    if (!t || !z) return;
+    const now = new Date();
+    const f = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Riga', hour: '2-digit', minute: '2-digit', hour12: false });
+    t.textContent = f.format(now);
+    t.setAttribute('datetime', now.toISOString());
+    const off = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Riga', timeZoneName: 'shortOffset' })
+      .formatToParts(now)
+      .find((p) => p.type === 'timeZoneName')?.value;
+    if (off) z.textContent = off.replace('GMT', 'GMT');
+  };
+  tick();
+  setInterval(tick, 60_000);
+</script>

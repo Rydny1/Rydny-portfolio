@@ -1,0 +1,54 @@
+---
+// Three steps on the orange line. Static in gate 1; motion arrives in gate 3.
+interface Props {
+  steps: readonly [string, string, string];
+}
+const { steps } = Astro.props;
+---
+
+<ol class="flow" aria-label="How the fix works">
+  {steps.map((s, i) => (
+    <>
+      <li class="step"><span>{s}</span></li>
+      {i < steps.length - 1 && <li class="line" aria-hidden="true"></li>}
+    </>
+  ))}
+</ol>
+
+<style>
+  .flow {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin-top: var(--s-4);
+  }
+  .step span {
+    display: block;
+    padding: var(--s-1) var(--s-2);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-pill);
+    background: var(--paper-raised);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .line {
+    flex: 1;
+    min-width: var(--s-2);
+    height: 2px;
+    background: var(--signal);
+  }
+  @media (max-width: 480px) {
+    .step span {
+      font-size: var(--fs-label);
+      padding: 6px var(--s-1);
+      white-space: normal;
+      text-align: center;
+      line-height: 1.25;
+    }
+    .line {
+      min-width: var(--s-1);
+    }
+  }
+</style>

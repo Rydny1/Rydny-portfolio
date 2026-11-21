@@ -1,0 +1,94 @@
+// All page copy lives here. Do not edit wording without Rydny's OK. No em or en dashes.
+export const copy = {
+  meta: {
+    title: 'Rydny Ihims | Software and Automation, Riga',
+    description:
+      "Rydny Ihims builds software, web apps and automations that take manual work off people's desks. Based in Riga. See the proof.",
+  },
+  nav: {
+    name: 'Rydny Ihims',
+    role: 'Software and automation',
+    links: [
+      { label: 'Work', href: '#work' },
+      { label: 'About', href: '#about' },
+      { label: 'Contact', href: '#contact' },
+    ],
+    city: 'Riga',
+    skip: 'Skip to content',
+  },
+  hero: {
+    line1: 'Find the problem',
+    line2: 'Build the fix.',
+    lead: 'I turn slow, manual processes into software and automations that run on their own.',
+    primary: { label: 'See the proof', href: '#work' },
+    secondary: { label: "Tell me what you're working on", href: '#contact' },
+    facts: [
+      { title: 'End to end', text: 'Idea, design, build, launch' },
+      { title: '5+ products', text: 'Built from zero' },
+      { title: 'Remote', text: 'Europe, UK and the Gulf' },
+    ],
+    steps: ['MAP', 'DESIGN', 'AUTOMATE', 'TEST'],
+  },
+  proof: {
+    title: 'Proof.',
+    lead: 'Three problems. Three working fixes.',
+    labels: { problem: 'Problem', fix: 'Fix', result: 'Result' },
+    more: {
+      prefix: 'More:',
+      items: [
+        { label: 'Steady (fitness app)', href: 'https://github.com/Rydny1/steady-fitness' },
+        // github.com/Rydny1/quicklist returns 404 (private or renamed), so this points at the profile until Rydny confirms.
+        { label: 'QuickList (listings platform)', href: 'https://github.com/Rydny1' },
+      ],
+    },
+  },
+  fix: {
+    title: 'What I fix',
+    rows: [
+      {
+        n: '01',
+        title: 'Manual processes.',
+        text: 'Data entry, follow-ups, reports, handovers. The work your team repeats every day, automated end to end.',
+      },
+      {
+        n: '02',
+        title: 'Websites and web apps.',
+        text: 'Fast, sharp, and built for one job: getting the visitor to act.',
+      },
+      {
+        n: '03',
+        title: 'The problem behind the problem.',
+        text: 'Before any code, I map where the time and money actually go. If the right fix is a better process, you hear that first.',
+      },
+    ],
+  },
+  about: {
+    title: 'The short version.',
+    caption: 'Rydny Ihims, Riga 2026',
+    alt: 'Portrait of Rydny Ihims',
+    paragraphs: [
+      "I'm Rydny Ihims. I build software and automations.",
+      'The problems I get handed usually start as lost time. Lost money. Someone doing the same task by hand, every day.',
+      'My job: find where it breaks, design the fix, build it, and make sure it keeps running.',
+      'Raised in Cameroon. Lived in Dubai. Now in Riga, studying Computer Science at the University of Latvia. I work in English and French.',
+      'First place at the Global Challenge Hackathon, for a WhatsApp system that sends leftover canteen food to hungry students.',
+    ],
+    quote: { text: 'What stands in the way becomes the way.', cite: 'Marcus Aurelius, Meditations' },
+    tools: ['React', 'Next.js', 'TypeScript', 'Python', 'Laravel', 'MySQL', 'n8n', 'REST APIs'],
+  },
+  contact: {
+    title: 'What are you working on?',
+    lead: 'A new idea, or something that already runs and should run better. Tell me where you want it to go. You get a straight answer: how to get there and what it takes.',
+    email: 'rydny01@gmail.com',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/Rydny1' },
+      { label: 'LinkedIn', href: 'https://linkedin.com/in/rydny-ihims' },
+    ],
+    // Set to the PDF path once Rydny supplies it; the link stays hidden while null.
+    cv: null as string | null,
+    cvLabel: 'Download CV',
+    status: 'Still running',
+    footer: '© 2026 Rydny Ihims. Built by hand in Riga.',
+  },
+  notFound: { title: 'Wrong room.', link: 'Back to the front door' },
+} as const;

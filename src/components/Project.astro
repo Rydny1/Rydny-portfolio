@@ -1,0 +1,112 @@
+---
+import type { Project } from '../content/projects';
+import { copy } from '../content/copy';
+import Pic from './Pic.astro';
+import MiniFlow from './MiniFlow.astro';
+
+interface Props {
+  project: Project;
+}
+const { project: p } = Astro.props;
+const L = copy.proof.labels;
+---
+
+<article class="project" aria-labelledby={`p-${p.slug}`}>
+  <div class="shot">
+    <Pic base={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} sizes="(min-width: 900px) 58vw, 100vw" style={`object-position:${p.image.position}`} />
+  </div>
+  <div class="text">
+    {p.badge ? <span class="badge">{p.badge}</span> : <span class="label">{p.label}</span>}
+    <h3 id={`p-${p.slug}`}>{p.name}</h3>
+    <dl>
+      <dt>{L.problem}</dt><dd>{p.problem}</dd>
+      <dt>{L.fix}</dt><dd>{p.fix}</dd>
+      <dt>{L.result}</dt><dd>{p.result}</dd>
+    </dl>
+    <MiniFlow steps={p.flow} />
+    {p.links.length > 0 && (
+      <ul class="links">
+        {p.links.map((l) => (
+          <li><a class="link" href={l.href} rel="noopener">{l.label}</a></li>
+        ))}
+      </ul>
+    )}
+  </div>
+</article>
+
+<style>
+  .project {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: var(--s-8);
+    align-items: start;
+    padding-block: var(--s-8);
+    border-top: 1px solid var(--hairline);
+  }
+  .shot {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--ink);
+    box-shadow: 0 24px 48px -24px rgb(31 32 35 / 0.4);
+  }
+  .shot :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  h3 {
+    font-size: var(--fs-h3);
+    line-height: 1;
+    margin: var(--s-2) 0 var(--s-4);
+  }
+  .badge {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px var(--s-1) 6px 10px;
+    border-radius: var(--radius-badge);
+  }
+  dl {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: var(--s-1) var(--s-2);
+  }
+  dt {
+    font-size: var(--fs-label);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--mist);
+    padding-top: 6px;
+  }
+  dd {
+    font-size: 17px;
+    line-height: 1.55;
+    margin-bottom: var(--s-1);
+  }
+  .links {
+    display: flex;
+    gap: var(--s-3);
+    margin-top: var(--s-3);
+  }
+  @media (max-width: 899px) {
+    .project {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--s-4);
+      padding-block: var(--s-6);
+    }
+  }
+  @media (max-width: 480px) {
+    dl {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    dt {
+      padding-top: var(--s-1);
+    }
+  }
+</style>

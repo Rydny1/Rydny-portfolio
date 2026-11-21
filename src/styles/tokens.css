@@ -1,0 +1,83 @@
+/* Every color, font, size and space lives here. Components use these variables only. */
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/fraunces-latin-wght-normal.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/fraunces-latin-wght-italic.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/plus-jakarta-sans-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/plus-jakarta-sans-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/plus-jakarta-sans-latin-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+:root {
+  /* color */
+  --ink: #1f2023;
+  --paper: #eee9e3;
+  --signal: #ff5a1f;
+  --mist: #66625b; /* brief says #6E6A63, which measures 4.45:1 on paper; this is the nearest value that passes AA */
+  --paper-raised: #f6f2ed;
+  --hairline: rgb(31 32 35 / 0.15);
+  --hairline-strong: rgb(31 32 35 / 0.28);
+  --wire-track: rgb(31 32 35 / 0.1);
+
+  /* type */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Brief gives two sizes (12vw in sec. 6, 6.8vw in sec. 4). The approved mockup measures about 7.4vw. */
+  --fs-hero: clamp(52px, 7.4vw, 128px);
+  --fs-h2: clamp(72px, 11vw, 176px);
+  --fs-h3: 44px;
+  --fs-lead: clamp(20px, 1.6vw, 21px);
+  --fs-body: 18px;
+  --fs-meta: 14px;
+  --fs-label: 12px;
+  --fs-pill: 11px;
+  --fs-fact: 24px;
+
+  /* 8px space scale */
+  --s-1: 8px;
+  --s-2: 16px;
+  --s-3: 24px;
+  --s-4: 32px;
+  --s-6: 48px;
+  --s-8: 64px;
+  --s-12: 96px;
+  --s-16: 128px;
+  --s-24: 192px;
+
+  /* layout */
+  --max: 1280px;
+  --pad: clamp(20px, 5vw, 64px);
+  --section-y: clamp(96px, 16vh, 200px);
+  --radius-pill: 999px;
+  --radius-badge: 4px;
+  --measure: 62ch;
+
+  /* motion */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}

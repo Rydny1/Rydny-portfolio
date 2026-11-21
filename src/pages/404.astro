@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import { copy } from '../content/copy';
+---
+
+<Base title="Wrong room. | Rydny Ihims" noindex>
+  <main class="nf">
+    <h1>{copy.notFound.title}</h1>
+    <a class="link" href="/">{copy.notFound.link}</a>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: var(--s-4);
+    padding: var(--pad);
+  }
+  h1 {
+    font-size: var(--fs-h2);
+    line-height: 0.86;
+  }
+</style>

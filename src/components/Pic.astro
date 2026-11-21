@@ -1,0 +1,32 @@
+---
+// AVIF + WebP picture with explicit dimensions so nothing shifts.
+interface Props {
+  base: string; // path under /img without extension, e.g. "apex"
+  alt: string;
+  width: number;
+  height: number;
+  srcset?: { w: number; base: string }[]; // optional responsive set, widest last
+  sizes?: string;
+  eager?: boolean;
+  class?: string;
+  style?: string;
+}
+const { base, alt, width, height, srcset, sizes, eager = false, class: cls, style } = Astro.props;
+const set = (ext: string) =>
+  srcset ? srcset.map((s) => `/img/${s.base}.${ext} ${s.w}w`).join(', ') : `/img/${base}.${ext}`;
+---
+
+<picture>
+  <source type="image/avif" srcset={set('avif')} sizes={sizes} />
+  <source type="image/webp" srcset={set('webp')} sizes={sizes} />
+  <img
+    src={`/img/${base}.webp`}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+    class={cls}
+    style={style}
+  />
+</picture>

@@ -1,0 +1,63 @@
+---
+import { copy } from '../content/copy';
+import { projects } from '../content/projects';
+import Project from './Project.astro';
+const { proof } = copy;
+---
+
+<section class="proof" id="work" aria-labelledby="proof-title" data-node>
+  <div class="wrap">
+    <div class="head">
+      <h2 id="proof-title">{proof.title}</h2>
+      <p class="lead">{proof.lead}</p>
+    </div>
+    {projects.map((p) => <Project project={p} />)}
+    <p class="more">
+      {proof.more.prefix}
+      {proof.more.items.map((m, i) => (
+        <>
+          {i > 0 && ', '}
+          <a class="link" href={m.href} rel="noopener">{m.label}</a>
+        </>
+      ))}
+    </p>
+  </div>
+</section>
+
+<style>
+  .proof {
+    padding-block: var(--section-y);
+    background: var(--paper);
+  }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--s-4);
+    margin-bottom: var(--s-8);
+  }
+  h2 {
+    font-size: var(--fs-h2);
+    line-height: 0.86;
+  }
+  .lead {
+    font-size: var(--fs-lead);
+    max-width: 26ch;
+    margin-bottom: var(--s-2);
+  }
+  .more {
+    border-top: 1px solid var(--hairline);
+    padding-top: var(--s-4);
+    font-size: 16px;
+    color: var(--mist);
+  }
+  .more :global(a) {
+    color: var(--ink);
+  }
+  @media (max-width: 899px) {
+    .head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

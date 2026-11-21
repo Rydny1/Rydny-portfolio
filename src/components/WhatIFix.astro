@@ -1,0 +1,59 @@
+---
+import { copy } from '../content/copy';
+const { fix } = copy;
+---
+
+<section class="fix" id="fix" aria-labelledby="fix-title" data-node>
+  <div class="wrap">
+    <h2 id="fix-title">{fix.title}</h2>
+    <ol class="rows">
+      {fix.rows.map((r) => (
+        <li class="row">
+          <span class="n label">{r.n}</span>
+          <h3>{r.title}</h3>
+          <p>{r.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .fix {
+    padding-block: var(--section-y);
+    background: var(--paper);
+  }
+  h2 {
+    font-size: var(--fs-h2);
+    line-height: 0.86;
+    margin-bottom: var(--s-12);
+  }
+  .rows {
+    list-style: none;
+    padding: 0;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 5fr 6fr;
+    gap: var(--s-4);
+    align-items: baseline;
+    padding-block: var(--s-6);
+    border-top: 1px solid var(--hairline);
+  }
+  .row:last-child {
+    border-bottom: 1px solid var(--hairline);
+  }
+  h3 {
+    font-size: var(--fs-h3);
+    line-height: 1.05;
+  }
+  p {
+    font-size: var(--fs-body);
+  }
+  @media (max-width: 899px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: var(--s-2);
+    }
+  }
+</style>

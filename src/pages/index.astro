@@ -1,15 +1,20 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
-import Work from '../components/Work.astro';
+import Proof from '../components/Proof.astro';
+import WhatIFix from '../components/WhatIFix.astro';
 import About from '../components/About.astro';
-import Skills from '../components/Skills.astro';
 import Contact from '../components/Contact.astro';
+import { copy } from '../content/copy';
 ---
-<BaseLayout title="Rydny Ihims. Full-Stack Developer and AI Builder">
+
+<Base>
+  <a class="skip" href="#work">{copy.nav.skip}</a>
   <Hero />
-  <Work />
-  <About />
-  <Skills />
-  <Contact />
-</BaseLayout>
+  <main id="main">
+    <Proof />
+    <WhatIFix />
+    <About />
+    <Contact />
+  </main>
+</Base>
