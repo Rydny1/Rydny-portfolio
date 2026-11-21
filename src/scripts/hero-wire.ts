@@ -139,9 +139,10 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
   const lights = Array.from({ length: lightCount }, (_, i) => {
     const g = el<SVGGElement>('g', {}, 'light');
     g.style.opacity = '0';
-    const glow = el('rect', { x: -CAPSULE_LEN / 2, y: -7.5, width: CAPSULE_LEN, height: 15, rx: 7.5 }, 'glow');
-    glow.setAttribute('filter', 'url(#soft)');
-    g.append(glow, el('rect', { x: -CAPSULE_LEN / 2, y: -1.5, width: CAPSULE_LEN, height: 3, rx: 1.5 }, 'core'));
+    // The 6px glow is two stacked rects (no SVG filter: filters repaint every frame and are slow on phones)
+    const outer = el('rect', { x: -CAPSULE_LEN / 2, y: -7.5, width: CAPSULE_LEN, height: 15, rx: 7.5 }, 'glow outer');
+    const mid = el('rect', { x: -CAPSULE_LEN / 2, y: -4.5, width: CAPSULE_LEN, height: 9, rx: 4.5 }, 'glow mid');
+    g.append(outer, mid, el('rect', { x: -CAPSULE_LEN / 2, y: -1.5, width: CAPSULE_LEN, height: 3, rx: 1.5 }, 'core'));
     lightsG.append(g);
     return { g, offset: i * ((TRIP + WAIT) / 2), cycle: -1, fired: [] as boolean[], pulsed: false };
   });
@@ -232,6 +233,7 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
   start();
 }
 
-if (hero && svg) init(hero, svg);
+// Build the wire after the first paint so it never competes with the first screen
+if (hero && svg) requestAnimationFrame(() => requestAnimationFrame(() => init(hero, svg)));
 
 export {};

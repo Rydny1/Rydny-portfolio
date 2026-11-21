@@ -383,7 +383,7 @@ const { nav, contact } = copy;
     },
     { passive: true },
   );
-  update();
+  requestAnimationFrame(update);
 
   // Bottom-sheet menu (phones): tap outside, swipe down, Escape or a link closes it.
   const root = document.querySelector<HTMLElement>('[data-sheet-root]');

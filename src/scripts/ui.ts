@@ -41,6 +41,7 @@ const defer = () => {
   void import('./media');
   void import('./scroll');
   void import('./cursor');
+  void import('./contact');
 };
 if (document.readyState === 'complete') idle(defer);
 else addEventListener('load', () => idle(defer), { once: true });

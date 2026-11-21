@@ -1,0 +1,157 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rydny Ihims</title>
+<style>
+@font-face{font-family:Fraunces;src:url(node_modules/@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2) format("woff2");font-weight:100 900}
+@font-face{font-family:Jakarta;src:url(node_modules/@fontsource/plus-jakarta-sans/files/plus-jakarta-sans-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:Jakarta;src:url(node_modules/@fontsource/plus-jakarta-sans/files/plus-jakarta-sans-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:Jakarta;src:url(node_modules/@fontsource/plus-jakarta-sans/files/plus-jakarta-sans-latin-600-normal.woff2);font-weight:600}
+:root{--cream:#EEE9E3;--green:#2E4636;--green-2:#2A4A39;--orange:#FF6B2C;--pad:64px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Jakarta;color:#1F2023;background:var(--cream);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.f{font-family:Fraunces;letter-spacing:-.03em}
+.hero{position:relative;height:900px;overflow:hidden;background:var(--cream)}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.25) saturate(1.05) brightness(1.12) contrast(.9)}
+.hero .tint{position:absolute;inset:0;background:#4E6B55;mix-blend-mode:color;opacity:.22}
+.hero .veil{position:absolute;inset:0;background:radial-gradient(ellipse at 40% 45%,rgba(240,235,227,.55),rgba(240,235,227,0) 70%)}
+.meta{position:absolute;left:var(--pad);right:var(--pad);z-index:4;display:flex;justify-content:space-between;font-size:14px;font-weight:500}
+.meta.top{top:0;left:0;right:0;padding:22px var(--pad);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(238,233,227,.28);align-items:center} .meta .name{font-family:Fraunces;font-size:21px;font-weight:560;color:#1F2023} .links{display:flex;gap:32px}
+.big{position:absolute;inset:0;z-index:4;margin:0;font-weight:560;letter-spacing:-.05em;line-height:.88;font-size:172px;color:var(--green)}
+.big span{position:absolute;white-space:nowrap} .l1{left:56px;top:16%} .l2{right:var(--pad);top:56%;font-style:italic;font-weight:480}
+.hwire{position:absolute;inset:0;width:100%;height:100%;z-index:3}
+.meta.bottom{bottom:40px;align-items:end} .lead{max-width:34ch;font-size:19px;line-height:1.5}
+.cta{display:flex;gap:28px;align-items:center;margin-top:24px}
+.btn{background:var(--orange);color:var(--green);padding:15px 24px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none}
+.btn.ghost{background:transparent;border:1px solid #1F2023;color:#1F2023;padding:10px 18px}
+.link{color:#1F2023;font-weight:600;font-size:15px;border-bottom:1px solid currentColor;padding-bottom:2px}
+.facts{display:flex;gap:48px} .facts b{display:block;font-family:Fraunces;font-weight:560;font-size:24px;letter-spacing:-.02em;color:#1F2023}
+/* proof */
+.proof{background:var(--green);color:var(--cream);padding:128px var(--pad) 120px;position:relative}
+.proof .head{display:flex;justify-content:space-between;align-items:end;margin-bottom:72px}
+.proof h2{font-size:190px;line-height:.82;font-weight:560;color:var(--cream)} .proof h2 em{color:var(--orange);font-style:normal}
+.proof .head p{max-width:24ch;font-size:20px;opacity:.85}
+.proj{display:grid;grid-template-columns:7fr 5fr;gap:56px;padding:48px 0;border-top:1px solid rgba(238,233,227,.18)}
+.shot{aspect-ratio:16/10;background:#111 left center/cover;border-radius:6px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.proj h3{font-size:48px;line-height:1;margin:14px 0 26px;font-weight:540}
+.badge{display:inline-block;border:1px solid rgba(238,233,227,.5);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;padding:6px 10px;border-radius:999px}
+dl{display:grid;grid-template-columns:88px 1fr;gap:10px 16px;font-size:17px} dt{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;opacity:.6;padding-top:5px}
+.flow{display:flex;align-items:center;margin-top:28px;font-size:13px;font-weight:600} .flow span{border:1px solid rgba(238,233,227,.35);padding:8px 12px;border-radius:999px}
+.flow i{flex:1;height:3px;background:var(--orange);min-width:18px;border-radius:2px}
+.more{margin-top:20px;font-size:15px;font-weight:600} .more u{text-decoration-color:var(--orange);text-underline-offset:4px}
+/* contact */
+.contact{background:var(--green);color:var(--cream);padding:128px var(--pad);border-top:1px solid rgba(238,233,227,.12)}
+.contact h2{font-size:120px;line-height:.9;font-weight:560;margin-bottom:56px}
+.letter{font-family:Fraunces;font-size:44px;line-height:1.5;font-weight:400;max-width:22ch*2;letter-spacing:-.02em}
+.blank{display:inline-block;min-width:220px;border-bottom:2px solid rgba(238,233,227,.45);color:rgba(238,233,227,.45);font-style:italic}
+.blank.on{border-color:var(--orange);color:var(--cream);font-style:normal}
+.chips{display:inline-flex;gap:10px;vertical-align:middle;font-family:Jakarta;font-size:15px;font-weight:600}
+.chips span{border:1px solid rgba(238,233,227,.45);border-radius:999px;padding:8px 16px} .chips .sel{background:var(--cream);color:var(--green)}
+.send{margin-top:48px;display:flex;align-items:center;gap:24px} .send small{opacity:.7;font-size:15px}
+</style>
+<style>
+:root{--green:#2E4636;--night:#17231B}
+.paper{position:relative;background:var(--cream);padding:120px var(--pad);overflow:hidden}
+.paper .wallfaint{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.16;filter:sepia(.3)}
+.paper>*{position:relative}
+.sh{display:flex;justify-content:space-between;align-items:end;margin-bottom:64px}
+.sh h2{font-size:176px;line-height:.82;font-weight:560;color:var(--green)}
+.sh h2 em{color:var(--orange);font-style:normal}
+.sh p{max-width:24ch;font-size:20px}
+.pj{display:grid;grid-template-columns:7fr 5fr;gap:56px;padding:44px 0;border-top:1px solid rgba(46,70,54,.2)}
+.pj .shot{aspect-ratio:16/10;background:#111 left center/cover;border-radius:6px;box-shadow:0 30px 60px -30px rgba(46,70,54,.55)}
+.pj h3{font-size:48px;line-height:1;margin:14px 0 24px;font-weight:540;color:#1F2023}
+.gbadge{display:inline-block;background:var(--green);color:var(--cream);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;padding:6px 11px;border-radius:999px}
+.pj dl dt{color:#1F2023;opacity:.5}
+.pj .flow span{border:1px solid rgba(46,70,54,.35);background:#F5F1EA}
+.pj .flow span.on{background:var(--green);color:var(--cream);border-color:var(--green)}
+.pj .more u{text-decoration-color:var(--orange)}
+.golden{background:#22362A;color:#EEE9E3}.golden .sh h2{color:#EEE9E3}.golden .fix{border-top-color:rgba(238,233,227,.16)}.golden .fix h3{color:#EEE9E3}.golden .fix .n{color:#EEE9E3;opacity:.5}
+.fix{display:grid;grid-template-columns:120px 1fr 1.2fr;gap:24px;padding:36px 0;border-top:1px solid rgba(46,70,54,.2);align-items:baseline}
+.fix .n{font-family:Fraunces;font-size:20px;color:var(--green);opacity:.6}
+.fix h3{font-size:56px;line-height:1;font-weight:540;color:var(--green)}
+.fix h3 i{color:var(--orange);font-style:normal}
+.fix p{font-size:19px;max-width:42ch}
+.evening{position:relative;background:#161615;color:var(--cream);padding:160px var(--pad) 72px;overflow:hidden}
+.evening .lamp{position:absolute;left:40%;top:46%;width:900px;height:600px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(255,170,110,.16),rgba(255,170,110,0));pointer-events:none}
+.evening .wallfaint{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.06;mix-blend-mode:screen}
+.evening>*{position:relative}
+.evening h2{font-size:120px;line-height:.9;font-weight:560;margin-bottom:52px}
+.evening .letter{font-family:Fraunces;font-size:44px;line-height:1.55;letter-spacing:-.02em}
+.evening .blank{border-bottom-color:rgba(238,233,227,.35)}
+.evening .chips{letter-spacing:0}
+.evening .chips .sel{background:#EEE9E3;color:#161615}
+.foot{margin-top:140px;display:flex;align-items:center;gap:28px}
+.foot .name{font-family:Fraunces;font-size:200px;line-height:.8;font-weight:560;letter-spacing:-.05em;color:#E9E3D8}
+.foot .node{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.foot .node b{width:12px;height:12px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 7px rgba(255,107,44,.18)}
+.grain{position:fixed;inset:-50%;z-index:50;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}</style><style>
+.fixs{position:relative;background:var(--cream);padding:40px var(--pad) 160px;overflow:hidden}
+.fixs .wallfaint{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.16;filter:sepia(.3)}
+.fixs>*{position:relative}
+.fixs .sh h2{color:var(--green)}
+.row{display:grid;grid-template-columns:90px 1fr 380px 40px;gap:24px;align-items:center;padding:34px 0;border-top:1px solid rgba(31,32,35,.16);transition:all .4s}
+.row:last-child{border-bottom:1px solid rgba(31,32,35,.16)}
+.row .n{font-size:13px;letter-spacing:.12em;font-weight:600;opacity:.5}
+.row h3{font-size:64px;line-height:1;font-weight:540;color:#1F2023;letter-spacing:-.035em}
+.row p{font-size:17px;opacity:0}
+.row .arr{width:40px;height:40px;border-radius:50%;border:1px solid rgba(31,32,35,.3);display:grid;place-items:center;font-size:16px}
+.row.hover h3{color:var(--green);transform:translateX(24px)}
+.row.hover h3 i{color:var(--orange);font-style:normal}
+.row.hover p{opacity:1}
+.row.hover .arr{background:#1F2023;color:var(--cream);border-color:#1F2023}
+.dark{position:relative;background:#161615;color:#EEE9E3;padding:0 var(--pad) 56px;overflow:hidden}
+.dark .fade{height:220px;margin:0 calc(var(--pad) * -1);background:linear-gradient(var(--cream),#161615)}
+.dark .wallfaint{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.07;mix-blend-mode:screen}
+.dark>*{position:relative}
+.ctop{display:grid;grid-template-columns:1fr 1fr;gap:64px;padding-top:96px;align-items:end}
+.ctop h2{font-size:168px;line-height:.84;font-weight:560;letter-spacing:-.05em}
+.ctop h2 em{color:var(--orange);font-style:normal}
+.ctop p{font-size:20px;max-width:30ch;opacity:.8;padding-bottom:18px}
+.form{margin-top:80px;font-family:Fraunces;font-size:40px;line-height:1.6;letter-spacing:-.015em;border-top:1px solid rgba(238,233,227,.14);padding-top:56px}
+.form .blank{display:inline-block;min-width:240px;border-bottom:1.5px solid rgba(238,233,227,.3);color:rgba(238,233,227,.38);font-style:italic}
+.form .blank.on{border-color:var(--orange);color:#EEE9E3;font-style:normal}
+.form .chips{display:inline-flex;gap:10px;vertical-align:middle;font-family:Jakarta;font-size:15px;font-weight:600;letter-spacing:0}
+.form .chips span{border:1px solid rgba(238,233,227,.3);border-radius:999px;padding:8px 16px}
+.form .chips .sel{background:#EEE9E3;color:#161615;border-color:#EEE9E3}
+.sendrow{margin-top:44px;display:flex;align-items:center;gap:24px;font-size:15px}.sendrow small{opacity:.6;font-size:15px}
+.footer{margin-top:150px;border-top:1px solid rgba(238,233,227,.14);padding-top:32px;display:grid;grid-template-columns:1fr auto;align-items:end}
+.footer .big2{font-family:Fraunces;font-size:212px;line-height:.78;font-weight:560;letter-spacing:-.055em;color:#E9E3D8;margin-top:40px;grid-column:1/-1}
+.footer .links2{display:flex;gap:28px;font-size:14px;opacity:.75}
+.footer .node{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.footer .node b{width:10px;height:10px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 6px rgba(255,107,44,.18)}
+</style></head><body><div class='grain'></div>
+<header class="hero">
+<video autoplay muted loop playsinline poster="wall-light-poster.jpg"><source src="wall-light.webm" type="video/webm"><source src="wall-light.mp4" type="video/mp4"></video><div class="tint"></div><div class="veil"></div>
+<div class="meta top"><span class="name">Rydny Ihims</span><span>Software and automation</span><span class="links"><span>Work</span><span>About</span><span>Contact</span></span><a class="btn ghost">Get in touch</a></div>
+<h1 class="big"><span class="l1">Find the problem.</span><span class="l2">Build the fix.</span></h1>
+<svg class="hwire" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
+<defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#C9D6E2" stop-opacity="0"/><stop offset=".5" stop-color="#F4F8FB"/><stop offset="1" stop-color="#C9D6E2" stop-opacity="0"/></linearGradient>
+<filter id="gl" x="-50%" y="-300%" width="200%" height="700%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<path d="M 1362 272 C 1362 372, 1220 384, 990 386 C 560 392, 170 380, 185 505 C 195 600, 360 590, 462 580" fill="none" stroke="#2E4636" stroke-opacity=".12" stroke-width="9" stroke-linecap="round"/>
+<path id="wp" d="M 1362 272 C 1362 372, 1220 384, 990 386 C 560 392, 170 380, 185 505 C 195 600, 360 590, 462 580" fill="none" stroke="#FF6B2C" stroke-width="3" stroke-linecap="round"/>
+<rect x="-18" y="-1.6" width="36" height="3.2" rx="1.6" fill="url(#lg)" filter="url(#gl)"><animateMotion dur="5.5s" repeatCount="indefinite" rotate="auto" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></rect>
+<circle cx="1362" cy="272" r="20" fill="#FF6B2C" fill-opacity=".18"/><circle cx="1362" cy="272" r="9" fill="#FF6B2C"/>
+<g><rect x="1182" y="360" width="58" height="30" rx="15" fill="#F3EEE6" stroke="#2E4636" stroke-opacity=".45"/><circle cx="1196" cy="375" r="3.5" fill="#FF6B2C"/><text x="1206" y="379" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="1.2" fill="#2E4636">MAP</text></g><g><rect x="583" y="376" width="82" height="30" rx="15" fill="#F3EEE6" stroke="#2E4636" stroke-opacity=".45"/><circle cx="597" cy="391" r="3.5" fill="#FF6B2C"/><text x="607" y="395" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="1.2" fill="#2E4636">DESIGN</text></g><g><rect x="181" y="426" width="98" height="30" rx="15" fill="#2E4636" stroke="#2E4636" stroke-opacity=".45"/><circle cx="195" cy="441" r="3.5" fill="#FF6B2C"/><text x="205" y="445" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="1.2" fill="#EEE9E3">AUTOMATE</text></g><g><rect x="297" y="571" width="66" height="30" rx="15" fill="#F3EEE6" stroke="#2E4636" stroke-opacity=".45"/><circle cx="311" cy="586" r="3.5" fill="#FF6B2C"/><text x="321" y="590" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="1.2" fill="#2E4636">TEST</text></g>
+<circle cx="462" cy="580" r="12" fill="#FF6B2C" fill-opacity=".2"/><circle cx="462" cy="580" r="6" fill="#FF6B2C"/>
+</svg>
+<div class="meta bottom"><div class="lead">I turn slow, manual processes into software and automations that run on their own.<div class="cta"><a class="btn">Get in touch</a><span class="link">See the work</span></div></div>
+<div class="facts"><div><b>End to end</b>Idea, design, build, launch</div><div><b>5+ products</b>Built from zero</div></div></div>
+</header>
+
+<section class="paper" id="proof"><video class="wallfaint" autoplay muted loop playsinline><source src="wall-light.webm"><source src="wall-light.mp4"></video>
+<div class="sh"><h2>Proof<em>.</em></h2><p>Three problems. Three working fixes.</p></div>
+<article class="pj"><div class="shot" style="background-image:url(plateshare.png)"></div><div><span class="gbadge">1st place · Hackathon winner</span><h3>PlateShare</h3>
+<dl><dt>Problem</dt><dd>Campus canteens bin good food at closing. Students go hungry at 5 pm.</dd><dt>Fix</dt><dd>One WhatsApp message from the canteen. Every student gets pinged. First reply claims the meal.</dd><dt>Result</dt><dd>Won first place. The bot runs on a live database.</dd></dl>
+<div class="flow"><span>Canteen posts</span><i></i><span>Students pinged</span><i></i><span>Meal claimed</span></div><div class="more">Want something like this? <u>Get in touch</u></div></div></article>
+</section>
+
+<section class="fixs"><video class="wallfaint" autoplay muted loop playsinline><source src="wall-light.webm"><source src="wall-light.mp4"></video>
+<div class="sh"><h2>What I fix<em style="color:var(--orange);font-style:normal">.</em></h2><p>Most work starts with one of these.</p></div>
+<div class="row"><span class="n">01</span><h3>Manual processes</h3><p>Data entry, follow-ups, reports, handovers. Automated end to end.</p><span class="arr">→</span></div>
+<div class="row hover"><span class="n">02</span><h3>Websites and web apps<i>.</i></h3><p>Fast, sharp, and built for one job: getting the visitor to act.</p><span class="arr">→</span></div>
+<div class="row"><span class="n">03</span><h3>The problem behind the problem</h3><p>I map where the time and money go first. Sometimes the fix is a better process.</p><span class="arr">→</span></div>
+</section>
+<section class="dark"><div class="fade"></div><video class="wallfaint" autoplay muted loop playsinline><source src="wall-light.webm"><source src="wall-light.mp4"></video>
+<div class="ctop"><h2>Get in<br>touch<em>.</em></h2><p>Hiring, building something new, or making what you have better. Send a note and you get a straight answer.</p></div>
+<div class="form">Hi Rydny, I'm <span class="blank on">Anna Berzina</span> from <span class="blank">company</span>.<br>I'd like to <span class="chips"><span>Build something new</span><span class="sel">Improve what I have</span><span>Hire you</span><span>Just say hi</span></span><br>The short version: <span class="blank" style="min-width:440px">one or two lines</span><br>Reach me at <span class="blank">email</span>.</div>
+<div class="sendrow"><a class="btn">Send it</a><small>or email rydny01@gmail.com</small></div>
+<div class="footer"><span class="links2"><span>GitHub</span><span>LinkedIn</span><span>Riga, 00:25 GMT+2</span></span><span class="node"><b></b>Still running</span><div class="big2">Rydny Ihims</div></div>
+</section></body></html>

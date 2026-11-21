@@ -347,8 +347,11 @@ html.has-cursor :where(input, textarea, select) {
   fill: var(--signal);
 }
 .pw-drop {
-  filter: drop-shadow(0 0 6px rgb(228 87 46 / 0.25));
   opacity: 0;
+}
+.pw-drop .halo {
+  fill: var(--signal);
+  opacity: 0.25;
 }
 /* Phones: no vertical line or droplet; a small orange dot beside each section title instead */
 @media (max-width: 599px) {

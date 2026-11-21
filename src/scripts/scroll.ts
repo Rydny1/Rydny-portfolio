@@ -126,7 +126,9 @@ function buildWire() {
   // Teardrop, tip pointing down, 10px wide and 14px tall; the tip sits on the end of the drawn line
   drop = mk<SVGGElement>('g', {}, 'pw-drop');
   const shape = mk<SVGPathElement>('path', { d: 'M0 0 L-3.7 -6.6 A5 5 0 1 1 3.7 -6.6 Z', transform: 'translate(0 0)' });
-  drop.append(shape);
+  const halo = mk<SVGCircleElement>('circle', { cx: 0, cy: -5, r: 9 });
+  halo.setAttribute('class', 'halo');
+  drop.append(halo, shape);
   svg.append(drop);
   main.prepend(svg);
   update(scrollY, innerHeight);

@@ -76,7 +76,12 @@
 }
 .wire .glow {
   fill: url(#capsule-glow);
-  opacity: 0.55;
+}
+.wire .glow.outer {
+  opacity: 0.2;
+}
+.wire .glow.mid {
+  opacity: 0.34;
 }
 .wire .core {
   fill: url(#capsule);

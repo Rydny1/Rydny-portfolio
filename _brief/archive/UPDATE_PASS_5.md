@@ -5,7 +5,7 @@ Read all of this before touching code. Work through it in order. Screenshot befo
 You have creative freedom. If you are at least 80% sure a change makes the site better, make it and log it. If anything looks broken, misaligned or cheap, fix it without asking. Bigger ideas go in your report for approval.
 
 Reference images in `_brief/references/`:
-- `current-hero-approved.png`: the current hero. **Approved.** This is the visual standard for the whole site. Keep the ink-black headline, the cream wall, the orange line and the pills exactly in this spirit.
+- `current-hero-approved.png`: an older build screenshot. **Superseded by `_brief/target/`.** The headline is vintage green, not ink-black. See `_brief/00_START_HERE.md`.
 - `current-footer.png`: current footer. Good, with two bugs (see 3).
 - `whatifix-rows-reference.png`: layout reference for What I fix.
 - `contact-reference.png`: layout reference for the contact section.
@@ -16,7 +16,7 @@ Reference images in `_brief/references/`:
 
 `CLAUDE.md` describes an old direction (Mercedes "engineered restraint", Clash Display, "no serif anywhere", a 3D aluminium control, GitHub Pages). None of that is true any more, and it contradicts the build. Rewrite it so it describes the site as it is now and after this pass:
 - Concept: "the room". Real leaf shadows on a cream plaster wall. One orange workflow line from "Find the problem" to "Build the fix."
-- Colours: cream wall and paper (main), ink #1F2023 (text), vintage green #2E4636 (rare: cursor leaf, active flow step, What I fix hover), orange (accent only: the line, its nodes, the full stops after section titles, the primary button, the live dot). Night #17181A for contact and footer.
+- Colours: cream wall and paper (main), ink #1F2023 (body text), vintage green #2E4636 (all display headlines, active flow step, AUTOMATE pill, What I fix hover, cursor leaf), orange (accent only: the line, its nodes, the full stops after section titles, the primary button, the live dot). Night #17181A for contact and footer.
 - Type: Fraunces (display), Plus Jakarta Sans (body).
 - Stack: Astro static, plain TypeScript scripts, Vercel. Point to `_brief/PORTFOLIO_BRIEF.md` and this file as the source of truth.
 - Keep the useful rules from the old file that still apply: no fabricated claims, no testimonials without a name, company and link, reduced-motion fallbacks everywhere, every section paints its own background.
