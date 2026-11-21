@@ -18,7 +18,7 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
 <article class="project" aria-labelledby={`p-${p.slug}`}>
   <div class="media">
     <figure>
-      <div class="frame" style={`aspect-ratio:${ratio}`} data-wipe>
+      <div class="frame" style={`aspect-ratio:${ratio}`} data-wipe data-tone={p.tone}>
         {primary ? (
           <a href={primary.href} rel="noopener" data-cursor="View project" aria-label={`${p.name}: ${primary.label}`}>
             <div class="pane" data-parallax-in>

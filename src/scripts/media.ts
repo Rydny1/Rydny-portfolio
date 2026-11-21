@@ -2,7 +2,7 @@
 // slow connections or reduced motion. (No loop ships until Rydny approves it: `video` is null in projects.ts.)
 import { reduced } from './motion';
 
-const videos = Array.from(document.querySelectorAll<HTMLVideoElement>('video.loop'));
+const videos = Array.from(document.querySelectorAll<HTMLVideoElement>('video.loop, video.shadows')).filter((v) => !v.classList.contains('shadows') || matchMedia('(min-width: 900px)').matches);
 const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
 const posterOnly = reduced || !!conn?.saveData || /^(slow-2g|2g|3g)$/.test(conn?.effectiveType ?? '');
 

@@ -14,9 +14,9 @@ const { proof } = copy;
   </div>
 
   <div class="wrap rail-wrap">
-    <div class="rail" data-rail tabindex="0" role="region" aria-label="Projects, swipe or scroll sideways">
+    <section class="rail" data-rail tabindex="0" aria-label="Projects, swipe or scroll sideways">
       {projects.map((p) => <Project project={p} />)}
-    </div>
+    </section>
     <div class="progress" aria-hidden="true">
       <span class="count"><b data-rail-now>01</b> / {String(projects.length).padStart(2, '0')}</span>
       <span class="track"><i data-rail-bar></i></span>

@@ -4,8 +4,14 @@ const { contact: c } = copy;
 ---
 
 <section class="contact" id="contact" aria-labelledby="contact-title" data-node>
+  <!-- Leaf shadows keep drifting, very faintly, on the night background (desktop, in view only) -->
+  <video class="shadows" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" poster="/img/wall-blur.webp" data-webm="/video/wall-light.webm" data-mp4="/video/wall-light.mp4"></video>
+
   <div class="wrap">
-    <h2 id="contact-title" data-title>{c.title}<span class="fs">.</span></h2>
+    <div class="top">
+      <h2 id="contact-title" data-title>{c.title}<span class="fs">.</span></h2>
+      <p class="lead" data-reveal data-delay="120">{c.lead}</p>
+    </div>
 
     <div class="letter-wrap" data-form-wrap data-reveal data-delay="120">
       <form class="letter" action="/api/contact" method="post" novalidate data-contact-form>
@@ -45,6 +51,7 @@ const { contact: c } = copy;
 
         <div class="actions">
           <button class="btn" type="submit" data-magnetic>{c.form.submit}</button>
+          <p class="prefer">{c.form.prefer} <a class="link" href={`mailto:${c.email}`}>{c.email}</a></p>
           <p class="err" role="alert" data-error></p>
         </div>
       </form>
@@ -54,27 +61,53 @@ const { contact: c } = copy;
       </div>
     </div>
 
-    <p class="prefer">{c.form.prefer} <a class="link" href={`mailto:${c.email}`}>{c.email}</a></p>
+    <div class="footrow" data-end-node>
+      <ul class="small">
+        {c.links.map((l) => (
+          <li><a class="link" href={l.href} rel="noopener">{l.label}</a></li>
+        ))}
+        {c.cv && <li><a class="link" href={c.cv} download>{c.cvLabel}</a></li>}
+        <li class="clock">Riga, <time data-riga-time datetime=""></time> <span data-riga-zone>GMT+2</span></li>
+      </ul>
+      <p class="status label"><span class="live" aria-hidden="true"></span>{c.status}</p>
+    </div>
 
-    <ul class="small">
-      {c.links.map((l) => (
-        <li><a class="link" href={l.href} rel="noopener">{l.label}</a></li>
-      ))}
-      {c.cv && <li><a class="link" href={c.cv} download>{c.cvLabel}</a></li>}
-    </ul>
-
-    <p class="status label" data-end-node>{c.status}</p>
-    <div class="big" aria-hidden="true" data-letters>{[...'Rydny Ihims'].map((ch) => <span class="ch">{ch === ' ' ? '\u00a0' : ch}</span>)}</div>
+    <div class="big" aria-hidden="true" data-letters>{[...'Rydny Ihims'].map((ch) => <span class="ch">{ch === ' ' ? ' ' : ch}</span>)}</div>
     <footer>{c.footer}</footer>
   </div>
 </section>
 
 <style>
   .contact {
-    --letter: clamp(22px, 2.9vw, 42px);
+    --letter: clamp(22px, 2.6vw, 36px);
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
     padding-block: var(--section-y) var(--s-4);
     background: var(--night);
     color: var(--paper);
+  }
+  /* Cream to night: a soft ramp over the padding at the bottom of About, never a hard edge */
+  .contact::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(-1 * var(--section-y) - var(--s-8));
+    height: calc(var(--section-y) + var(--s-8));
+    background: linear-gradient(to bottom, transparent, rgb(23 24 26 / 0.55) 45%, var(--night));
+    pointer-events: none;
+  }
+  .shadows {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.1;
+    mix-blend-mode: screen;
+    pointer-events: none;
   }
   .contact :global(:focus-visible) {
     outline-color: var(--paper);
@@ -82,11 +115,26 @@ const { contact: c } = copy;
   .contact :global(.link) {
     color: var(--paper);
   }
-  h2 {
-    font-size: clamp(48px, 8vw, 128px);
-    line-height: 0.92;
+
+  .top {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: var(--s-6);
+    align-items: end;
+    padding-bottom: var(--s-6);
+    border-bottom: 1px solid rgb(238 233 227 / 0.18);
     margin-bottom: var(--s-6);
-    max-width: 14ch;
+  }
+  h2 {
+    font-size: clamp(56px, 8.4vw, 136px);
+    line-height: 0.9;
+    max-width: 6ch;
+  }
+  .lead {
+    font-size: var(--fs-lead);
+    color: var(--on-night-mist);
+    max-width: 34ch;
+    margin-bottom: var(--s-1);
   }
 
   .letter-wrap {
@@ -97,12 +145,12 @@ const { contact: c } = copy;
     font-family: var(--font-display);
     font-size: var(--letter);
     font-weight: 380;
-    line-height: 1.55;
+    line-height: 1.5;
     letter-spacing: -0.02em;
   }
   .line {
     max-width: none;
-    margin-bottom: var(--s-3);
+    margin-bottom: var(--s-2);
   }
   .letter label:not(.sr-only):not(.pill) {
     font: inherit;
@@ -146,6 +194,7 @@ const { contact: c } = copy;
   }
   .letter ::placeholder {
     color: rgb(238 233 227 / 0.5);
+    font-style: italic;
     opacity: 1;
   }
   .letter [aria-invalid='true'] {
@@ -153,7 +202,6 @@ const { contact: c } = copy;
     border-bottom-style: dashed;
   }
 
-  /* Choice pills */
   .choice {
     border: 0;
     padding: 0;
@@ -183,13 +231,12 @@ const { contact: c } = copy;
     cursor: pointer;
   }
   .pill span {
-    display: block;
-    font: 500 16px/1.2 var(--font-body);
-    letter-spacing: 0;
     display: flex;
     align-items: center;
     min-height: 44px;
     padding: 0 var(--s-2);
+    font: 500 16px/1.2 var(--font-body);
+    letter-spacing: 0;
     border: 1px solid rgb(238 233 227 / 0.45);
     border-radius: var(--radius-pill);
     transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
@@ -211,10 +258,16 @@ const { contact: c } = copy;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--s-3);
-    margin-top: var(--s-4);
+    gap: var(--s-2) var(--s-3);
+    margin-top: var(--s-3);
+  }
+  .prefer {
+    font: 400 14px/1.4 var(--font-body);
+    letter-spacing: 0;
+    color: var(--on-night-mist);
   }
   .err {
+    flex-basis: 100%;
     font: 500 15px/1.4 var(--font-body);
     letter-spacing: 0;
     color: var(--paper);
@@ -240,16 +293,40 @@ const { contact: c } = copy;
   .sent:focus {
     outline: none;
   }
-  .prefer {
-    margin-top: var(--s-4);
-    font-size: 16px;
+
+  /* Footer row: links and the Riga time on the left, the live status on the right */
+  .footrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-3);
+    border-top: 1px solid rgb(238 233 227 / 0.18);
+    font-size: 14px;
     color: var(--on-night-mist);
   }
   .small {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-4);
-    margin-top: var(--s-3);
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+  }
+  .clock {
+    font-variant-numeric: tabular-nums;
+  }
+  .status {
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+    color: var(--on-night-mist);
+  }
+  .live {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 0 4px rgb(228 87 46 / 0.2);
   }
 
   .big {
@@ -260,22 +337,36 @@ const { contact: c } = copy;
     font-weight: 380;
     letter-spacing: -0.045em;
     line-height: 0.9;
-    margin-top: var(--s-2);
+    margin-top: var(--s-3);
     white-space: nowrap;
   }
   .big :global(.ch) {
     display: inline-block;
-  }
-  .status {
-    margin-top: var(--s-12);
-    color: var(--on-night-mist);
+    white-space: pre;
   }
   footer {
-    margin-top: var(--s-8);
+    margin-top: var(--s-3);
     padding-top: var(--s-3);
     border-top: 1px solid rgb(238 233 227 / 0.18);
     font-size: var(--fs-meta);
     color: var(--on-night-mist);
+  }
+
+  @media (max-width: 899px) {
+    .top {
+      grid-template-columns: 1fr;
+      gap: var(--s-3);
+      padding-bottom: var(--s-4);
+      margin-bottom: var(--s-4);
+    }
+    .shadows {
+      display: none;
+    }
+    .footrow {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: var(--s-6);
+    }
   }
 </style>
 

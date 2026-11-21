@@ -66,7 +66,7 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
     const mobile = W < 900;
     const S: Pt = { x: sp.x + sp.w / 2, y: sp.y + sp.h * 0.5 + fs * 0.3 };
     const E: Pt = mobile
-      ? { x: Math.max(14, bp.x + 6), y: bp.y + fs * 0.1 }
+      ? { x: Math.max(24, bp.x), y: bp.y + fs * 0.1 }
       : { x: Math.max(12, bp.x - 18), y: bp.y + bp.h * 0.5 + fs * 0.12 };
     const dy = Math.max(120, E.y - S.y);
 
@@ -88,7 +88,7 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
       // Phones: a tall S between the two lines, ending above the "B". Two pills.
       d =
         `M ${S.x} ${S.y} ` +
-        `C ${S.x + (W - S.x) * 0.9} ${S.y + dy * 0.04}, ${W * 0.96} ${S.y + dy * 0.3}, ${W * 0.72} ${S.y + dy * 0.46} ` +
+        `C ${S.x + (W - S.x) * 0.8} ${S.y + dy * 0.04}, ${W - 48} ${S.y + dy * 0.3}, ${W * 0.7} ${S.y + dy * 0.46} ` +
         `C ${W * 0.46} ${S.y + dy * 0.62}, ${E.x} ${S.y + dy * 0.55}, ${E.x} ${E.y}`;
       ts = [0.3, 0.72];
     }

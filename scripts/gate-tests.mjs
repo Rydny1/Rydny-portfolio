@@ -2,9 +2,10 @@
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 import { HtmlValidate } from 'html-validate';
-import { spawn } from 'node:child_process';
+import { serve } from './lib/serve.mjs';
 import { readFileSync, readdirSync, mkdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { gzipSync } from 'node:zlib';
 
 const PORT = 4400;
 const BASE = `http://localhost:${PORT}`;
@@ -16,11 +17,7 @@ const log = (name, ok, detail = '') => {
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? '  ' + detail : ''}`);
 };
 
-const server = spawn('npx', ['astro', 'preview', '--port', String(PORT)], { shell: true, stdio: 'ignore' });
-for (let i = 0; i < 60; i++) {
-  try { if ((await fetch(BASE)).ok) break; } catch {}
-  await new Promise((r) => setTimeout(r, 500));
-}
+const { stop } = await serve('.', PORT);
 
 try {
   const browser = await chromium.launch();
@@ -279,20 +276,21 @@ try {
     log('6  external links return 200', bad.length === 0, bad.join(' ; ') || `${hrefs.length} checked`);
   }
 
-  // Test 7: bundle sizes
+  // Test 7: bundle sizes (gzipped, as the budgets are written)
   {
     const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
     const files = walk('dist');
-    const sum = (re) => files.filter((f) => re.test(f)).reduce((a, f) => a + statSync(f).size, 0);
+    const gz = (f) => gzipSync(readFileSync(f)).length;
+    const sumGz = (re) => files.filter((f) => re.test(f)).reduce((a, f) => a + gz(f), 0);
     const html = readFileSync('dist/index.html', 'utf8');
-    const inlineJs = [...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].reduce((a, m) => a + m[1].length, 0);
-    const inlineCss = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].reduce((a, m) => a + m[1].length, 0);
-    console.log(`     JS: ${sum(/\.js$/)} B on disk + ${inlineJs} B inline | CSS: ${sum(/\.css$/)} B on disk + ${inlineCss} B inline | index.html ${statSync('dist/index.html').size} B`);
-    log('7  JS under 60 KB, CSS under 25 KB (raw)', sum(/\.js$/) + inlineJs < 60000 && sum(/\.css$/) + inlineCss < 25000);
+    const inline = (tag) => [...html.matchAll(new RegExp(`<${tag}[^>]*>([\s\S]*?)</${tag}>`, 'g'))].reduce((a, m) => a + gzipSync(m[1]).length, 0);
+    const js = sumGz(/\.js$/) + inline('script');
+    const css = sumGz(/\.css$/) + inline('style');
+    console.log(`     JS ${js} B gz | CSS ${css} B gz | index.html ${gzipSync(readFileSync('dist/index.html')).length} B gz`);
+    log('7  JS under 60 KB gz, CSS under 25 KB gz', js < 60000 && css < 25000, `${js} / ${css}`);
   }
 } finally {
-  server.kill();
-  spawn('taskkill', ['/pid', String(server.pid), '/T', '/F'], { shell: true, stdio: 'ignore' });
+  stop();
 }
 const failed = results.filter((r) => !r.ok);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);

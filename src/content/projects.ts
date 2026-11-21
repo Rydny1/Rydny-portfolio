@@ -12,6 +12,7 @@ export interface Project {
   flow: [string, string, string];
   links: { label: string; href: string }[];
   caption: string;
+  tone: 'light' | 'dark'; // brightness of the screenshot, so the cursor leaf can adapt
   image: { src: string; width: number; height: number; alt: string };
   video: { webm: string; mp4: string } | null;
 }
@@ -28,6 +29,7 @@ export const projects: Project[] = [
     flow: ['Canteen posts', 'Students pinged', 'Meal claimed'],
     links: [{ label: 'GitHub', href: 'https://github.com/Rydny1/PlateShare' }],
     caption: 'github.com/Rydny1/PlateShare',
+    tone: 'light',
     image: { src: 'plateshare', width: 1440, height: 900, alt: 'PlateShare dashboard showing active food offers and claim progress' },
     video: null,
   },
@@ -45,6 +47,7 @@ export const projects: Project[] = [
       { label: 'GitHub', href: 'https://github.com/Rydny1/apex-ai-analysis' },
     ],
     caption: 'apex-ai-analysis.vercel.app',
+    tone: 'dark',
     image: { src: 'apex', width: 1600, height: 1000, alt: 'APEX homepage: Football, priced before the market catches up' },
     video: null,
   },
@@ -59,6 +62,7 @@ export const projects: Project[] = [
     flow: ['Browse the stone', 'Pick a piece', 'Send an enquiry'],
     links: [], // No live link by instruction.
     caption: 'Client project, Dubai',
+    tone: 'dark',
     image: { src: 'altays', width: 1200, height: 560, alt: 'Altays marble furniture online store homepage' },
     video: null,
   },

@@ -1,0 +1,67 @@
+---
+// Phones: a small floating "Get in touch" pill inside the thumb zone. Appears after the hero, hides over contact.
+import { copy } from '../content/copy';
+---
+
+<a class="fab" href="#contact" data-fab>{copy.nav.cta.label}</a>
+
+<style>
+  .fab {
+    display: none;
+  }
+  @media (max-width: 899px) {
+    .fab {
+      position: fixed;
+      right: var(--pad);
+      bottom: calc(var(--s-2) + env(safe-area-inset-bottom));
+      z-index: 40;
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 var(--s-3);
+      border-radius: var(--radius-pill);
+      background: var(--ink);
+      color: var(--paper);
+      font: 600 15px/1 var(--font-body);
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgb(31 32 35 / 0.25);
+      opacity: 0;
+      transform: translateY(16px);
+      pointer-events: none;
+      transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+    }
+    .fab.show {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+    .fab:active {
+      transform: scale(0.97);
+    }
+  }
+</style>
+
+<script>
+  const fab = document.querySelector<HTMLElement>('[data-fab]');
+  const contact = document.querySelector<HTMLElement>('#contact');
+  if (fab && contact) {
+    let afterHero = false;
+    let overContact = false;
+    const sync = () => fab.classList.toggle('show', afterHero && !overContact);
+    addEventListener(
+      'scroll',
+      () => {
+        const a = scrollY > innerHeight * 0.85;
+        if (a !== afterHero) {
+          afterHero = a;
+          sync();
+        }
+      },
+      { passive: true },
+    );
+    new IntersectionObserver(([e]) => {
+      overContact = !!e?.isIntersecting;
+      sync();
+    }, { threshold: 0.15 }).observe(contact);
+  }
+</script>

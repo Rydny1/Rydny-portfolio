@@ -3,6 +3,12 @@ import { spawn, execSync } from 'node:child_process';
 
 export async function serve(dir = '.', port = 4400) {
   const base = `http://localhost:${port}`;
+  // Astro refuses to start a second preview in the same project, so clear any leftover one first.
+  try {
+    execSync('npx astro preview stop', { cwd: dir, stdio: 'ignore' });
+  } catch {
+    /* none running */
+  }
   const proc = spawn('npx', ['astro', 'preview', '--port', String(port)], { cwd: dir, shell: true, stdio: 'ignore' });
   for (let i = 0; i < 120; i++) {
     try {

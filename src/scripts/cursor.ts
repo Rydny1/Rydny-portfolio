@@ -32,6 +32,33 @@ if (matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(pr
   let running = false;
   let first = true;
 
+  // Colour sensitivity: green over bright areas, light grey-white over dark ones.
+  // Reads an explicit data-tone first, then the first opaque background behind the pointer.
+  const lum = (css: string): number | null => {
+    const m = css.match(/rgba?\(([\d.]+)[ ,]+([\d.]+)[ ,]+([\d.]+)(?:[ ,/]+([\d.]+))?/);
+    if (!m) return null;
+    const a = m[4] === undefined ? 1 : Number(m[4]);
+    if (a < 0.5) return null;
+    const ch = [m[1], m[2], m[3]].map((v) => {
+      const c = Number(v) / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * ch[0]! + 0.7152 * ch[1]! + 0.0722 * ch[2]!;
+  };
+  let lastTarget: Element | null = null;
+  const toneOf = (t: Element | null): 'dark' | 'light' => {
+    if (!t) return 'light';
+    const marked = t.closest<HTMLElement>('[data-tone]');
+    if (marked) return marked.dataset.tone === 'dark' ? 'dark' : 'light';
+    if (t.closest('.btn, .touch:hover, .sheet-close:active')) return t.closest('.btn') ? 'dark' : 'light';
+    if (t.closest('.nav.on-night, .contact')) return 'dark';
+    for (let n: Element | null = t; n; n = n.parentElement) {
+      const l = lum(getComputedStyle(n).backgroundColor);
+      if (l !== null) return l < 0.28 ? 'dark' : 'light';
+    }
+    return 'light';
+  };
+
   const STIFF = 0.16;
   const DAMP = 0.74;
 
@@ -79,6 +106,10 @@ if (matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(pr
       }
       lastMove = performance.now();
       const t = e.target as Element | null;
+      if (t !== lastTarget) {
+        lastTarget = t;
+        el.classList.toggle('dark', toneOf(t) === 'dark');
+      }
       const field = !!t?.closest('input, textarea, select');
       el.classList.toggle('on', !field);
       const view = !!t?.closest('[data-cursor]');

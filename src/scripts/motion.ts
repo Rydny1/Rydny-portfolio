@@ -7,6 +7,7 @@
 
 export const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+const K = matchMedia('(max-width: 899px)').matches ? 0.7 : 1; // phones: shorter, 0.3 to 0.5s motion
 
 // ---------- single scroll scheduler ----------
 type FrameFn = (scrollY: number, vh: number, velocity: number) => void;
@@ -115,13 +116,13 @@ function play(it: Item) {
   const instant = isFast();
   clear(it);
   if (instant) return;
-  const opts = (d: number, dl = 0): KeyframeAnimationOptions => ({ duration: d, delay: dl, easing: EASE, fill: 'backwards' });
+  const opts = (d: number, dl = 0): KeyframeAnimationOptions => ({ duration: d * K, delay: dl * K, easing: EASE, fill: 'backwards' });
   if (kind === 'fade') el.animate([{ opacity: 0, transform: 'translateY(24px)' }, { opacity: 1, transform: 'none' }], opts(650, delay));
   else if (kind === 'wipe') el.animate([{ clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], opts(800, delay));
   else if (kind === 'title') {
     it.parts?.forEach((p, i) => p.animate([{ transform: 'translateY(115%)' }, { transform: 'none' }], opts(600, delay + i * 70)));
     const n = it.parts?.length ?? 0;
-    it.stop?.animate([{ transform: 'scale(0)' }, { transform: 'scale(1)' }], { duration: 300, delay: delay + n * 70 + 240, easing: EASE, fill: 'backwards' });
+    it.stop?.animate([{ transform: 'scale(0)' }, { transform: 'scale(1)' }], { duration: 300 * K, delay: (delay + n * 70 + 240) * K, easing: EASE, fill: 'backwards' });
   } else if (kind === 'letters') it.parts?.forEach((p, i) => p.animate([{ transform: 'translateY(105%)' }, { transform: 'none' }], opts(700, delay + i * 40)));
 }
 

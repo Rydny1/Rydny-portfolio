@@ -17,6 +17,8 @@ const mk = <T extends SVGElement>(tag: string, attrs: Record<string, string | nu
   return n;
 };
 
+import './stepper';
+
 if (form && wrap && sent && errBox) init(form, wrap, sent, errBox);
 
 function init(form: HTMLFormElement, wrap: HTMLElement, sent: HTMLElement, errBox: HTMLElement) {
@@ -72,6 +74,7 @@ function init(form: HTMLFormElement, wrap: HTMLElement, sent: HTMLElement, errBo
       else firstEl(k)?.setAttribute('aria-invalid', 'true');
     });
     errBox.textContent = keys.length ? e[keys[0]!]! : '';
+    if (keys[0]) form.dispatchEvent(new CustomEvent('invalid-field', { detail: keys[0] }));
     firstEl(keys[0] ?? '')?.focus();
   };
   form.addEventListener('input', (ev) => {

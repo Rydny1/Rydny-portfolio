@@ -211,6 +211,25 @@ html.has-cursor :where(input, textarea, select) {
 .cursor.link .blade {
   fill-opacity: 0.2;
 }
+/* Over dark areas the leaf turns light grey-white and drops the multiply blend (which would vanish on dark) */
+.cursor.dark {
+  mix-blend-mode: normal;
+}
+.cursor.dark .blade {
+  fill: var(--paper);
+  fill-opacity: 0.28;
+  stroke: var(--paper);
+}
+.cursor.dark .vein {
+  stroke: var(--paper);
+}
+.cursor.dark .label {
+  color: var(--paper);
+}
+.cursor .blade,
+.cursor .vein {
+  transition: fill 0.3s var(--ease), stroke 0.3s var(--ease), fill-opacity 0.3s var(--ease);
+}
 .cursor .label {
   position: absolute;
   left: 16px;
@@ -346,4 +365,65 @@ html.has-cursor :where(input, textarea, select) {
     transform-origin: center;
     transform: scale(0.7);
   }
+}
+
+/* Tap feedback on touch devices */
+@media (hover: none) {
+  .btn:active,
+  .pill:active span,
+  .toggle:active,
+  .touch:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Contact stepper (phones) */
+.letter.stepper {
+  font-size: clamp(24px, 6.6vw, 30px);
+}
+.letter.stepper .line {
+  margin-bottom: var(--s-3);
+}
+.stepbar {
+  position: relative;
+  height: 2px;
+  margin-bottom: var(--s-4);
+  background: rgb(238 233 227 / 0.2);
+  overflow: hidden;
+}
+.stepbar .fill {
+  position: absolute;
+  inset: 0;
+  background: var(--signal);
+  transform-origin: left;
+  transform: scaleX(0.25);
+  transition: transform 0.4s var(--ease);
+}
+.stepbar .glow {
+  position: absolute;
+  left: 0;
+  top: -0.5px;
+  width: 28px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to right, transparent, var(--glass), transparent);
+  opacity: 0;
+}
+.stepnav {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+}
+.stepnav [hidden] {
+  display: none;
+}
+.letter.stepper .pill span {
+  min-height: 48px;
+  font-size: 17px;
+}
+.letter.stepper input[type='text'],
+.letter.stepper input[type='email'],
+.letter.stepper textarea {
+  min-height: 48px;
 }

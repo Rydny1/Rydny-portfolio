@@ -1,13 +1,13 @@
 ---
 import { copy } from '../content/copy';
-const { nav } = copy;
+const { nav, contact } = copy;
 ---
 
 <header class="nav" data-nav>
   <div class="in">
     <div class="bar">
       <a class="name" href="#top">{nav.name}</a>
-      <nav aria-label="Primary">
+      <nav aria-label="Primary" class="links">
         <ul>
           {nav.links.map((l) => (
             <li><a class="roll" href={l.href} data-text={l.label}><span>{l.label}</span></a></li>
@@ -15,15 +15,36 @@ const { nav } = copy;
         </ul>
       </nav>
       <a class="touch" href={nav.cta.href}>{nav.cta.label}</a>
+      <button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="sheet" data-menu-open>
+        <span></span><span></span>
+      </button>
     </div>
     <div class="meta">
       <span>{nav.role}</span>
       <span class="clock"
-        >{nav.city} <time id="riga-time" datetime=""></time> <span id="riga-zone">GMT+2</span></span
+        >{nav.city} <time data-riga-time datetime=""></time><span class="zone"> <span data-riga-zone>GMT+2</span></span></span
       >
     </div>
   </div>
 </header>
+
+<!-- Phones: bottom-sheet menu -->
+<div class="sheet-root" data-sheet-root hidden>
+  <div class="backdrop" data-menu-close></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Menu" data-sheet>
+    <div class="grab" aria-hidden="true"></div>
+    <ul class="sheet-links">
+      {nav.links.map((l) => (
+        <li><a href={l.href} data-menu-close>{l.label}</a></li>
+      ))}
+    </ul>
+    <div class="sheet-foot">
+      <p>{nav.city} <time data-riga-time datetime=""></time></p>
+      <a class="link" href={`mailto:${contact.email}`}>{contact.email}</a>
+    </div>
+    <button class="sheet-close" type="button" data-menu-close>Close</button>
+  </div>
+</div>
 
 <style>
   .nav {
@@ -35,31 +56,48 @@ const { nav } = copy;
     color: var(--ink);
     transition: color 0.4s var(--ease);
   }
-  /* Bar background fades in once the page scrolls (opacity only). */
-  .nav::before {
+  /* Bar background fades in once the page scrolls (opacity only). Blur only, no line. */
+  /* Progressive blur: two layers, both masked so the blur is strongest at the top and fades to nothing at the
+     bottom (the lower third is fully clear). The tint is light, so content scrolling behind stays visible and
+     nobody notices a bar. Opacity only toggles on scroll. */
+  .nav::before,
+  .nav::after {
     content: '';
     position: absolute;
     inset: 0 0 auto 0;
-    height: 80px;
-    background: rgb(238 233 227 / 0.78);
-    backdrop-filter: blur(14px);
+    height: 64px;
     opacity: 0;
-    transition: opacity 0.35s var(--ease), background-color 0.4s var(--ease);
+    pointer-events: none;
+    transition: opacity 0.35s var(--ease);
   }
-  .nav.scrolled::before {
+  .nav::before {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 68%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 68%);
+  }
+  .nav::after {
+    background: linear-gradient(to bottom, rgb(238 233 227 / 0.5), rgb(238 233 227 / 0.16) 55%, rgb(238 233 227 / 0));
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+  }
+  .nav.scrolled::before,
+  .nav.scrolled::after {
     opacity: 1;
   }
   .nav.on-night {
     color: var(--paper);
   }
-  .nav.on-night::before {
-    background: rgb(23 24 26 / 0.7);
+  .nav.on-night::after {
+    background: linear-gradient(to bottom, rgb(23 24 26 / 0.5), rgb(23 24 26 / 0.16) 55%, rgb(23 24 26 / 0));
   }
   .in {
     position: relative;
     max-width: var(--max);
     margin-inline: auto;
-    padding: var(--s-3) var(--pad) 0;
+    padding: var(--s-2) var(--pad) 0;
   }
   .bar {
     display: grid;
@@ -100,9 +138,7 @@ const { nav } = copy;
     transition: transform 0.45s var(--ease);
   }
   .roll:hover span,
-  .roll:focus-visible span {
-    transform: translateY(-100%);
-  }
+  .roll:focus-visible span,
   .roll:hover::after,
   .roll:focus-visible::after {
     transform: translateY(-100%);
@@ -111,7 +147,7 @@ const { nav } = copy;
     justify-self: end;
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
+    min-height: 40px;
     padding: 0 var(--s-3);
     border: 1px solid currentColor;
     border-radius: var(--radius-pill);
@@ -129,10 +165,39 @@ const { nav } = copy;
     color: var(--ink);
     border-color: var(--paper);
   }
+  .burger {
+    display: none;
+    justify-self: end;
+    width: 44px;
+    height: 44px;
+    margin-right: -10px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    position: relative;
+  }
+  /* Two thin ink lines, no circle, no box */
+  .burger span {
+    position: absolute;
+    right: 10px;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.3s var(--ease);
+  }
+  .burger span:first-child {
+    top: 18px;
+    width: 24px;
+  }
+  .burger span:last-child {
+    top: 25px;
+    width: 16px;
+  }
   .meta {
     display: flex;
     justify-content: space-between;
-    margin-top: var(--s-3);
+    margin-top: var(--s-2);
     font-size: 13px;
     transition: opacity 0.3s var(--ease);
   }
@@ -147,29 +212,148 @@ const { nav } = copy;
   .nav.on-night :global(:focus-visible) {
     outline-color: var(--paper);
   }
+
+  /* Phones */
   @media (max-width: 899px) {
+    /* lighter blur on phones: kind to mid-range Android, same fade */
+    .nav::before {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .nav::before,
+    .nav::after {
+      height: 60px;
+    }
     .bar {
       grid-template-columns: 1fr auto;
     }
-    nav {
+    .links,
+    .touch {
       display: none;
+    }
+    .burger {
+      display: block;
+    }
+    .meta {
+      font-size: 12px;
+      gap: var(--s-3);
+      margin-top: var(--s-1);
+    }
+    .zone {
+      display: none;
+    }
+  }
+
+  /* Bottom sheet */
+  .sheet-root[hidden] {
+    display: none;
+  }
+  .sheet-root {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+  }
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(23 24 26 / 0.45);
+    animation: sheet-fade 0.3s var(--ease) both;
+  }
+  .sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: var(--s-1) var(--pad) calc(var(--s-4) + env(safe-area-inset-bottom));
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 24px 24px 0 0;
+    animation: sheet-up 0.4s var(--ease) both;
+    touch-action: none;
+  }
+  .grab {
+    width: 40px;
+    height: 4px;
+    margin: var(--s-1) auto var(--s-3);
+    border-radius: 2px;
+    background: var(--hairline-strong);
+  }
+  .sheet-links {
+    display: block;
+  }
+  .sheet-links a {
+    display: block;
+    padding: var(--s-1) 0;
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    text-decoration: none;
+  }
+  .sheet-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s-2);
+    margin-top: var(--s-4);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--hairline);
+    font-size: 14px;
+    color: var(--mist);
+  }
+  .sheet-close {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    margin-top: var(--s-3);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-pill);
+    background: none;
+    color: var(--ink);
+    font: 600 15px var(--font-body);
+  }
+  .sheet-root.closing .sheet {
+    animation: sheet-down 0.3s var(--ease) both;
+  }
+  .sheet-root.closing .backdrop {
+    animation: sheet-fade-out 0.3s var(--ease) both;
+  }
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes sheet-down {
+    to {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes sheet-fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes sheet-fade-out {
+    to {
+      opacity: 0;
     }
   }
 </style>
 
 <script>
   // Live Riga clock, updates every minute.
-  const t = document.getElementById('riga-time');
-  const z = document.getElementById('riga-zone');
   const tick = () => {
-    if (!t || !z) return;
     const now = new Date();
-    t.textContent = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Riga', hour: '2-digit', minute: '2-digit', hour12: false }).format(now);
-    t.setAttribute('datetime', now.toISOString());
+    const hm = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Riga', hour: '2-digit', minute: '2-digit', hour12: false }).format(now);
     const off = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Riga', timeZoneName: 'shortOffset' })
       .formatToParts(now)
       .find((p) => p.type === 'timeZoneName')?.value;
-    if (off) z.textContent = off;
+    document.querySelectorAll('[data-riga-time]').forEach((t) => {
+      t.textContent = hm;
+      t.setAttribute('datetime', now.toISOString());
+    });
+    if (off) document.querySelectorAll('[data-riga-zone]').forEach((z) => (z.textContent = off));
   };
   tick();
   setInterval(tick, 60_000);
@@ -195,4 +379,48 @@ const { nav } = copy;
     { passive: true },
   );
   update();
+
+  // Bottom-sheet menu (phones): tap outside, swipe down, Escape or a link closes it.
+  const root = document.querySelector<HTMLElement>('[data-sheet-root]');
+  const sheet = document.querySelector<HTMLElement>('[data-sheet]');
+  const opener = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  if (root && sheet && opener) {
+    const open = () => {
+      root.hidden = false;
+      root.classList.remove('closing');
+      opener.setAttribute('aria-expanded', 'true');
+      document.documentElement.style.overflow = 'hidden';
+      sheet.querySelector<HTMLElement>('a')?.focus();
+    };
+    const close = () => {
+      if (root.hidden) return;
+      root.classList.add('closing');
+      opener.setAttribute('aria-expanded', 'false');
+      document.documentElement.style.overflow = '';
+      setTimeout(() => {
+        root.hidden = true;
+        root.classList.remove('closing');
+        sheet.style.transform = '';
+      }, 280);
+      opener.focus();
+    };
+    opener.addEventListener('click', open);
+    root.querySelectorAll('[data-menu-close]').forEach((el) => el.addEventListener('click', close));
+    addEventListener('keydown', (e) => e.key === 'Escape' && close());
+    let y0 = 0;
+    let dy = 0;
+    sheet.addEventListener('touchstart', (e) => {
+      y0 = e.touches[0]!.clientY;
+      dy = 0;
+    }, { passive: true });
+    sheet.addEventListener('touchmove', (e) => {
+      dy = Math.max(0, e.touches[0]!.clientY - y0);
+      sheet.style.transform = `translateY(${dy}px)`;
+    }, { passive: true });
+    sheet.addEventListener('touchend', () => {
+      if (dy > 90) close();
+      else sheet.style.transform = '';
+    });
+    matchMedia('(min-width: 900px)').addEventListener('change', (m) => m.matches && close());
+  }
 </script>
