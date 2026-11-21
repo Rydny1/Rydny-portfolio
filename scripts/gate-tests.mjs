@@ -68,6 +68,30 @@ try {
     await ctx.close();
   }
 
+  // Hero fits the first screen on every device class, nothing clipped, overlapping or overflowing
+  const devices = [
+    [360, 640], [375, 667], [390, 844], [393, 852], [412, 915], [430, 932], [844, 390], [667, 375],
+    [768, 1024], [820, 1180], [1024, 768], [1024, 1366], [1180, 820],
+    [1280, 720], [1280, 800], [1366, 768], [1440, 900], [1536, 864], [1680, 1050], [1920, 1080], [2560, 1440], [3440, 1440],
+  ];
+  for (const [w, h] of devices) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h } });
+    const page = await ctx.newPage();
+    await page.goto(BASE, { waitUntil: 'networkidle' });
+    const m = await page.evaluate(() => {
+      const r = (s) => document.querySelector(s).getBoundingClientRect();
+      const hero = r('.hero'), l1 = r('.l1'), l2 = r('.l2'), bot = r('.bottom'), nav = r('.nav');
+      return { heroH: Math.round(hero.height), vh: innerHeight, navBottom: Math.round(nav.bottom), l1Top: Math.round(l1.top), l1Right: Math.round(l1.right), l2Bottom: Math.round(l2.bottom), botTop: Math.round(bot.top), botBottom: Math.round(bot.bottom), l2Right: Math.round(l2.right), l2Left: Math.round(l2.left), vw: innerWidth, overflow: document.documentElement.scrollWidth - innerWidth };
+    });
+    const desktop = w >= 900;
+    // Desktop must equal the screen. Portrait phones and tablets (800px tall or more) must fit. Short or landscape screens may scroll but never overlap.
+    const heightOk = desktop ? m.heroH === m.vh : h >= 800 && h > w ? m.heroH <= m.vh + 1 : true;
+    const ok = heightOk && m.l1Top > m.navBottom && m.l2Bottom < m.botTop && m.botBottom <= m.heroH - 8 && m.l1Right <= m.vw && m.l2Right <= m.vw && m.l2Left >= 0 && m.overflow <= 0;
+    log(`   hero fits ${w}x${h}`, ok, ok ? '' : JSON.stringify(m));
+    await page.screenshot({ path: `${shots}/fit-${w}x${h}.png` });
+    await ctx.close();
+  }
+
   // Test 10: reduced motion
   {
     const ctx = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });

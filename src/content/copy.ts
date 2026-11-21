@@ -13,6 +13,7 @@ export const copy = {
       { label: 'About', href: '#about' },
       { label: 'Contact', href: '#contact' },
     ],
+    cta: { label: 'Get in touch', href: '#contact' },
     city: 'Riga',
     skip: 'Skip to content',
   },
@@ -37,8 +38,7 @@ export const copy = {
       prefix: 'More:',
       items: [
         { label: 'Steady (fitness app)', href: 'https://github.com/Rydny1/steady-fitness' },
-        // github.com/Rydny1/quicklist returns 404 (private or renamed), so this points at the profile until Rydny confirms.
-        { label: 'QuickList (listings platform)', href: 'https://github.com/Rydny1' },
+        // QuickList (school project, repo not public) left out on purpose, per Rydny.
       ],
     },
   },

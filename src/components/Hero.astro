@@ -141,31 +141,73 @@ const { hero } = copy;
     letter-spacing: -0.01em;
   }
 
+  /* Desktop: the hero is exactly one screen. Type scales with the smaller of width and height. */
+  @media (min-width: 900px) {
+    .hero {
+      height: max(100svh, 620px);
+      min-height: 0;
+    }
+    .inner {
+      height: 100%;
+      min-height: 0;
+      padding-top: clamp(120px, 17vh, 160px);
+      padding-bottom: clamp(var(--s-3), 5vh, var(--s-6));
+    }
+    h1 {
+      font-size: clamp(52px, min(7.4vw, 13vh), 128px);
+    }
+    .l2 {
+      margin-top: clamp(var(--s-3), 8vh, var(--s-16));
+    }
+    .bottom {
+      margin-top: var(--s-3);
+    }
+  }
+
   @media (max-width: 899px) {
     h1 {
-      font-size: clamp(48px, 14vw, 96px);
-      flex: 0;
+      font-size: clamp(44px, 13.5vw, 96px);
       text-wrap: balance;
     }
     .l1,
     .l2 {
       align-self: flex-start;
     }
+    .l1 {
+      margin-bottom: var(--s-8);
+    }
     .l2 {
-      margin-top: var(--s-12);
+      margin-top: auto;
     }
     .inner {
       padding-top: var(--s-16);
+      padding-bottom: var(--s-3);
     }
     .bottom {
       flex-direction: column;
-      align-items: flex-start;
-      gap: var(--s-6);
-      margin-top: var(--s-8);
+      align-items: stretch;
+      gap: var(--s-3);
+      margin-top: var(--s-4);
+    }
+    .lead {
+      font-size: 18px;
+    }
+    .cta {
+      margin-top: var(--s-2);
     }
     .facts {
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: var(--s-2);
+    }
+    .facts li {
+      font-size: var(--fs-label);
+      line-height: 1.35;
+    }
+    .facts b {
+      font-size: 17px;
+      line-height: 1.2;
+      margin-bottom: 4px;
     }
   }
 </style>

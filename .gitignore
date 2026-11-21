@@ -25,3 +25,8 @@ pnpm-debug.log*
 .aider*
 
 _brief/shots/
+
+.vercel
+.env*
+.vercel/
+.env*.local
