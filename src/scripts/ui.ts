@@ -31,4 +31,7 @@ if (fine && !reduced) {
   );
 }
 
+import './cursor';
+import './scroll';
+
 export {};

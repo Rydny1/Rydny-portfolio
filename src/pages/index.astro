@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 import Proof from '../components/Proof.astro';
 import WhatIFix from '../components/WhatIFix.astro';
@@ -10,6 +11,7 @@ import { copy } from '../content/copy';
 
 <Base>
   <a class="skip" href="#work">{copy.nav.skip}</a>
+  <Nav />
   <Hero />
   <main id="main">
     <Proof />

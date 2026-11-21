@@ -7,13 +7,13 @@ const { proof } = copy;
 
 <section class="proof" id="work" aria-labelledby="proof-title" data-node>
   <div class="wrap">
-    <div class="head">
+    <div class="head" data-reveal>
       <h2 id="proof-title">{proof.title}</h2>
       <p class="lead">{proof.lead}</p>
     </div>
     {projects.map((p) => <Project project={p} />)}
     <p class="more">
-      {proof.more.prefix}
+      {proof.more.prefix}{' '}
       {proof.more.items.map((m, i) => (
         <>
           {i > 0 && ', '}
@@ -27,7 +27,7 @@ const { proof } = copy;
 <style>
   .proof {
     padding-block: var(--section-y);
-    background: var(--paper);
+    background: var(--paper-glass);
   }
   .head {
     display: flex;

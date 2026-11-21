@@ -41,6 +41,10 @@ p {
 a {
   color: inherit;
 }
+main {
+  position: relative;
+  z-index: 1;
+}
 ul {
   list-style: none;
   padding: 0;
@@ -153,5 +157,137 @@ ul {
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+}
+
+/* Glass cursor (fine pointers only; the script adds .has-cursor, so nothing is hidden without JS) */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none;
+}
+html.has-cursor :where(input, textarea, select) {
+  cursor: auto;
+}
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease);
+  will-change: transform;
+}
+.cursor.on {
+  opacity: 1;
+}
+.cursor .ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.16);
+  border: 1px solid rgb(255 255 255 / 0.9);
+  box-shadow: 0 0 0 1px rgb(31 32 35 / 0.22), 0 6px 20px rgb(31 32 35 / 0.12);
+  backdrop-filter: blur(6px) saturate(1.7);
+  -webkit-backdrop-filter: blur(6px) saturate(1.7);
+  transform: scale(0.3);
+  transition: transform 0.4s var(--ease), background-color 0.3s var(--ease);
+}
+.cursor.link .ring {
+  transform: scale(0.85);
+  background: rgb(255 255 255 / 0.1);
+}
+.cursor.view .ring {
+  transform: scale(1.5);
+  background: rgb(255 255 255 / 0.22);
+}
+.cursor.down .ring {
+  transform: scale(0.22);
+}
+.cursor .label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font: 600 11px/1 var(--font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0;
+  transition: opacity 0.25s var(--ease);
+}
+.cursor.view .label {
+  opacity: 1;
+}
+
+/* Page wire */
+.pagewire {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: visible;
+}
+.pw-track {
+  stroke: var(--ink);
+  stroke-opacity: 0.12;
+  stroke-width: 3;
+}
+.pw-track.night {
+  stroke: var(--paper);
+  stroke-opacity: 0.16;
+}
+.pw-line {
+  stroke: var(--signal);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.pw-node .dot {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-opacity: 0.35;
+  stroke-width: 1.5;
+  transition: fill 0.35s var(--ease), stroke 0.35s var(--ease);
+}
+.pw-node.night .dot {
+  fill: var(--night);
+  stroke: var(--paper);
+  stroke-opacity: 0.4;
+}
+.pw-node .ring {
+  fill: var(--signal);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.5);
+  transition: opacity 0.4s var(--ease), transform 0.5s var(--ease);
+}
+.pw-node.on .dot {
+  fill: var(--signal);
+  stroke: var(--signal);
+  stroke-opacity: 1;
+}
+.pw-node.on .ring {
+  opacity: 0.2;
+  transform: scale(1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pw-node.end.on .ring {
+    animation: pw-live 2.6s ease-in-out infinite;
+  }
+}
+@keyframes pw-live {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.05;
+    transform: scale(1.5);
   }
 }

@@ -9,13 +9,20 @@ interface Props {
 }
 const { project: p } = Astro.props;
 const L = copy.proof.labels;
+const primary = p.links[0];
 ---
 
 <article class="project" aria-labelledby={`p-${p.slug}`}>
-  <div class="shot">
-    <Pic base={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} sizes="(min-width: 900px) 58vw, 100vw" style={`object-position:${p.image.position}`} />
+  <div class="shot" data-reveal>
+    {primary ? (
+      <a href={primary.href} rel="noopener" data-cursor="View" aria-label={`${p.name}: ${primary.label}`}>
+        <Pic base={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} sizes="(min-width: 900px) 58vw, 100vw" style={`object-position:${p.image.position}`} />
+      </a>
+    ) : (
+      <Pic base={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} sizes="(min-width: 900px) 58vw, 100vw" style={`object-position:${p.image.position}`} />
+    )}
   </div>
-  <div class="text">
+  <div class="text" data-reveal data-delay="120">
     {p.badge ? <span class="badge">{p.badge}</span> : <span class="label">{p.label}</span>}
     <h3 id={`p-${p.slug}`}>{p.name}</h3>
     <dl>
@@ -50,10 +57,22 @@ const L = copy.proof.labels;
     background: var(--ink);
     box-shadow: 0 24px 48px -24px rgb(31 32 35 / 0.4);
   }
+  .shot a {
+    display: block;
+    height: 100%;
+  }
+  .shot :global(picture) {
+    height: 100%;
+  }
   .shot :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.9s var(--ease);
+  }
+  .shot a:hover :global(img),
+  .shot a:focus-visible :global(img) {
+    transform: scale(1.04);
   }
   h3 {
     font-size: var(--fs-h3);

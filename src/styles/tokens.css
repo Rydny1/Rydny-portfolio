@@ -39,6 +39,7 @@
   --signal: #ff5a1f;
   --mist: #66625b; /* brief says #6E6A63, which measures 4.45:1 on paper; this is the nearest value that passes AA */
   --paper-raised: #f6f2ed;
+  --paper-glass: rgb(238 233 227 / 0.92); /* sections let the blurred wall drift faintly behind */
   --hairline: rgb(31 32 35 / 0.15);
   --hairline-strong: rgb(31 32 35 / 0.28);
   --wire-track: rgb(31 32 35 / 0.1);

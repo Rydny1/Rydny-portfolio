@@ -1,39 +1,43 @@
 # Test report
 
-## Gate 1: Structure (21 Nov 2026)
+Run everything with `npm run build && npm run test:gate`. Screenshots land in `_brief/shots/`.
 
-Run with `npm run build && npm run test:gate`. Screenshots land in `_brief/shots/`.
+## Update pass (22 Nov 2026): 68 of 68 automated checks pass
 
-| # | Test | Result |
+| Area | Checks | Result |
 |---|---|---|
-| 1 | `astro check` (strict TS) | Pass, 0 errors, 0 warnings, 0 hints |
-| 2 | Build | Pass, 0 warnings |
-| 4 | axe-core (wcag2a, 2aa, 21aa, best-practice), desktop | Pass, 0 violations |
-| 5 | html-validate on index and 404 | Pass |
-| 6 | Internal anchors and 6 external links | Pass (200) |
-| 7 | Bundle size | JS 0.9 KB inline, CSS about 12 KB. Budgets 60 KB and 25 KB |
-| 8 | No horizontal overflow at 360, 390, 768, 1024, 1280, 1440, 1920. No console errors | Pass |
-| 9 | JavaScript disabled, all copy visible | Pass (33 strings) |
-| 10 | Reduced motion: video not playing | Pass |
-| 15 | Video plays on screen, pauses off screen | Pass |
-|   | No em or en dashes in rendered page | Pass |
+| Type check (`astro check`, strict) and build | 0 errors, 0 warnings, 0 hints | Pass |
+| axe-core (wcag2a, 2aa, 21aa, best-practice) on the full page including the form and night section | 0 violations | Pass |
+| html-validate on index and 404 | 0 errors | Pass |
+| Links: internal anchors and external | all resolve, all 200 | Pass |
+| JavaScript disabled: every copy line visible | 33 strings | Pass |
+| No em or en dashes in rendered page | none | Pass |
+| Hero fits first screen, nothing clipped or overlapping, no overflow | 22 viewports: phones 360 to 430, landscape phones, tablets, laptops 1280 to 1536, 1680, 1920, 2560, ultrawide 3440 | Pass |
+| No horizontal overflow, no console errors, footer name not clipped | 360, 390, 768, 1024, 1280, 1440, 1920 | Pass |
+| Hero wire: pills built (4 desktop, 2 phone), light moves, no script errors | desktop and phone | Pass |
+| Light smoothness | frame gaps p95 16.7 ms, max 16.8 ms (steady 60 fps) | Pass |
+| Pinned hero, fixed nav, page wire (5 nodes), scroll blur, night nav, all nodes lit at end | 1440 | Pass |
+| Contact form: empty submit error + aria-invalid + focus, role=alert, keyboard-only fill and submit, success state, payload | Chromium | Pass |
+| API: valid, honeypot, too fast, bad email, bad choice, long message, foreign origin, oversize, bad JSON, rate limit (6th is 429) | handler imported directly | Pass |
+| Reduced motion: video not playing | | Pass |
+| Video plays on screen, pauses when scrolled away | | Pass |
+| Bundle (raw): JS 16.8 KB, CSS 24.1 KB | budgets 60 KB and 25 KB | Pass (CSS close to the limit) |
 
-Not run yet (later gates): Lighthouse (3), WebKit and Firefox scroll (12), perf trace (13), keyboard walk (14), OG preview (16), device checklist (17).
+Live: https://rydny-portfolio.vercel.app (Vercel project `rydny-portfolio`, GitHub linked, branch `revamp`).
 
-### Found and fixed
-- Mobile overflow at 360px: project grid item grew to its content. Fixed with `minmax(0, 1fr)` and wrapping flow pills.
-- Contrast: brief's `mist` #6E6A63 measures 4.45:1 on paper, just under AA. Changed to #66625B (about 5:1).
-- Hero H1 at 12vw overflowed. Used 7.4vw (max 128px), which matches the approved mockup.
-- GitHub link `Rydny1/quicklist` returns 404.
+### Not run yet
+- Lighthouse mobile and desktop (budgets: Perf 95+, others 100, LCP under 2.0s, CLS under 0.05). Needs a run on the Vercel URL.
+- WebKit and Firefox scroll runs, long-task trace, OG card preview, real-device checklist.
+- Keyboard walk beyond the form (skip link, nav, focus ring on every control) is partly covered by axe but not scripted.
+- The contact API runs as a stub (logs only). It has not been exercised on Vercel itself yet.
 
-### Open questions for Rydny
-1. QuickList repo is not public at `github.com/Rydny1/quicklist`. Link currently points at your GitHub profile. Make the repo public, or give the right URL?
-2. Steady now links to `github.com/Rydny1/steady-fitness` (the only public match). Correct?
-3. Brief gives the hero H1 two sizes (12vw and 6.8vw). I used 7.4vw to match the mockup. OK?
-4. Mist colour tweak above. OK?
-5. Nav: hero spec lists "Contact" as a link, copy rules also want a "Get in touch" outline nav button. Currently the link row only. Which one?
-6. Vercel project not created yet, so SITE_URL in `src/config.ts` is a placeholder. Confirm I may create the free Vercel project for Gate 5.
-7. Only 1003x1254 of the portrait exists, so 1440w crop was skipped (would be upscaled).
+### Known limits
+- Rate limit is per function instance (in memory). Exact limiting needs a shared store (Upstash or Vercel KV): needs your OK.
+- Cursor and magnetic buttons are mouse only. Touch devices get none of it, by design.
+- Page wire x position uses the content column; on very narrow phones it sits 10px from the edge.
 
-### Rubric (self-score, structure only, so Design is not judged yet)
-Design n/a, Usability 8, Creativity n/a (no wire yet), Content 9. Weakest: no wire, no day-light overlays, APEX and Altays screenshots have a dark band inside the frame.
+### Real-device checklist (for you)
+1. iPhone Safari and an Android phone: hero fits one screen, S-curve readable, light moves, wall video autoplays.
+2. Tap targets 44px or larger: nav button, "Let's talk", pills, Send it.
+3. Form: type with the on-screen keyboard, check the blanks grow and the page does not jump.
+4. Scroll feel: pinned hero, blur, page wire.

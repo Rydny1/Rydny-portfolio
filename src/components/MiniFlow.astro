@@ -6,7 +6,7 @@ interface Props {
 const { steps } = Astro.props;
 ---
 
-<ol class="flow" aria-label="How the fix works">
+<ol class="flow" aria-label="How the fix works" data-flow>
   {steps.map((s, i) => (
     <>
       <li class="step"><span>{s}</span></li>
@@ -38,6 +38,7 @@ const { steps } = Astro.props;
     min-width: var(--s-2);
     height: 2px;
     background: var(--signal);
+    transform-origin: left;
   }
   @media (max-width: 480px) {
     .step span {

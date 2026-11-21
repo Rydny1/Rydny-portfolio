@@ -55,6 +55,8 @@ try {
     page.on('pageerror', (e) => errors.push(String(e)));
     await page.goto(BASE, { waitUntil: 'networkidle' });
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    const bigClip = await page.evaluate(() => { const b = document.querySelector('.big'); return b.scrollWidth - b.clientWidth; });
+    log(`   width ${w}: footer name not clipped`, bigClip <= 0, bigClip > 0 ? `${bigClip}px clipped` : '');
     await page.screenshot({ path: `${shots}/hero-${w}.png` });
     // Trigger lazy images so the full-page shot is honest
     await page.evaluate(async () => {
@@ -123,6 +125,27 @@ try {
     log(`   wire ${label}: pills built (${info.pills}), light moves (${info.moved} positions)`, info.pills === (w < 900 ? 2 : 4) && info.moved > 20, JSON.stringify(info));
     log(`   wire ${label}: no script errors`, errs.length === 0, errs.join(' ; '));
     await page.screenshot({ path: `${shots}/wire-${label}.png` });
+    await ctx.close();
+  }
+
+  // Pinned hero, blur layer, page wire, fixed nav
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const page = await ctx.newPage();
+    await page.goto(BASE, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(2300);
+    const sticky = await page.$eval('.hero', (n) => getComputedStyle(n).position);
+    const navPos = await page.$eval('[data-nav]', (n) => getComputedStyle(n).position);
+    const nodes = await page.$$eval('.pagewire .pw-node', (n) => n.length);
+    await page.evaluate(() => window.scrollTo(0, 700));
+    await page.waitForTimeout(500);
+    const mid = await page.evaluate(() => ({ blur: parseFloat(document.querySelector('.hero .blur').style.opacity), inner: parseFloat(document.querySelector('.hero .inner').style.opacity), heroTop: Math.round(document.querySelector('.hero').getBoundingClientRect().top), scrolled: document.querySelector('[data-nav]').classList.contains('scrolled') }));
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await page.waitForTimeout(600);
+    const end = await page.evaluate(() => ({ night: document.querySelector('[data-nav]').classList.contains('on-night'), litNodes: document.querySelectorAll('.pagewire .pw-node.on').length }));
+    log('   hero pinned, nav fixed, page wire has 5 nodes', sticky === 'sticky' && navPos === 'fixed' && nodes === 5, JSON.stringify({ sticky, navPos, nodes }));
+    log('   scroll blur: wall blurs, type fades, hero stays pinned, bar appears', mid.blur > 0.5 && mid.inner < 0.2 && mid.heroTop === 0 && mid.scrolled, JSON.stringify(mid));
+    log('   end of page: nav turns paper on night, all 5 nodes lit', end.night && end.litNodes === 5, JSON.stringify(end));
     await ctx.close();
   }
 

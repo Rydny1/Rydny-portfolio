@@ -5,10 +5,10 @@ const { fix } = copy;
 
 <section class="fix" id="fix" aria-labelledby="fix-title" data-node>
   <div class="wrap">
-    <h2 id="fix-title">{fix.title}</h2>
+    <h2 id="fix-title" data-reveal>{fix.title}</h2>
     <ol class="rows">
       {fix.rows.map((r) => (
-        <li class="row">
+        <li class="row" data-reveal>
           <span class="n label">{r.n}</span>
           <h3>{r.title}</h3>
           <p>{r.text}</p>
@@ -21,7 +21,7 @@ const { fix } = copy;
 <style>
   .fix {
     padding-block: var(--section-y);
-    background: var(--paper);
+    background: var(--paper-glass);
   }
   h2 {
     font-size: var(--fs-h2);

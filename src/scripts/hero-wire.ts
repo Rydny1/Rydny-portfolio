@@ -207,8 +207,9 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
     frameId = requestAnimationFrame(frame);
   };
 
+  const covered = () => scrollY > innerHeight * 1.1;
   const start = () => {
-    if (running || !visible || document.hidden) return;
+    if (running || !visible || document.hidden || covered()) return;
     running = true;
     t0 = performance.now() + (t0Pending ? SEQUENCE_DELAY : 0);
     t0Pending = false;
@@ -227,6 +228,7 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
     visible ? start() : stop();
   }).observe(hero);
   document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+  addEventListener('scroll', () => (covered() ? stop() : start()), { passive: true });
   start();
 }
 

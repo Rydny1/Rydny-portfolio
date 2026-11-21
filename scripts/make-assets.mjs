@@ -18,6 +18,9 @@ async function emit(input, name, { width, height, position = 'centre' }, q = { a
 await emit('_brief/assets/wall-light-poster.jpg', 'wall-poster', { width: 1600 }, { avif: 38, webp: 55, jpg: 60 }, ['avif', 'webp', 'jpg']);
 await emit('_brief/assets/wall-light-poster.jpg', 'wall-poster-800', { width: 800 }, { avif: 38, webp: 55, jpg: 60 }, ['avif', 'webp', 'jpg']);
 
+// Pre-blurred wall for the scroll blur: opacity is scrubbed, filter is never animated
+await sharp('_brief/assets/wall-light-poster.jpg').resize({ width: 800 }).blur(22).webp({ quality: 55 }).toFile(`${out}/wall-blur.webp`);
+
 // Portrait 4:5 (source is 1254 square, so 1003x1254 is the largest honest crop)
 const crop = await sharp('_brief/assets/portfolio-picture.png').extract({ left: 125, top: 0, width: 1003, height: 1254 }).toBuffer();
 for (const w of [480, 960]) await emit(crop, `portrait-${w}`, { width: w, height: Math.round(w * 1.25) }, { avif: 50, webp: 70, jpg: 74 });
