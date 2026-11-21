@@ -7,7 +7,7 @@ if (matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(pr
   el.className = 'cursor';
   el.setAttribute('aria-hidden', 'true');
   el.innerHTML =
-    '<svg class="leaf" viewBox="0 0 24 24" width="22" height="22" focusable="false">' +
+    '<svg class="leaf" viewBox="0 0 24 24" width="20" height="20" focusable="false">' +
     '<path class="blade" d="M12 1.6C18.4 6.4 19.2 14 12 22.4C4.8 14 5.6 6.4 12 1.6Z"/>' +
     '<path class="vein" d="M12 22.4V7.2M12 15.2L8.6 11.6M12 12.4L15.2 9.2"/>' +
     '</svg><span class="label">View project</span>';
@@ -86,14 +86,14 @@ if (matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(pr
       el.classList.toggle('view', view);
       el.classList.toggle('link', link);
       tiltTarget = link ? 20 : 0;
-      scaleTarget = link ? 1.35 : 1;
+      scaleTarget = link ? 2 : 1;
       wake();
     },
     { passive: true },
   );
   document.addEventListener('pointerleave', () => el.classList.remove('on'));
   document.addEventListener('pointerdown', () => (scaleTarget = 0.85));
-  document.addEventListener('pointerup', () => (scaleTarget = el.classList.contains('link') ? 1.35 : 1));
+  document.addEventListener('pointerup', () => (scaleTarget = el.classList.contains('link') ? 2 : 1));
   void label;
 }
 
