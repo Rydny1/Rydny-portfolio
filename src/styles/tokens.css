@@ -36,7 +36,9 @@
   /* color */
   --ink: #1f2023;
   --paper: #eee9e3;
-  --signal: #ff5a1f;
+  --signal: #e4572e; /* line, nodes, full stops, live dot. 3.05:1 on cream (graphics rule is 3:1) */
+  --signal-fill: #ea6236; /* button fill, ink text on top: 4.88:1 */
+  --green: #2e4636; /* vintage green: leaf cursor, active flow step, What I fix hover */
   --mist: #66625b; /* brief says #6E6A63, which measures 4.45:1 on paper; this is the nearest value that passes AA */
   --paper-raised: #f6f2ed;
   --paper-glass: rgb(238 233 227 / 0.92); /* sections let the blurred wall drift faintly behind */
@@ -45,7 +47,8 @@
   --wire-track: rgb(31 32 35 / 0.1);
   --night: #17181a; /* evening: contact section and footer */
   --on-night-mist: #aaa59c;
-  --glass: #e6eef6; /* the light that travels the line: cool blue-grey */
+  --glass: #e6eef6;
+  --glass-deep: #a9bdd1; /* the glow around the light: reads blue-grey, never white */ /* the light that travels the line: cool blue-grey */
 
   /* type */
   --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;

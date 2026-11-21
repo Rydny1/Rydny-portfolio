@@ -21,8 +21,11 @@
   stroke-width: 3;
   stroke-linecap: round;
 }
-.wire stop {
+.wire #capsule stop {
   stop-color: var(--glass);
+}
+.wire #capsule-glow stop {
+  stop-color: var(--glass-deep);
 }
 
 .wire .pill-body {
@@ -72,8 +75,8 @@
   transform-origin: center;
 }
 .wire .glow {
-  fill: url(#capsule);
-  opacity: 0.22;
+  fill: url(#capsule-glow);
+  opacity: 0.55;
 }
 .wire .core {
   fill: url(#capsule);

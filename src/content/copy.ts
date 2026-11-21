@@ -13,7 +13,7 @@ export const copy = {
       { label: 'About', href: '#about' },
       { label: 'Contact', href: '#contact' },
     ],
-    cta: { label: "Let's talk", href: '#contact' },
+    cta: { label: 'Get in touch', href: '#contact' },
     city: 'Riga',
     skip: 'Skip to content',
   },
@@ -21,20 +21,19 @@ export const copy = {
     line1: 'Find the problem',
     line2: 'Build the fix.',
     lead: 'I turn slow, manual processes into software and automations that run on their own.',
-    primary: { label: "Let's talk", href: '#contact' },
+    primary: { label: 'Get in touch', href: '#contact' },
     secondary: { label: 'See the work', href: '#work' },
     facts: [
       { title: 'End to end', text: 'Idea, design, build, launch' },
       { title: '5+ products', text: 'Built from zero' },
-      { title: 'Remote', text: 'Europe, UK and the Gulf' },
     ],
     steps: ['MAP', 'DESIGN', 'AUTOMATE', 'TEST'],
   },
   proof: {
-    title: 'Proof.',
+    title: 'Proof',
     lead: 'Three problems. Three working fixes.',
     labels: { problem: 'Problem', fix: 'Fix', result: 'Result' },
-    ask: { label: "Want something like this? Let's talk.", href: '#contact' },
+    ask: { label: 'Want something like this? Get in touch.', href: '#contact' },
     more: {
       prefix: 'More:',
       items: [
@@ -45,26 +44,27 @@ export const copy = {
   },
   fix: {
     title: 'What I fix',
+    lead: 'Most work starts with one of these.',
     rows: [
       {
         n: '01',
-        title: 'Manual processes.',
+        title: 'Manual processes',
         text: 'Data entry, follow-ups, reports, handovers. The work your team repeats every day, automated end to end.',
       },
       {
         n: '02',
-        title: 'Websites and web apps.',
+        title: 'Websites and web apps',
         text: 'Fast, sharp, and built for one job: getting the visitor to act.',
       },
       {
         n: '03',
-        title: 'The problem behind the problem.',
+        title: 'The problem behind the problem',
         text: 'Before any code, I map where the time and money actually go. If the right fix is a better process, you hear that first.',
       },
     ],
   },
   about: {
-    title: 'The short version.',
+    title: 'The short version',
     caption: 'Rydny Ihims, Riga 2026',
     alt: 'Portrait of Rydny Ihims',
     paragraphs: [
@@ -76,7 +76,8 @@ export const copy = {
     tools: ['React', 'Next.js', 'TypeScript', 'Python', 'Laravel', 'MySQL', 'n8n', 'REST APIs'],
   },
   contact: {
-    title: 'What are you working on?',
+    title: 'Get in touch',
+    lead: 'Hiring, building something new, or making what you have better. Send a note and you get a straight answer.',
     form: {
       hi: "Hi Rydny, I'm",
       from: 'from',

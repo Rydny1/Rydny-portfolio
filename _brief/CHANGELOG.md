@@ -27,3 +27,12 @@ One line per change, with why. Newest at the bottom.
 - Page wire: one orange line down the left of the page, drawn by scroll, with a node per section that lights at 55% of the screen. It ends at a live node beside "Still running". Why: brief's workflow line, and it makes the footer earn its place.
 - Reveals: sections fade and rise as they arrive, mini flows draw step by step (0.9s, once), portrait drifts up to 24px, footer name rises letter by letter. All start from a hidden frame only when the element enters view, so a full-page screenshot or failed script can never leave content blank. Why: brief's progressive-enhancement rule.
 - Footer name sized to the container (min(14.2vw, 206px)); a test now checks it never clips. Why: it was clipping at 1440.
+
+## Update passes 5 and 6 (22 Nov 2026)
+- CLAUDE.md rewritten: concept "the room", the current palette, type, stack, and the rules that still apply. Why: the old file described a 3D, Clash Display, GitHub Pages site that no longer exists.
+- Accent moved to a deeper red-orange: `--signal` #E4572E (3.05:1 on cream, passes the 3:1 graphics rule; old orange was 2.58:1), `--signal-fill` #EA6236 for the button (ink text 4.88:1). Hard-coded oranges in the contact success animation now use the tokens. Why: pass 6, more vintage next to the green and cream.
+- Added `--green` #2E4636 and `--glass-deep` #A9BDD1 tokens.
+- Every "Let's talk" is now "Get in touch" (nav, hero, after each project). Contact title is "Get in touch." with a new lead. "Remote" fact removed. Section titles carry an orange full stop (Proof, What I fix, The short version, Get in touch). Why: pass 5 copy; I added the stop to About too for consistency.
+- Removed the hairline under the nav bar (blur only).
+- Orange blob behind the nav in the footer was a page-wire node glowing through the glass. Nodes now fade out when they are within 96px of the top.
+- The light's glow is now blue-grey (#A9BDD1) instead of near white, and the light passes underneath the pills so it no longer washes out the labels.

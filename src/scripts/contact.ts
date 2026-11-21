@@ -140,15 +140,21 @@ function init(form: HTMLFormElement, wrap: HTMLElement, sent: HTMLElement, errBo
       svg.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:5';
       const defs = mk('defs');
       const grad = mk('linearGradient', { id: 'capsule-sent', x1: 0, x2: 1, y1: 0, y2: 0 });
-      [[0, 0], [0.5, 1], [1, 0]].forEach(([o, op]) => grad.append(mk('stop', { offset: o!, 'stop-color': '#e6eef6', 'stop-opacity': op! })));
+      [[0, 0], [0.5, 1], [1, 0]].forEach(([o, op]) => {
+        const st = mk('stop', { offset: o!, 'stop-opacity': op! });
+        st.style.stopColor = 'var(--glass)';
+        grad.append(st);
+      });
       defs.append(grad);
       const d = `M ${bx} ${by} C ${bx + 140} ${by + 30}, ${ex - 140} ${ey + 30}, ${ex} ${ey}`;
-      const line = mk<SVGPathElement>('path', { d, pathLength: 1, fill: 'none', stroke: '#ff5a1f', 'stroke-width': 3, 'stroke-linecap': 'round' });
+      const line = mk<SVGPathElement>('path', { d, pathLength: 1, fill: 'none', 'stroke-width': 3, 'stroke-linecap': 'round' });
+      line.style.stroke = 'var(--signal)';
       line.style.strokeDasharray = '1 1';
       line.style.strokeDashoffset = '1.01';
-      const ring = mk('circle', { cx: ex, cy: ey, r: 12, fill: '#ff5a1f', 'fill-opacity': 0.16 });
-      const dot = mk('circle', { cx: ex, cy: ey, r: 6, fill: '#ff5a1f' });
-      const pulse = mk<SVGCircleElement>('circle', { cx: ex, cy: ey, r: 6, fill: '#ff5a1f' });
+      const ring = mk<SVGCircleElement>('circle', { cx: ex, cy: ey, r: 12, 'fill-opacity': 0.16 });
+      const dot = mk<SVGCircleElement>('circle', { cx: ex, cy: ey, r: 6 });
+      const pulse = mk<SVGCircleElement>('circle', { cx: ex, cy: ey, r: 6 });
+      [ring, dot, pulse].forEach((n) => (n.style.fill = 'var(--signal)'));
       pulse.style.cssText = 'opacity:0;transform-box:fill-box;transform-origin:center';
       [ring, dot].forEach((n) => (n.style.opacity = '0'));
       const light = mk<SVGGElement>('g');

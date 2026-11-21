@@ -24,7 +24,7 @@ const { about } = copy;
     </figure>
 
     <div class="text" data-reveal data-delay="120">
-      <h2 id="about-title">{about.title}</h2>
+      <h2 id="about-title">{about.title}<span class="fs">.</span></h2>
       {about.paragraphs.map((t) => <p>{t}</p>)}
       <blockquote>
         <p>{about.quote.text}</p>

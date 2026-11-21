@@ -149,6 +149,7 @@ function update() {
     const p = clamp(here, 0, total);
     progressLine.style.strokeDashoffset = String(total - p);
     for (const n of nodes) {
+      n.el.classList.toggle('hide', n.y + mainTop - scrollY < 96);
       const on = here >= n.y;
       if (on !== n.on) {
         n.on = on;
