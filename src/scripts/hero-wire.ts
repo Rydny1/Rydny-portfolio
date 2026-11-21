@@ -20,7 +20,6 @@ function el<T extends SVGElement>(tag: string, attrs: Record<string, string | nu
   if (cls) n.setAttribute('class', cls);
   return n;
 }
-const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 function init(hero: HTMLElement, svg: SVGSVGElement) {
@@ -232,3 +231,5 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
 }
 
 if (hero && svg) init(hero, svg);
+
+export {};

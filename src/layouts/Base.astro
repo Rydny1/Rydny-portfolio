@@ -33,5 +33,8 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
   </head>
   <body>
     <slot />
+    <script>
+      import '../scripts/ui';
+    </script>
   </body>
 </html>

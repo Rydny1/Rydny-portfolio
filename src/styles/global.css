@@ -101,16 +101,53 @@ ul {
 }
 
 .btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
-  gap: var(--s-1);
-  padding: 14px 22px;
+  padding: 14px 40px 14px 24px;
+  border: 0;
   border-radius: var(--radius-pill);
   background: var(--signal);
   color: var(--ink);
-  font-weight: 600;
-  font-size: 15px;
+  font: 600 15px/1.2 var(--font-body);
   text-decoration: none;
+  cursor: pointer;
+  transition: color 0.35s var(--ease);
+  will-change: transform;
+}
+/* Ink fill wipes in from the left; a small arrow slides in. Transform and opacity only. */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease);
+}
+.btn::after {
+  content: '\2192';
+  position: absolute;
+  right: 16px;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.3s var(--ease), transform 0.35s var(--ease);
+}
+.btn:hover,
+.btn:focus-visible {
+  color: var(--paper);
+}
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: scaleX(1);
+}
+.btn:hover::after,
+.btn:focus-visible::after {
+  opacity: 1;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {

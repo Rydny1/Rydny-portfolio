@@ -15,3 +15,8 @@ One line per change, with why. Newest at the bottom.
 - Hero load sequence runs once per session; every duration and delay is base x 1.18 (one variable, --k). Pure CSS so nothing can stay hidden if JS fails. Why: 15% slower, per request.
 - Wire on phones ends above the "B" instead of beside it. Why: the side approach cut through the letter.
 - Pills sit at fixed fractions of the curve instead of mockup coordinates. Why: at 1440 the "Build" line starts left of the full stop, unlike the mockup, so mapped pills hit the text.
+- Contact is now a letter: inline underlined blanks that grow as you type (native field-sizing, mirror fallback), choice pills as a real radio group in a fieldset, orange underline draws in on focus, visually hidden labels, errors in a role=alert region, full keyboard use. Why: brief item 6.
+- Submit: on success the orange line draws from the button to an end node, the blue-grey light travels it, the form is replaced by the "Sent" message. Reduced motion skips straight to the message.
+- /api/contact (Vercel function, Web Request/Response signature): server validation, honeypot (looks like success, delivers nothing), 3s minimum fill time, 5 per hour per IP, origin check, 6 KB body cap. Stub only: it logs the message to the Vercel function logs. No email service added. Why: ship-safe, and waiting on Rydny's OK for delivery.
+- Contact and footer sit on night (#17181A) with paper text. Why: evening light, per brief.
+- Buttons: ink fill wipes in from the left on hover, arrow slides in, magnetic up to 6px (hero and Send it).

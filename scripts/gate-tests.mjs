@@ -137,6 +137,67 @@ try {
     await ctx.close();
   }
 
+  // Contact form: validation, keyboard use, success state (API mocked in the browser)
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
+    const page = await ctx.newPage();
+    let posted = null;
+    await page.route('**/api/contact', async (route) => {
+      posted = JSON.parse(route.request().postData() ?? '{}');
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) });
+    });
+    await page.goto(BASE, { waitUntil: 'networkidle' });
+    await page.click('button[type=submit]');
+    const err = (await page.textContent('[data-error]'))?.trim();
+    const invalid = await page.$eval('#f-name', (n) => n.getAttribute('aria-invalid'));
+    const focused = await page.evaluate(() => document.activeElement?.id);
+    log('   form: empty submit shows error, marks field, focuses it', !!err && invalid === 'true' && focused === 'f-name', `${err} | ${invalid} | ${focused}`);
+    const roleAlert = await page.$eval('[data-error]', (n) => n.getAttribute('role'));
+    log('   form: errors announced (role=alert)', roleAlert === 'alert');
+    // keyboard only
+    await page.focus('#f-name');
+    await page.keyboard.type('Test Person');
+    await page.keyboard.press('Tab'); await page.keyboard.type('Acme');
+    await page.keyboard.press('Tab'); await page.keyboard.press('ArrowRight'); // first radio, then pick the second
+    await page.keyboard.press('Tab'); await page.keyboard.type('We need a faster invoicing flow.');
+    await page.keyboard.press('Tab'); await page.keyboard.type('test@example.com');
+    await page.waitForTimeout(3100); // server rule: 3s minimum
+    await page.keyboard.press('Tab'); await page.keyboard.press('Enter');
+    await page.waitForSelector('[data-sent]:not([hidden])', { timeout: 8000 }).catch(() => {});
+    const sentText = await page.textContent('[data-sent]');
+    log('   form: keyboard-only fill and submit, success state replaces form', /Sent\. I'll get back to you within 2 working days\./.test(sentText ?? '') && (await page.$eval('[data-contact-form]', (n) => n.hidden)), sentText?.trim());
+    log('   form: payload has fields and timestamp', posted && posted.name === 'Test Person' && posted.email === 'test@example.com' && typeof posted.choice === 'string' && posted.choice.length > 0 && Number.isFinite(posted.t), JSON.stringify(posted));
+    await ctx.close();
+  }
+
+  // API handler (no email service: validates, honeypots, rate limits, logs)
+  {
+    const { POST, validate } = await import(new URL('../api/contact.ts', import.meta.url).href);
+    const mk = (body, { ip = '1.1.1.1', origin = 'https://rydny-portfolio.vercel.app' } = {}) =>
+      new Request('https://rydny-portfolio.vercel.app/api/contact', { method: 'POST', headers: { 'content-type': 'application/json', origin, 'x-forwarded-for': ip }, body: typeof body === 'string' ? body : JSON.stringify(body) });
+    const good = () => ({ name: 'A', company: '', choice: 'Hire you', message: 'Hello there', email: 'a@b.co', website: '', t: Date.now() - 5000 });
+    const logs = []; const orig = console.log; console.log = (...a) => logs.push(a.join(' '));
+    const r = {};
+    r.ok = (await POST(mk(good(), { ip: '2.2.2.2' }))).status;
+    r.logged = logs.length;
+    r.honeypot = await (await POST(mk({ ...good(), website: 'x' }, { ip: '3.3.3.3' }))).json();
+    r.honeypotLogged = logs.length - r.logged;
+    r.fast = (await POST(mk({ ...good(), t: Date.now() - 500 }, { ip: '4.4.4.4' }))).status;
+    r.badEmail = (await POST(mk({ ...good(), email: 'nope' }, { ip: '5.5.5.5' }))).status;
+    r.badChoice = (await POST(mk({ ...good(), choice: 'x' }, { ip: '5.5.5.6' }))).status;
+    r.longMsg = (await POST(mk({ ...good(), message: 'x'.repeat(700) }, { ip: '5.5.5.7' }))).status;
+    r.origin = (await POST(mk(good(), { ip: '6.6.6.6', origin: 'https://evil.example' }))).status;
+    r.big = (await POST(mk('x'.repeat(7000), { ip: '7.7.7.7' }))).status;
+    r.notJson = (await POST(mk('{oops', { ip: '8.8.8.8' }))).status;
+    const rl = []; for (let i = 0; i < 6; i++) rl.push((await POST(mk(good(), { ip: '9.9.9.9' }))).status);
+    console.log = orig;
+    log('   api: valid 200 and logged once', r.ok === 200 && r.logged === 1, JSON.stringify({ ok: r.ok, logged: r.logged }));
+    log('   api: honeypot looks ok but delivers nothing', r.honeypot.ok === true && r.honeypotLogged === 0);
+    log('   api: too fast 400, bad email 422, bad choice 422, long message 422', r.fast === 400 && r.badEmail === 422 && r.badChoice === 422 && r.longMsg === 422, JSON.stringify(r));
+    log('   api: foreign origin 403, oversize 413, bad JSON 400', r.origin === 403 && r.big === 413 && r.notJson === 400, JSON.stringify(r));
+    log('   api: rate limit 5 per hour per IP (6th is 429)', rl.slice(0, 5).every((x) => x === 200) && rl[5] === 429, rl.join(','));
+  }
+
   // Test 4: axe
   {
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
