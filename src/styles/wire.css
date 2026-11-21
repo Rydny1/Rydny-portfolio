@@ -1,0 +1,132 @@
+/* The hero wire. Pills, nodes and the travelling light are created by hero-wire.ts. */
+.wire {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+.wire .track {
+  fill: none;
+  stroke: var(--ink);
+  stroke-opacity: 0.1;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+.wire .line {
+  fill: none;
+  stroke: var(--signal);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.wire stop {
+  stop-color: var(--glass);
+}
+
+.wire .pill-body {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.wire .pill rect {
+  fill: var(--paper-raised);
+  stroke: var(--ink);
+  stroke-opacity: 0.28;
+}
+.wire .pill .d {
+  fill: var(--signal);
+}
+.wire .pill.active rect {
+  fill: var(--signal);
+}
+.wire .pill.active .d {
+  fill: var(--ink);
+}
+.wire .pill .flash {
+  fill: var(--glass);
+  opacity: 0;
+}
+.wire .pill text {
+  font-family: var(--font-mono);
+  font-size: var(--fs-pill);
+  letter-spacing: 1.2px;
+  fill: var(--ink);
+}
+
+.wire .node-ring {
+  fill: var(--signal);
+  fill-opacity: 0.16;
+}
+.wire .node-dot {
+  fill: var(--signal);
+}
+.wire .pulse {
+  fill: var(--signal);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.wire .pop {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.wire .glow {
+  fill: url(#capsule);
+  opacity: 0.22;
+}
+.wire .core {
+  fill: url(#capsule);
+}
+
+/* Load sequence: plays once per session, only with JS and no reduced-motion preference. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not(.seen) .wire .track,
+  html.js:not(.seen) .wire .line {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1.01;
+    animation: wire-draw calc(0.7s * var(--k)) cubic-bezier(0.4, 0, 0.2, 1) calc(0.6s * var(--k)) forwards;
+  }
+  html.js:not(.seen) .wire .start .pop {
+    animation: wire-pop calc(0.25s * var(--k)) var(--ease) calc(0.5s * var(--k)) both;
+  }
+  html.js:not(.seen) .wire .end .pop {
+    animation: wire-pop calc(0.25s * var(--k)) var(--ease) calc(1.25s * var(--k)) both;
+  }
+  html.js:not(.seen) .wire .pill-body {
+    animation: wire-pill calc(0.3s * var(--k)) var(--ease) var(--d, 0s) both;
+  }
+  html.js:not(.seen) .wire .pill .d {
+    animation: wire-dot 0.01s linear var(--d, 0s) both;
+  }
+}
+@keyframes wire-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes wire-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes wire-pill {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes wire-dot {
+  from {
+    fill: var(--mist);
+  }
+}

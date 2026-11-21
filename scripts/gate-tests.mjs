@@ -75,7 +75,7 @@ try {
     [1280, 720], [1280, 800], [1366, 768], [1440, 900], [1536, 864], [1680, 1050], [1920, 1080], [2560, 1440], [3440, 1440],
   ];
   for (const [w, h] of devices) {
-    const ctx = await browser.newContext({ viewport: { width: w, height: h } });
+    const ctx = await browser.newContext({ viewport: { width: w, height: h }, reducedMotion: 'reduce' });
     const page = await ctx.newPage();
     await page.goto(BASE, { waitUntil: 'networkidle' });
     const m = await page.evaluate(() => {
@@ -89,6 +89,40 @@ try {
     const ok = heightOk && m.l1Top > m.navBottom && m.l2Bottom < m.botTop && m.botBottom <= m.heroH - 8 && m.l1Right <= m.vw && m.l2Right <= m.vw && m.l2Left >= 0 && m.overflow <= 0;
     log(`   hero fits ${w}x${h}`, ok, ok ? '' : JSON.stringify(m));
     await page.screenshot({ path: `${shots}/fit-${w}x${h}.png` });
+    await ctx.close();
+  }
+
+  // Hero wire: built, light travels, frames are smooth, nothing throws
+  for (const [w, h, label] of [[1440, 900, 'desktop'], [390, 844, 'phone']]) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h } });
+    const page = await ctx.newPage();
+    const errs = [];
+    page.on('pageerror', (e) => errs.push(String(e)));
+    page.on('console', (m) => m.type() === 'error' && errs.push(m.text()));
+    await page.goto(BASE, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(2600); // load sequence is 1.89s
+    const info = await page.evaluate(async () => {
+      const pills = document.querySelectorAll('.wire .pill').length;
+      const lightEl = document.querySelector('.wire .light');
+      const samples = [];
+      const gaps = [];
+      let last = performance.now();
+      await new Promise((res) => {
+        const t0 = performance.now();
+        const tick = (now) => {
+          gaps.push(now - last); last = now;
+          samples.push(lightEl.getAttribute('transform'));
+          now - t0 < 2500 ? requestAnimationFrame(tick) : res();
+        };
+        requestAnimationFrame(tick);
+      });
+      const moved = new Set(samples.filter(Boolean)).size;
+      gaps.sort((a, b) => a - b);
+      return { pills, moved, p95: gaps[Math.floor(gaps.length * 0.95)], max: gaps[gaps.length - 1] };
+    });
+    log(`   wire ${label}: pills built (${info.pills}), light moves (${info.moved} positions)`, info.pills === (w < 900 ? 2 : 4) && info.moved > 20, JSON.stringify(info));
+    log(`   wire ${label}: no script errors`, errs.length === 0, errs.join(' ; '));
+    await page.screenshot({ path: `${shots}/wire-${label}.png` });
     await ctx.close();
   }
 

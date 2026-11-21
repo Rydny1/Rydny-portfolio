@@ -10,3 +10,8 @@ One line per change, with why. Newest at the bottom.
 - Nav gets an outlined button; role and Riga time moved to a meta row below it (pattern from dennypratama.com). Why: both nav styles appear on the best reference sites.
 - QuickList dropped from the "More" line (school project, repo not public). Why: Rydny's call.
 - Mist colour darkened to #66625B. Why: brief value failed AA contrast (4.45:1).
+- Hero wire built: smooth curve from the full stop to "Build", four step pills (two on phones), nodes at both ends. Route is computed from real text positions and rebuilt on resize. Why: brief signature element; never hard-coded.
+- One light replaces three: a 28px by 3px capsule (core #E6EEF6, faint 6px glow), 5.5s ease-in-out trip, end node pulses once (scale 1 to 1.6, 0.6s), 0.8s pause, repeat. Pill dots flash blue-grey for 0.3s as it passes. Why: each trip reads as one job done. Two-light variant: add ?lights=2 to the URL.
+- Hero load sequence runs once per session; every duration and delay is base x 1.18 (one variable, --k). Pure CSS so nothing can stay hidden if JS fails. Why: 15% slower, per request.
+- Wire on phones ends above the "B" instead of beside it. Why: the side approach cut through the letter.
+- Pills sit at fixed fractions of the curve instead of mockup coordinates. Why: at 1440 the "Build" line starts left of the full stop, unlike the mockup, so mapped pills hit the text.

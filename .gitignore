@@ -30,3 +30,4 @@ _brief/shots/
 .env*
 .vercel/
 .env*.local
+_brief/report/

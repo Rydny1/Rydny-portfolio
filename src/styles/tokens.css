@@ -42,6 +42,7 @@
   --hairline: rgb(31 32 35 / 0.15);
   --hairline-strong: rgb(31 32 35 / 0.28);
   --wire-track: rgb(31 32 35 / 0.1);
+  --glass: #e6eef6; /* the light that travels the line: cool blue-grey */
 
   /* type */
   --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
@@ -79,5 +80,6 @@
   --measure: 62ch;
 
   /* motion */
+  --k: 1.18; /* hero timing multiplier: every hero duration and delay is base x --k */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }

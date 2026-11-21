@@ -1,4 +1,5 @@
 ---
+import '../styles/wire.css';
 import { copy } from '../content/copy';
 import Nav from './Nav.astro';
 const { hero } = copy;
@@ -16,6 +17,23 @@ const { hero } = copy;
   </video>
   <div class="veil" aria-hidden="true"></div>
 
+  <svg class="wire" aria-hidden="true" focusable="false" data-steps={JSON.stringify(hero.steps)}>
+    <defs>
+      <linearGradient id="capsule" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0" stop-opacity="0"></stop>
+        <stop offset="0.5" stop-opacity="1"></stop>
+        <stop offset="1" stop-opacity="0"></stop>
+      </linearGradient>
+      <filter id="soft" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="2.5"></feGaussianBlur></filter>
+    </defs>
+    <path class="track" pathLength="1"></path>
+    <path class="line" pathLength="1"></path>
+    <g class="pills"></g>
+    <g class="start"></g>
+    <g class="end"></g>
+    <g class="lights"></g>
+  </svg>
+
   <Nav />
 
   <div class="inner">
@@ -28,7 +46,7 @@ const { hero } = copy;
       <div class="lead-block">
         <p class="lead">{hero.lead}</p>
         <div class="cta">
-          <a class="btn" href={hero.primary.href}>{hero.primary.label}</a>
+          <a class="btn" href={hero.primary.href} data-magnetic>{hero.primary.label}</a>
           <a class="link" href={hero.secondary.href}>{hero.secondary.label}</a>
         </div>
       </div>
@@ -80,7 +98,7 @@ const { hero } = copy;
     min-height: 100svh;
     max-width: var(--max);
     margin-inline: auto;
-    padding: clamp(var(--s-12), 16vh, var(--s-24)) var(--pad) var(--s-6);
+    padding: clamp(120px, 17vh, 160px) var(--pad) var(--s-6);
     display: flex;
     flex-direction: column;
   }
@@ -99,7 +117,8 @@ const { hero } = copy;
   }
   .l2 {
     align-self: flex-end;
-    margin-top: clamp(var(--s-8), 14vh, var(--s-24));
+    margin-top: auto;
+    margin-bottom: clamp(var(--s-6), 17vh, 160px);
   }
   .l2 em {
     font-style: italic;
@@ -110,7 +129,7 @@ const { hero } = copy;
     justify-content: space-between;
     align-items: flex-end;
     gap: var(--s-6);
-    margin-top: var(--s-8);
+    margin-top: var(--s-3);
   }
   .lead {
     font-size: var(--fs-lead);
@@ -150,17 +169,10 @@ const { hero } = copy;
     .inner {
       height: 100%;
       min-height: 0;
-      padding-top: clamp(120px, 17vh, 160px);
       padding-bottom: clamp(var(--s-3), 5vh, var(--s-6));
     }
     h1 {
       font-size: clamp(52px, min(7.4vw, 13vh), 128px);
-    }
-    .l2 {
-      margin-top: clamp(var(--s-3), 8vh, var(--s-16));
-    }
-    .bottom {
-      margin-top: var(--s-3);
     }
   }
 
@@ -177,7 +189,7 @@ const { hero } = copy;
       margin-bottom: var(--s-8);
     }
     .l2 {
-      margin-top: auto;
+      margin-bottom: 0;
     }
     .inner {
       padding-top: var(--s-16);
@@ -210,10 +222,39 @@ const { hero } = copy;
       margin-bottom: 4px;
     }
   }
+
+  /* Load sequence (1.6s base, every duration and delay x --k). Plays once per session.
+     Pure CSS, so nothing can stay hidden if a script fails. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js:not(.seen)) .l1 {
+      animation: rise calc(0.55s * var(--k)) var(--ease) both;
+    }
+    :global(html.js:not(.seen)) .l2 {
+      animation: rise calc(0.45s * var(--k)) var(--ease) calc(1.15s * var(--k)) both;
+    }
+    :global(html.js:not(.seen)) .lead-block,
+    :global(html.js:not(.seen)) .facts {
+      animation: fade-up calc(0.4s * var(--k)) var(--ease) calc(1.2s * var(--k)) both;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
 </style>
 
 <script>
-  // Play the wall only when on screen and the tab is visible. Skipped for reduced motion (poster only).
+  import '../scripts/hero-wire';
+
+  // Play the wall only when on screen and the tab is visible. Reduced motion: poster only.
   const v = document.querySelector<HTMLVideoElement>('.hero .wall');
   if (v && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let visible = true;

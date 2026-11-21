@@ -28,6 +28,7 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
     <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-latin-wght-italic.woff2" crossorigin />
     <script is:inline>
       document.documentElement.classList.add('js');
+      try { if (sessionStorage.getItem('seen')) document.documentElement.classList.add('seen'); } catch (e) {}
     </script>
   </head>
   <body>
