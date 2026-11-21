@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rydny Ihims | Solutions Engineer in Riga</title>
+<style>
+@font-face{font-family:Fraunces;src:url(node_modules/@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2) format("woff2");font-weight:100 900}
+@font-face{font-family:Jakarta;src:url(node_modules/@fontsource/plus-jakarta-sans/files/plus-jakarta-sans-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:Jakarta;src:url(node_modules/@fontsource/plus-jakarta-sans/files/plus-jakarta-sans-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:Jakarta;src:url(node_modules/@fontsource/plus-jakarta-sans/files/plus-jakarta-sans-latin-600-normal.woff2);font-weight:600}
+:root{--ink:#1F2023;--paper:#EEE9E3;--signal:#FF5A1F;--mist:#6E6A63;--max:1280px;--pad:clamp(20px,5vw,64px)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Jakarta,system-ui,sans-serif;color:var(--ink);background:var(--paper);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad);position:relative}
+.label{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--mist)}
+h1,h2,h3{font-family:Fraunces,serif;font-weight:400;letter-spacing:-.025em}
+/* HERO */
+.hero{position:relative;min-height:min(100vh,920px);background:#fff;overflow:hidden}
+.hero .light{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;filter:sepia(.28) saturate(1.1) brightness(1.1) contrast(.92)}
+.hero::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(246,241,234,.55) 0%,rgba(246,241,234,.25) 55%,rgba(246,241,234,0) 75%)}
+nav{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:28px var(--pad);max-width:var(--max);margin:0 auto}
+nav .name{font-family:Fraunces;font-size:22px}
+nav ul{display:flex;gap:36px;list-style:none;align-items:center;font-size:15px;font-weight:500}
+.btn{display:inline-block;background:var(--signal);color:var(--ink);padding:14px 22px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;position:relative;z-index:5}
+.btn.small{padding:10px 18px}.btn.ghost{background:transparent;border:1px solid var(--ink)}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:7fr 5fr;gap:48px;align-items:center;padding-top:clamp(16px,4vh,48px)}
+.hero h1{font-size:clamp(52px,6.8vw,104px);line-height:.95;margin:18px 0 28px}
+.hero h1 em{font-style:normal;color:var(--ink);position:relative}
+.hero p.sub{font-size:21px;max-width:30ch;color:#3a3a3c}
+.cta{display:flex;gap:28px;align-items:center;margin-top:40px}
+.cta a.link{color:var(--ink);font-weight:600;font-size:15px;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px}
+.frame{justify-self:end;width:min(100%,440px);aspect-ratio:4/5;background:#262619 url(portrait.png) center 30%/cover;box-shadow:0 30px 60px -20px rgba(31,32,35,.45),0 8px 18px rgba(31,32,35,.18);position:relative;mix-blend-mode:multiply}
+.frame::after{content:"Rydny Ihims, Riga 2026";position:absolute;left:0;bottom:-30px;font-size:12px;letter-spacing:.06em;color:var(--mist)}
+.proof{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);margin-top:clamp(32px,5vh,64px);border-top:1px solid rgba(31,32,35,.2);padding:20px 0 40px}
+.proof div{font-size:14px;font-weight:500;padding-right:24px}
+.proof b{display:block;font-family:Fraunces;font-weight:400;font-size:24px;letter-spacing:-.01em;margin-bottom:2px}
+/* WIRE */
+.wire{position:absolute;left:calc(var(--pad) - 32px);top:0;bottom:0;width:2px;background:linear-gradient(var(--signal),var(--signal)) top/2px 62% no-repeat, rgba(31,32,35,.12)}
+.node{position:absolute;left:calc(var(--pad) - 38px);width:14px;height:14px;border-radius:50%;background:var(--paper);border:2px solid rgba(31,32,35,.3)}
+.node.on{background:var(--signal);border-color:var(--signal);box-shadow:0 0 0 6px rgba(255,90,31,.18)}
+/* WORK */
+section.work{padding:clamp(96px,16vh,200px) 0}
+.sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:88px}
+.sec-head h2{font-size:clamp(72px,11vw,176px);line-height:.86}
+.sec-head p{max-width:26ch;font-size:20px;color:#3a3a3c}
+.project{display:grid;grid-template-columns:7fr 5fr;gap:56px;align-items:start;padding:56px 0;border-top:1px solid rgba(31,32,35,.15)}
+.shot{aspect-ratio:16/10;background:#1c1c1c left center/cover;box-shadow:0 24px 48px -24px rgba(31,32,35,.4)}
+.project h3{font-size:44px;line-height:1;margin:12px 0 28px}
+.badge{display:inline-block;background:var(--ink);color:var(--paper);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border-radius:4px}
+.pfr{display:grid;grid-template-columns:88px 1fr;gap:10px 16px;font-size:17px}
+.pfr dt{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--mist);padding-top:4px}
+.flow{display:flex;align-items:center;margin-top:28px;font-size:13px;font-weight:600}
+.flow span{border:1px solid rgba(31,32,35,.25);padding:8px 12px;border-radius:999px;background:#F6F2ED}
+.flow i{flex:1;height:2px;background:var(--signal);min-width:18px}
+
+.h2{height:min(100vh,920px);min-height:720px;padding:0}
+.h2::before{background:radial-gradient(ellipse at 40% 45%,rgba(246,241,234,.5),rgba(246,241,234,0) 70%)!important}
+.meta{position:absolute;left:var(--pad);right:var(--pad);z-index:4;display:flex;justify-content:space-between;font-size:14px;font-weight:500}
+.meta.top{top:28px}.meta .links{display:flex;gap:32px}.meta.top .name{font-family:Fraunces;font-size:20px;margin-top:-3px}.meta.top .clock{font-variant-numeric:tabular-nums}
+.big{position:absolute;inset:0;z-index:4;margin:0;font-weight:380;letter-spacing:-.045em;line-height:.88;font-size:clamp(64px,12vw,190px)}
+.big span{position:absolute;white-space:nowrap}
+.big .l1{left:calc(var(--pad) - 8px);top:16%}
+.big .l2{right:var(--pad);top:55%;font-style:italic;font-weight:340}
+.hwire{position:absolute;inset:0;width:100%;height:100%;z-index:3}
+.meta.bottom{bottom:40px;align-items:end}
+.meta .lead{max-width:34ch;font-size:19px;line-height:1.5;font-weight:400}
+.meta .cta{margin-top:24px}
+.facts{display:flex;gap:48px;text-align:left}
+.facts b{display:block;font-family:Fraunces;font-weight:400;font-size:24px;letter-spacing:-.01em}
+@media (max-width:820px){
+nav ul li:not(:last-child){display:none}
+.hero-grid{grid-template-columns:1fr;gap:28px}
+.frame{justify-self:start;width:62%;order:-1}
+.frame::after{display:none}
+.hero h1{font-size:clamp(44px,12.5vw,64px)}
+.hero p.sub{font-size:18px}
+.cta{flex-wrap:wrap;gap:18px}
+.proof{grid-template-columns:1fr;gap:16px}
+.project,.sec-head{grid-template-columns:1fr;display:grid}
+.wire,.node{left:8px}
+}
+</style>
+</head>
+<body>
+<header class="hero h2">
+  <video class="light" autoplay muted loop playsinline poster="wall-light-poster.jpg"><source src="wall-light.webm" type="video/webm"><source src="wall-light.mp4" type="video/mp4"></video>
+  <div class="meta top"><span class="name">Rydny Ihims</span><span>Software and automation</span><span class='links'><a>Work</a><a>About</a><a>Contact</a></span><span class="clock">Riga 22:41 &nbsp;GMT+2</span></div>
+  <h1 class="big"><span class="l1">Find the problem.</span><span class="l2">Build the fix.</span></h1>
+  <svg class="hwire" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
+  <defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <linearGradient id="wg" x1="780" y1="238" x2="868" y2="535" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF5A1F"/><stop offset="1" stop-color="#FF5A1F"/></linearGradient></defs>
+  <path d="M 780 238 C 780 350, 640 330, 480 360 C 250 402, 170 520, 300 590 C 430 660, 690 560, 868 535" fill="none" stroke="#1F2023" stroke-opacity=".10" stroke-width="8" stroke-linecap="round"/>
+  <path id="wp" d="M 780 238 C 780 350, 640 330, 480 360 C 250 402, 170 520, 300 590 C 430 660, 690 560, 868 535" fill="none" stroke="url(#wg)" stroke-width="2.2" stroke-linecap="round"/>
+  
+  <circle r="3" fill="#FF7A3D" fill-opacity="0.18"><animateMotion dur="4.2s" repeatCount="indefinite" begin="0.24s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><circle r="3.5" fill="#FF7A3D" fill-opacity="0.28"><animateMotion dur="4.2s" repeatCount="indefinite" begin="0.18s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><circle r="4" fill="#FF7A3D" fill-opacity="0.4"><animateMotion dur="4.2s" repeatCount="indefinite" begin="0.12s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><circle r="5" fill="#FF7A3D" fill-opacity="0.6"><animateMotion dur="4.2s" repeatCount="indefinite" begin="0.06s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><g filter="url(#glow)"><circle r="16" fill="#FF7A3D" fill-opacity=".28"/><circle r="6" fill="#FFE9DC"/><animateMotion dur="4.2s" repeatCount="indefinite" begin="0s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></g><circle r="3" fill="#FF7A3D" fill-opacity="0.18"><animateMotion dur="4.2s" repeatCount="indefinite" begin="1.64s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><circle r="3.5" fill="#FF7A3D" fill-opacity="0.28"><animateMotion dur="4.2s" repeatCount="indefinite" begin="1.58s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><circle r="4" fill="#FF7A3D" fill-opacity="0.4"><animateMotion dur="4.2s" repeatCount="indefinite" begin="1.52s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><circle r="5" fill="#FF7A3D" fill-opacity="0.6"><animateMotion dur="4.2s" repeatCount="indefinite" begin="1.46s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><g filter="url(#glow)"><circle r="16" fill="#FF7A3D" fill-opacity=".28"/><circle r="6" fill="#FFE9DC"/><animateMotion dur="4.2s" repeatCount="indefinite" begin="1.4s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></g><circle r="3" fill="#FF7A3D" fill-opacity="0.18"><animateMotion dur="4.2s" repeatCount="indefinite" begin="3.04s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><circle r="3.5" fill="#FF7A3D" fill-opacity="0.28"><animateMotion dur="4.2s" repeatCount="indefinite" begin="2.98s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><circle r="4" fill="#FF7A3D" fill-opacity="0.4"><animateMotion dur="4.2s" repeatCount="indefinite" begin="2.92s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><circle r="5" fill="#FF7A3D" fill-opacity="0.6"><animateMotion dur="4.2s" repeatCount="indefinite" begin="2.86s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></circle><g filter="url(#glow)"><circle r="16" fill="#FF7A3D" fill-opacity=".28"/><circle r="6" fill="#FFE9DC"/><animateMotion dur="4.2s" repeatCount="indefinite" begin="2.8s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#wp"/></animateMotion></g>
+  <circle cx="780" cy="238" r="20" fill="#FF5A1F" fill-opacity=".16"/><circle cx="780" cy="238" r="9" fill="#FF5A1F"/>
+  <g><rect x="644" y="318" width="58" height="30" rx="15" fill="#F6F1EA" stroke="#1F2023" stroke-opacity=".28"/><circle cx="658" cy="333" r="3.5" fill="#FF5A1F"/><text x="668" y="337" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="1.2" fill="#1F2023">MAP</text></g><g><rect x="225" y="437" width="82" height="30" rx="15" fill="#F6F1EA" stroke="#1F2023" stroke-opacity=".28"/><circle cx="239" cy="452" r="3.5" fill="#FF5A1F"/><text x="249" y="456" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="1.2" fill="#1F2023">DESIGN</text></g><g><rect x="303" y="593" width="98" height="30" rx="15" fill="#FF5A1F" stroke="#1F2023" stroke-opacity=".28"/><circle cx="317" cy="608" r="3.5" fill="#1F2023"/><text x="327" y="612" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="1.2" fill="#1F2023">AUTOMATE</text></g><g><rect x="608" y="568" width="66" height="30" rx="15" fill="#F6F1EA" stroke="#1F2023" stroke-opacity=".28"/><circle cx="622" cy="583" r="3.5" fill="#FF5A1F"/><text x="632" y="587" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="1.2" fill="#1F2023">TEST</text></g>
+  <circle cx="868" cy="535" r="12" fill="#FF5A1F" fill-opacity=".18"/><circle cx="868" cy="535" r="6" fill="#FF5A1F"/>
+</svg>
+  <div class="meta bottom">
+    <div class="lead">I turn slow, manual processes into software and automations that run on their own.<div class="cta"><a class="btn" href="#">See the proof</a><a class="link" href="#">Tell me what you&#39;re working on</a></div></div>
+    <div class="facts"><div><b>End to end</b>Idea, design, build, launch</div><div><b>5+ products</b>Built from zero</div><div><b>Remote</b>Europe, UK and the Gulf</div></div>
+  </div>
+</header>
+<section class="work">
+  <div class="wrap">
+    <div class="wire"></div><div class="node on" style="top:40px"></div><div class="node on" style="top:420px"></div><div class="node" style="top:1100px"></div>
+    <div class="sec-head"><h2>Proof.</h2><p>Three problems. Three fixes. All shipped.</p></div>
+    <article class="project">
+      <div class="shot" style="background-image:url(plateshare.png)"></div>
+      <div>
+        <span class="badge">1st place · Global Challenge Hackathon</span>
+        <h3>PlateShare</h3>
+        <dl class="pfr">
+          <dt>Problem</dt><dd>Campus canteens bin good food at closing. Students go hungry at 5&nbsp;pm.</dd>
+          <dt>Fix</dt><dd>One WhatsApp message from the canteen. Every student gets pinged. First reply claims the meal. Nothing to install.</dd>
+          <dt>Result</dt><dd>Won first place. Bot runs on a live database.</dd>
+        </dl>
+        <div class="flow"><span>Canteen posts</span><i></i><span>Students pinged</span><i></i><span>Meal claimed</span></div>
+      </div>
+    </article>
+    <article class="project">
+      <div class="shot" style="background-image:url(apex.webp)"></div>
+      <div>
+        <span class="label">Analysis engine</span>
+        <h3>APEX</h3>
+        <dl class="pfr">
+          <dt>Problem</dt><dd>Bookmakers misprice football matches. Spotting it by hand takes hours every week.</dd>
+          <dt>Fix</dt><dd>An engine that prices every match on its own and flags where the bookmaker got it wrong.</dd>
+          <dt>Result</dt><dd>Live. Runs every matchweek.</dd>
+        </dl>
+        <div class="flow"><span>Odds in</span><i></i><span>Match priced</span><i></i><span>Mistakes flagged</span></div>
+      </div>
+    </article>
+  </div>
+</section>
+</body>
+</html>

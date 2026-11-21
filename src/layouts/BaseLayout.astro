@@ -124,7 +124,20 @@ const { title, description = 'Rydny Ihims. Full-stack developer and AI builder.'
           el.classList.toggle('is-visible', visible);
         });
       }
-      checkReveal();
+      // The page-load intro overlay (1.7s, see .page-intro below) sits
+      // fully opaque over the hero. Running checkReveal() immediately
+      // means the hero's fade-in plays out entirely underneath that
+      // overlay — by the time it clears, the hero is already sitting at
+      // its final, fully-revealed state, so the animation itself is
+      // never actually seen. Hold the first check until the overlay is
+      // gone so the reveal plays where it's visible. Reduced-motion
+      // skips the overlay outright (see the @media block below), so
+      // there's nothing to wait for there.
+      if (reduceMotion) {
+        checkReveal();
+      } else {
+        setTimeout(checkReveal, 1700);
+      }
       if (lenis) {
         lenis.on('scroll', checkReveal);
       } else {
