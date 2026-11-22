@@ -66,3 +66,6 @@ One line per change, with why. Newest at the bottom.
 ## Hero intro plays every time, and the stutter cause
 - The hero opening (headline, line drawing, pills, light) was set to play once per browser session, which is why a refresh showed it plain. It now plays on every load, and again whenever you scroll back up to the top (it restarts the running CSS animations and the light).
 - Main cause of the stutter: the travelling light asked the SVG for three points on the path every frame. On a throttled mid-range phone that was the single biggest cost (about 1.5 s over one scroll). The path is now sampled once per layout into a lookup table. Measured at 4x CPU slowdown on a phone-size screen: median frame 42 ms to 18 ms, frames slower than 34 ms 109 to 3.
+
+## Contact: email as a copy pill
+- Email moved from the small faded line after the Send button to a prominent pill under the contact lead, with a copy icon that turns into a tick when copied. Why: on phones the old line was easy to miss; the email is now the first thing you can act on.

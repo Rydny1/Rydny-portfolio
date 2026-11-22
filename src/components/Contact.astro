@@ -16,6 +16,7 @@ const { contact: c } = copy;
       <div class="leadcol">
         <p class="lead" data-words>{c.lead}</p>
         <p class="avail">{c.availability}</p>
+        <div class="mailrow"><CopyEmail /></div>
       </div>
     </div>
 
@@ -57,7 +58,6 @@ const { contact: c } = copy;
 
         <div class="actions">
           <button class="btn" type="submit" data-magnetic>{c.form.submit}</button>
-          <p class="prefer">{c.form.prefer} <CopyEmail /></p>
           <p class="err" role="alert" data-error></p>
         </div>
       </form>
@@ -270,10 +270,10 @@ const { contact: c } = copy;
     font-family: var(--font-body);
     font-size: 15px;
   }
-  .prefer {
-    font: 400 15px/1.4 var(--font-body);
+  .mailrow {
+    margin-top: var(--s-3);
+    font: 500 16px/1.4 var(--font-body);
     letter-spacing: 0;
-    opacity: 0.6;
   }
   .mail {
     text-decoration: none;
