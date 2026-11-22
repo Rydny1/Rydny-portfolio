@@ -52,3 +52,8 @@ One line per change, with why. Newest at the bottom.
 - PlateShare badge now reads "1st place · Global Challenge Hackathon" and links to the repo (README says "Winner, Global Challenge hackathon").
 - Built the closed "How it works" toggle on project cards (smooth grid-rows open, keyboard accessible, aria-expanded, reduced-motion safe). It stays hidden until `src/content/how.ts` is filled; drafts are in `_brief/how-it-works-drafts.md`, awaiting approval.
 - Footer is now just "© 2026 Rydny Ihims" (removed "Built by hand in Riga"). Removed "internships" from the availability line (copy.ts, README). What I fix lead gains "Each one gives time and money back." so the page states the outcome, not only the method. "How it works" toggles are now published on all three cards using the approved drafts.
+
+## Three bug fixes
+- Email is now a copy button (new CopyEmail component, used in the contact section and the mobile menu; the footer has no email). Click, Enter or Space copies, a "Copied" label shows 1.5s then fades, screen readers hear "Email copied", a separate "or open in email app" mailto link sits under it, and if the clipboard API fails the text is selected as a fallback.
+- Project counter read "04 / 03" on the last card. The total now comes from the projects data (`data-total`), progress is clamped to 0..1 and the index to 1..total, and it recalculates on resize. Verified 01, 02, 03 / 03 when swiping to the end, overscrolling and resizing.
+- "How it works" opened every card visually because phone cards stretched to the tallest card. The rail now uses `align-items: flex-start`, so each card keeps its own height (open card 1241px, others 818 and 717 on a phone; aria-expanded is true only on the clicked card).

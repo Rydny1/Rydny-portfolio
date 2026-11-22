@@ -17,7 +17,7 @@ const { proof } = copy;
     <section class="rail" data-rail tabindex="0" aria-label="Projects, swipe or scroll sideways">
       {projects.map((p) => <Project project={p} />)}
     </section>
-    <div class="progress" aria-hidden="true">
+    <div class="progress" aria-hidden="true" data-total={projects.length}>
       <span class="count"><b data-rail-now>01</b> / {String(projects.length).padStart(2, '0')}</span>
       <span class="track"><i data-rail-bar></i></span>
     </div>
@@ -71,6 +71,7 @@ const { proof } = copy;
       scroll-padding-inline: var(--pad);
       padding-inline: var(--pad);
       padding-bottom: var(--s-1);
+      align-items: flex-start;
       overscroll-behavior-x: contain;
       scrollbar-width: none;
     }
@@ -114,25 +115,24 @@ const { proof } = copy;
   const bar = document.querySelector<HTMLElement>('[data-rail-bar]');
   const now = document.querySelector<HTMLElement>('[data-rail-now]');
   if (rail && bar && now) {
-    const cards = Array.from(rail.children) as HTMLElement[];
+    const total = Number(rail.parentElement?.querySelector<HTMLElement>('.progress')?.dataset.total) || rail.children.length;
     let ticking = false;
     const update = () => {
       ticking = false;
       const max = rail.scrollWidth - rail.clientWidth;
-      const p = max > 0 ? rail.scrollLeft / max : 0;
-      bar.style.transform = `scaleX(${(1 / cards.length + p * (1 - 1 / cards.length)).toFixed(3)})`;
-      now.textContent = String(Math.min(cards.length, Math.round(p * (cards.length - 1)) + 1)).padStart(2, '0');
+      const p = max > 0 ? Math.min(1, Math.max(0, rail.scrollLeft / max)) : 0; // clamped: rubber-banding never overshoots
+      const idx = Math.min(total, Math.max(1, Math.round(p * (total - 1)) + 1));
+      bar.style.transform = `scaleX(${(1 / total + p * (1 - 1 / total)).toFixed(3)})`;
+      now.textContent = String(idx).padStart(2, '0');
     };
-    rail.addEventListener(
-      'scroll',
-      () => {
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(update);
-        }
-      },
-      { passive: true },
-    );
+    const queue = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    rail.addEventListener('scroll', queue, { passive: true });
+    addEventListener('resize', queue);
     update();
   }
 </script>

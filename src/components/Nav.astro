@@ -1,5 +1,6 @@
 ---
 import { copy } from '../content/copy';
+import CopyEmail from './CopyEmail.astro';
 const { nav, contact } = copy;
 ---
 
@@ -40,7 +41,7 @@ const { nav, contact } = copy;
     </ul>
     <div class="sheet-foot">
       <p>{nav.city} <time data-riga-time datetime=""></time></p>
-      <a class="link" href={`mailto:${contact.email}`}>{contact.email}</a>
+      <CopyEmail />
     </div>
     <button class="sheet-close" type="button" data-menu-close>Close</button>
   </div>

@@ -1,0 +1,91 @@
+---
+import { copy } from '../content/copy';
+const email = copy.contact.email;
+---
+
+<span class="cm" data-copy-email>
+  <button class="cm-btn" type="button" aria-label={`Copy email address ${email}`}>{email}</button>
+  <span class="cm-note" aria-hidden="true">Copied</span>
+  <a class="cm-open" href={`mailto:${email}`}>or open in email app</a>
+  <span class="sr-only" role="status" aria-live="polite" data-live></span>
+</span>
+
+<style is:global>
+  .cm {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 12px;
+  }
+  .cm-btn {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--signal);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    user-select: text;
+  }
+  .cm-note {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+  }
+  .cm.copied .cm-note {
+    opacity: 0.85;
+  }
+  .cm-open {
+    flex-basis: 100%;
+    font-size: 12px;
+    opacity: 0.7;
+    text-decoration: none;
+  }
+  .cm-open:hover,
+  .cm-open:focus-visible {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-copy-email]').forEach((box) => {
+    const btn = box.querySelector<HTMLButtonElement>('.cm-btn')!;
+    const live = box.querySelector<HTMLElement>('[data-live]')!;
+    let timer = 0;
+    const done = (msg: string, announce: string) => {
+      box.querySelector<HTMLElement>('.cm-note')!.textContent = msg;
+      live.textContent = '';
+      requestAnimationFrame(() => (live.textContent = announce));
+      box.classList.add('copied');
+      clearTimeout(timer);
+      timer = window.setTimeout(() => box.classList.remove('copied'), 1500);
+    };
+    const select = () => {
+      const r = document.createRange();
+      r.selectNodeContents(btn);
+      const s = getSelection();
+      s?.removeAllRanges();
+      s?.addRange(r);
+    };
+    btn.addEventListener('click', async () => {
+      const text = btn.textContent!.trim();
+      try {
+        await navigator.clipboard.writeText(text);
+        done('Copied', 'Email copied');
+      } catch {
+        select();
+        let ok = false;
+        try {
+          ok = document.execCommand('copy');
+        } catch {
+          ok = false;
+        }
+        done(ok ? 'Copied' : 'Press Ctrl+C', ok ? 'Email copied' : 'Email selected. Press Control C to copy.');
+      }
+    });
+  });
+</script>

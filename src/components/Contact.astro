@@ -1,5 +1,6 @@
 ---
 import { copy } from '../content/copy';
+import CopyEmail from './CopyEmail.astro';
 const { contact: c } = copy;
 ---
 
@@ -56,7 +57,7 @@ const { contact: c } = copy;
 
         <div class="actions">
           <button class="btn" type="submit" data-magnetic>{c.form.submit}</button>
-          <p class="prefer">{c.form.prefer} <a class="mail" href={`mailto:${c.email}`}>{c.email}</a></p>
+          <p class="prefer">{c.form.prefer} <CopyEmail /></p>
           <p class="err" role="alert" data-error></p>
         </div>
       </form>
