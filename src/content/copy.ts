@@ -37,7 +37,7 @@ export const copy = {
   },
   fix: {
     title: 'What I fix',
-    lead: 'Most work starts with one of these.',
+    lead: 'Most work starts with one of these. Each one gives time and money back.',
     rows: [
       {
         n: '01',
@@ -63,7 +63,7 @@ export const copy = {
     paragraphs: [
       "I'm Rydny. I build software and automations for people whose work has outgrown doing it by hand.",
       'I start by finding where the time goes. Then I design the fix, build it, and stay with it until it runs on its own.',
-      'I grew up in Cameroon, lived in Dubai, and now study Computer Science at the University of Latvia in Riga. I work in English and French, and I enter hackathons whenever I can. Open to freelance projects, internships and part-time roles.',
+      'I grew up in Cameroon, lived in Dubai, and now study Computer Science at the University of Latvia in Riga. I work in English and French, and I enter hackathons whenever I can. Open to freelance projects and part-time roles.',
     ],
     quote: { text: 'An hour lost at a bottleneck is an hour lost for the entire system.', cite: 'Eliyahu M. Goldratt, The Goal' },
     tools: ['React', 'Next.js', 'TypeScript', 'Python', 'Laravel', 'MySQL', 'n8n', 'REST APIs'],
@@ -71,7 +71,7 @@ export const copy = {
   contact: {
     title: 'Get in touch',
     lead: "Tell me what you're trying to solve. You'll get a straight answer on what to build, what to automate, and whether I'm the right person for it.",
-    availability: 'Open to freelance projects, internships and part-time roles.',
+    availability: 'Open to freelance projects and part-time roles.',
     form: {
       hi: "Hi Rydny, I'm",
       from: 'from',
@@ -99,7 +99,7 @@ export const copy = {
     cv: null as string | null,
     cvLabel: 'Download CV',
     status: 'Still running',
-    footer: '© 2026 Rydny Ihims. Built by hand in Riga.',
+    footer: '© 2026 Rydny Ihims',
   },
   notFound: { title: 'Wrong room.', link: 'Back to the front door' },
 } as const;

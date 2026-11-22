@@ -51,3 +51,4 @@ One line per change, with why. Newest at the bottom.
 - Removed the "More:" line under Proof (Steady, African Grill). African Grill's link returns 404, and Rydny asked to drop the whole line.
 - PlateShare badge now reads "1st place · Global Challenge Hackathon" and links to the repo (README says "Winner, Global Challenge hackathon").
 - Built the closed "How it works" toggle on project cards (smooth grid-rows open, keyboard accessible, aria-expanded, reduced-motion safe). It stays hidden until `src/content/how.ts` is filled; drafts are in `_brief/how-it-works-drafts.md`, awaiting approval.
+- Footer is now just "© 2026 Rydny Ihims" (removed "Built by hand in Riga"). Removed "internships" from the availability line (copy.ts, README). What I fix lead gains "Each one gives time and money back." so the page states the outcome, not only the method. "How it works" toggles are now published on all three cards using the approved drafts.
