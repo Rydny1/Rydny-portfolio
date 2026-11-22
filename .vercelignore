@@ -1,4 +1,4 @@
-_brief
-scripts
-node_modules
-.astro
+/_brief
+/scripts
+/node_modules
+/.astro

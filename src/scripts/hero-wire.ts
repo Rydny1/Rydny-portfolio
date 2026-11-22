@@ -93,23 +93,19 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
       // out to the right, a round turn down the right edge, a level sweep left, a second round turn down the
       // left lane, a round U under the node, then straight up into it. All 16px+ inside the screen edges.
       const k = 0.5523; // quarter-circle handle length
-      const L = 26; // left lane
+      const L = 24; // the far-left turn, 16px+ inside the edge
       const R = { x: W - 28, y: S.y + 0.2 * dy }; // right turn
       const M = { x: W * 0.5, y: S.y + 0.5 * dy }; // middle of the sweep
-      const Lp = { x: L, y: S.y + 0.74 * dy }; // left turn
-      const r = (E.x - L) / 2; // radius of the U
-      const yb = E.y + 52; // bottom of the U
-      const cx = L + r;
+      const Lp = { x: L, y: S.y + 0.74 * dy }; // left turn, heading down
+      // out right, round turn down the right edge, level sweep left, one broad round turn at the left edge, and back
+      // right into the node beside "Build". Every join has the same direction on both sides, so there is no wobble.
       d =
         `M ${S.x} ${S.y} ` +
         `C ${S.x + k * (R.x - S.x)} ${S.y}, ${R.x} ${R.y - k * (R.y - S.y)}, ${R.x} ${R.y} ` +
         `C ${R.x} ${R.y + k * (M.y - R.y)}, ${M.x + k * (R.x - M.x)} ${M.y}, ${M.x} ${M.y} ` +
         `C ${M.x - k * (M.x - L)} ${M.y}, ${L} ${Lp.y - k * (Lp.y - M.y)}, ${L} ${Lp.y} ` +
-        `L ${L} ${yb - r} ` +
-        `C ${L} ${yb - r + k * r}, ${cx - k * r} ${yb}, ${cx} ${yb} ` +
-        `C ${cx + k * r} ${yb}, ${E.x} ${yb - r + k * r}, ${E.x} ${yb - r} ` +
-        `L ${E.x} ${E.y}`;
-      ts = [0.16, 0.46];
+        `C ${L} ${Lp.y + k * (E.y - Lp.y)}, ${E.x - k * (E.x - L)} ${E.y}, ${E.x} ${E.y}`;
+      ts = [0.17, 0.47];
     }
     track.setAttribute('d', d);
     line.setAttribute('d', d);
