@@ -93,8 +93,10 @@ function buildWire() {
     const r = el.getBoundingClientRect();
     return r.top + scrollY - mainTop + r.height * f;
   };
+  const wide = innerWidth >= 900; // on phones the projects sit side by side in a carousel, so no per-project checkpoints
   const marks = [
     { el: document.querySelector('#proof-title'), f: 0.5 },
+    ...(wide ? ['#p-plateshare', '#p-apex', '#p-altays'].map((id) => ({ el: document.querySelector(id), f: 0.5 })) : []),
     { el: document.querySelector('#fix-title'), f: 0.5 },
     { el: document.querySelector('#about-title'), f: 0.5 },
     { el: document.querySelector('#contact-title'), f: 0.3 },
@@ -125,7 +127,8 @@ function buildWire() {
 
   // Teardrop, tip pointing down, 10px wide and 14px tall; the tip sits on the end of the drawn line
   drop = mk<SVGGElement>('g', {}, 'pw-drop');
-  const shape = mk<SVGPathElement>('path', { d: 'M0 0 L-3.7 -6.6 A5 5 0 1 1 3.7 -6.6 Z', transform: 'translate(0 0)' });
+  // A raindrop: pointed at the top, round bulb at the bottom, the bulb resting on the tip of the line
+  const shape = mk<SVGPathElement>('path', { d: 'M0 -15 C -1.2 -11 -5 -8.5 -5 -5 A5 5 0 0 0 5 -5 C 5 -8.5 1.2 -11 0 -15 Z' });
   const halo = mk<SVGCircleElement>('circle', { cx: 0, cy: -5, r: 9 });
   halo.setAttribute('class', 'halo');
   drop.append(halo, shape);

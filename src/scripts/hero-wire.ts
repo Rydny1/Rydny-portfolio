@@ -42,6 +42,7 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
   let L = 1;
   const pills: PillRef[] = [];
   let pillsBuilt = false;
+  let lastMobile: boolean | null = null;
 
   // Offsets ignore transforms, so the load animation cannot skew the measurement.
   const pos = (node: HTMLElement) => {
@@ -64,6 +65,13 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
     const sp = pos(stopEl);
     const bp = pos(bEl);
     const mobile = W < 900;
+    if (lastMobile !== null && lastMobile !== mobile) {
+      // the layout switched (rotation, resize): rebuild the pills for the new layout so none end up misplaced
+      pillsG.replaceChildren();
+      pills.length = 0;
+      pillsBuilt = false;
+    }
+    lastMobile = mobile;
     const S: Pt = { x: sp.x + sp.w / 2 + fs * 0.03, y: sp.y + sp.h * 0.5 + fs * 0.31 };
     const E: Pt = mobile
       ? { x: Math.max(30, bp.x - 16), y: bp.y + bp.h * 0.5 }
@@ -106,13 +114,13 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
         `C ${R.x} ${R.y + ks * (M.y - R.y)}, ${M.x + ks * (R.x - M.x)} ${M.y}, ${M.x} ${M.y} ` +
         `C ${M.x - ks * (M.x - L)} ${M.y}, ${L} ${Lp.y - ks * (Lp.y - M.y)}, ${L} ${Lp.y} ` +
         `C ${L} ${Lp.y + k * (E.y - Lp.y)}, ${E.x - k * (E.x - L)} ${E.y}, ${E.x} ${E.y}`;
-      ts = [0.17, 0.47];
+      ts = [0.12, 0.4, 0.6, 0.83];
     }
     track.setAttribute('d', d);
     line.setAttribute('d', d);
     L = line.getTotalLength();
 
-    const wanted = mobile ? [0, 2].map((i) => labels[i]).filter((v): v is string => !!v) : labels;
+    const wanted = labels; // all four steps, on phones too
 
     if (!pillsBuilt) {
       wanted.forEach((label, i) => {

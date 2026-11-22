@@ -11,6 +11,19 @@ interface Props {
 }
 const { title = copy.meta.title, description = copy.meta.description, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Rydny Ihims',
+  jobTitle: 'Software and Automation Developer',
+  url: SITE_URL,
+  image: new URL('/og.jpg', SITE_URL).href,
+  address: { '@type': 'PostalAddress', addressLocality: 'Riga', addressCountry: 'LV' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of Latvia' },
+  knowsLanguage: ['English', 'French'],
+  knowsAbout: ['Software development', 'Process automation', 'Web applications', 'Next.js', 'TypeScript', 'Python'],
+  sameAs: ['https://github.com/Rydny1', 'https://linkedin.com/in/rydny-ihims'],
+};
 ---
 
 <!doctype html>
@@ -21,6 +34,24 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <meta name="author" content="Rydny Ihims" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rydny Ihims" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.jpg', SITE_URL).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Rydny Ihims: I find the problem. Then I build the fix." />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL('/og.jpg', SITE_URL).href} />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {Astro.url.pathname === '/' && <script type="application/ld+json" set:html={JSON.stringify(person)} />}
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#eee9e3" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

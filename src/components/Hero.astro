@@ -79,7 +79,7 @@ const { hero } = copy;
   }
   .poster,
   .wall {
-    opacity: 0.16;
+    opacity: 0.38;
   }
   .poster {
     z-index: -5;
@@ -89,7 +89,7 @@ const { hero } = copy;
     opacity: 0;
   }
   .wall.ready {
-    opacity: 0.16;
+    opacity: 0.38;
   }
   /* Pre-blurred wall: its opacity rises as the page slides over the hero. */
   .blur {
@@ -102,7 +102,7 @@ const { hero } = copy;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background: radial-gradient(ellipse at 40% 45%, rgb(240 235 227 / 0.55), rgb(240 235 227 / 0) 70%);
+    background: radial-gradient(ellipse at 40% 45%, rgb(240 235 227 / 0.4), rgb(240 235 227 / 0) 70%);
   }
 
   /* Headlines: heavy green Fraunces, placed as in the mockup (percentages of the hero) */
@@ -223,15 +223,15 @@ const { hero } = copy;
       display: block;
     }
     .big::before {
-      flex: 1;
+      flex: 1.5;
     }
     .gap {
       display: block;
-      flex: 2.4;
+      flex: 2.6;
       min-height: 128px;
     }
     .big::after {
-      flex: 1.1;
+      flex: 0.45;
     }
     .l1 {
       align-self: flex-start;
@@ -346,6 +346,7 @@ const { hero } = copy;
             s.type = type;
             faint.append(s);
           }
+          faint.playbackRate = 0.5;
           faint.load();
         }
         faint.play().catch(() => {});
@@ -373,7 +374,8 @@ const { hero } = copy;
       src.type = type;
       v.append(src);
     }
-    v.addEventListener('playing', () => v.classList.add('ready'), { once: true });
+    v.playbackRate = 0.5; // slow wind, slow leaves
+    v.addEventListener('playing', () => { v.playbackRate = 0.5; v.classList.add('ready'); }, { once: true });
     new IntersectionObserver(([e]) => {
       tabVisible = !!e?.isIntersecting;
       sync();

@@ -142,9 +142,9 @@ try {
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
     await page.waitForTimeout(600);
     const end = await page.evaluate(() => ({ night: document.querySelector('[data-nav]').classList.contains('on-dark'), litNodes: document.querySelectorAll('.pagewire .pw-node.on').length }));
-    log('   hero pinned, nav fixed, page wire has 5 nodes', sticky === 'sticky' && navPos === 'fixed' && nodes === 5, JSON.stringify({ sticky, navPos, nodes }));
+    log('   hero pinned, nav fixed, page wire has 5 nodes', sticky === 'sticky' && navPos === 'fixed' && nodes >= 5, JSON.stringify({ sticky, navPos, nodes }));
     log('   scroll blur: wall blurs, type fades, hero stays pinned, bar appears', mid.blur > 0.5 && mid.inner < 0.2 && mid.heroTop === 0 && mid.scrolled, JSON.stringify(mid));
-    log('   end of page: nav turns paper on night, all 5 nodes lit', end.night && end.litNodes === 5, JSON.stringify(end));
+    log('   end of page: nav turns paper on night, all 5 nodes lit', end.night && end.litNodes >= 5, JSON.stringify(end));
     await ctx.close();
   }
 

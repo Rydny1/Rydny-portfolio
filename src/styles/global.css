@@ -354,22 +354,6 @@ html.has-cursor :where(input, textarea, select) {
   fill: var(--signal);
   opacity: 0.25;
 }
-/* Phones: no vertical line or droplet; a small orange dot beside each section title instead */
-@media (max-width: 599px) {
-  .pw-track,
-  .pw-line,
-  .pw-drop,
-  .pw-node .ring {
-    display: none;
-  }
-  .pw-node .dot {
-    fill: var(--signal);
-    stroke: none;
-    transform-box: fill-box;
-    transform-origin: center;
-    transform: scale(0.7);
-  }
-}
 
 /* Tap feedback on touch devices */
 @media (hover: none) {
