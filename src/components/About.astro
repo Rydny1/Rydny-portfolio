@@ -6,8 +6,8 @@ const { about } = copy;
 
 <section class="about" id="about" aria-labelledby="about-title" data-node>
   <div class="wrap grid">
-    <figure class="portrait" data-reveal>
-      <div class="frame" data-parallax data-tone="dark">
+    <figure class="portrait">
+      <div class="frame" data-parallax data-iris data-tone="dark">
         <Pic
           base="portrait-960"
           srcset={[
@@ -23,9 +23,9 @@ const { about } = copy;
       <figcaption class="label">{about.caption}</figcaption>
     </figure>
 
-    <div class="text" data-reveal data-delay="120">
-      <h2 id="about-title" data-title>{about.title}<span class="fs">.</span></h2>
-      {about.paragraphs.map((t) => <p>{t}</p>)}
+    <div class="text">
+      <h2 id="about-title" data-title data-drift="1">{about.title}<span class="fs">.</span></h2>
+      {about.paragraphs.map((t) => <p data-words>{t}</p>)}
       <blockquote>
         <p>{about.quote.text}</p>
         <cite>{about.quote.cite}</cite>

@@ -47,7 +47,7 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
     {p.links.length > 0 && (
       <ul class="links">
         {p.links.map((l) => (
-          <li><a class="link" href={l.href} rel="noopener">{l.label}</a></li>
+          <li><a class="pl" href={l.href} rel="noopener">{l.label}<span aria-hidden="true"> ↗</span></a></li>
         ))}
       </ul>
     )}
@@ -147,14 +147,35 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
   }
   .links {
     display: flex;
-    gap: var(--s-3);
-    margin-top: var(--s-2);
+    flex-wrap: wrap;
+    gap: var(--s-1);
+    margin-top: var(--s-3);
+  }
+  .pl {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1px solid rgb(46 70 54 / 0.35);
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+  }
+  .pl:hover,
+  .pl:focus-visible {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--paper);
   }
 
   /* Phones: each project is a card inside the swipe carousel */
   @media (max-width: 899px) {
     .project {
-      display: block;
+      display: flex;
+      flex-direction: column;
       flex: 0 0 86%;
       scroll-snap-align: start;
       border: 1px solid rgb(46 70 54 / 0.25);
@@ -166,7 +187,14 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
       box-shadow: none;
     }
     .text {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
       padding: var(--s-3) 0 var(--s-1);
+    }
+    .links {
+      margin-top: auto;
+      padding-top: var(--s-3);
     }
     .meta {
       margin-bottom: var(--s-2);

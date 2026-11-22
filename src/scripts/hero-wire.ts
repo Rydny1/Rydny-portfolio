@@ -114,7 +114,7 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
         `C ${R.x} ${R.y + ks * (M.y - R.y)}, ${M.x + ks * (R.x - M.x)} ${M.y}, ${M.x} ${M.y} ` +
         `C ${M.x - ks * (M.x - L)} ${M.y}, ${L} ${Lp.y - ks * (Lp.y - M.y)}, ${L} ${Lp.y} ` +
         `C ${L} ${Lp.y + k * (E.y - Lp.y)}, ${E.x - k * (E.x - L)} ${E.y}, ${E.x} ${E.y}`;
-      ts = [0.12, 0.4, 0.6, 0.83];
+      ts = [0.1, 0.4, 0.69, 0.89];
     }
     track.setAttribute('d', d);
     line.setAttribute('d', d);

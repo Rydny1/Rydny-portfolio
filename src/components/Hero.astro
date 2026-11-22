@@ -239,23 +239,43 @@ const { hero } = copy;
     .l2 {
       align-self: flex-end;
     }
+    /* Bottom block: copy on the headline's left edge, a full-width thumb-sized button, facts spread across the width */
     .bottom {
       position: static;
       flex-direction: column;
       align-items: stretch;
+      text-align: left;
       gap: var(--s-3);
       padding-top: var(--s-2);
     }
     .lead {
-      font-size: 18px;
+      font-size: clamp(13.5px, 4.05vw, 16px);
+      max-width: none;
+      text-wrap: balance; /* two even lines */
     }
     .cta {
       margin-top: var(--s-2);
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--s-2);
+    }
+    .cta .btn {
+      justify-content: center;
+      padding: 0 var(--s-3);
+      min-height: 52px;
+    }
+    .cta .btn::after {
+      display: none;
+    }
+    .cta .link {
+      align-self: center;
     }
     .facts {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: var(--s-3);
+      width: 100%;
+      justify-items: start;
     }
     .facts li {
       font-size: var(--fs-label);

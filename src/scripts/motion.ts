@@ -42,7 +42,15 @@ addEventListener('resize', schedule);
 export const isFast = () => velocity > 2.2; // about 2200 px per second
 
 // ---------- reveals ----------
-type Kind = 'fade' | 'wipe' | 'title' | 'letters';
+// Each kind is a different spatial move, so the page does not feel like one fade repeated:
+//   fade   content settles in from below with a slight turn
+//   wipe   images open upward out of a tilted plane, while the picture inside settles from a zoom (depth)
+//   iris   a circle opens from the centre (the portrait)
+//   wipex  rows slide open from the left edge
+//   title  headline words rise from behind a mask with a turn, the orange full stop pops last
+//   words  paragraphs rise word by word from behind a mask
+//   letters  the footer name rises letter by letter
+type Kind = 'fade' | 'wipe' | 'iris' | 'wipex' | 'title' | 'words' | 'letters';
 interface Item {
   el: HTMLElement;
   kind: Kind;
@@ -54,12 +62,19 @@ interface Item {
 }
 const items = new Map<Element, Item>();
 
-const hiddenStyle: Record<'fade' | 'wipe', Record<string, string>> = {
-  fade: { opacity: '0', transform: 'translateY(24px)' },
-  wipe: { clipPath: 'inset(100% 0 0 0)' },
+const HIDDEN: Partial<Record<Kind, Record<string, string>>> = {
+  fade: { opacity: '0', transform: 'translateY(44px) rotate(1.4deg)' },
+  wipe: { clipPath: 'inset(100% 0 0 0)', transform: 'perspective(1400px) rotateX(8deg) translateY(44px) scale(0.97)' },
+  iris: { clipPath: 'circle(0% at 50% 62%)' },
+  wipex: { opacity: '0', transform: 'translateX(-28px)' },
+};
+const PART_HIDDEN: Partial<Record<Kind, string>> = {
+  title: 'translateY(118%) rotate(5deg)',
+  words: 'translateY(112%) rotate(2.5deg)',
+  letters: 'translateY(105%) rotate(7deg)',
 };
 
-function splitTitle(h: HTMLElement) {
+function split(h: HTMLElement) {
   if (h.dataset.split) return;
   h.dataset.split = '1';
   const stop = h.querySelector<HTMLElement>('.fs');
@@ -90,43 +105,113 @@ function hide(it: Item) {
   const { el, kind } = it;
   it.armed = true;
   it.shown = false;
-  if (kind === 'fade' || kind === 'wipe') Object.assign(el.style, hiddenStyle[kind]);
-  else if (kind === 'title') {
-    it.parts?.forEach((p) => (p.style.transform = 'translateY(115%)'));
-    if (it.stop) {
-      it.stop.style.transform = 'scale(0)';
-      it.stop.style.display = 'inline-block';
-    }
-  } else if (kind === 'letters') it.parts?.forEach((p) => (p.style.transform = 'translateY(105%)'));
-}
-
-function clear(it: Item) {
-  const { el, kind } = it;
-  if (kind === 'fade') {
-    el.style.removeProperty('opacity');
-    el.style.removeProperty('transform');
-  } else if (kind === 'wipe') el.style.removeProperty('clip-path');
-  else {
-    it.parts?.forEach((p) => p.style.removeProperty('transform'));
-    it.stop?.style.removeProperty('transform');
+  const box = HIDDEN[kind];
+  if (box) Object.assign(el.style, box);
+  const part = PART_HIDDEN[kind];
+  if (part) it.parts?.forEach((p) => (p.style.transform = part));
+  if (it.stop) {
+    it.stop.style.transform = 'scale(0)';
+    it.stop.style.display = 'inline-block';
   }
 }
 
-function play(it: Item) {
+function clear(it: Item) {
+  const { el } = it;
+  el.style.removeProperty('opacity');
+  el.style.removeProperty('transform');
+  el.style.removeProperty('clip-path');
+  it.parts?.forEach((p) => p.style.removeProperty('transform'));
+  it.stop?.style.removeProperty('transform');
+}
+
+// The moves of each kind, as a list of animations. The same list is played forward on entry and reversed on exit,
+// so whatever comes in one way goes out the same way.
+interface Spec {
+  target: HTMLElement;
+  frames: Keyframe[];
+  dur: number;
+  delay: number;
+}
+function specsFor(it: Item): Spec[] {
   const { kind, el, delay } = it;
+  const inner = el.querySelector<HTMLElement>('img, video');
+  const specs: Spec[] = [];
+  if (kind === 'fade') {
+    specs.push({ target: el, frames: [{ opacity: 0, transform: 'translateY(44px) rotate(1.4deg)' }, { opacity: 1, transform: 'none' }], dur: 950, delay });
+  } else if (kind === 'wipe') {
+    specs.push({
+      target: el,
+      frames: [
+        { clipPath: 'inset(100% 0 0 0)', transform: 'perspective(1400px) rotateX(8deg) translateY(44px) scale(0.97)' },
+        { clipPath: 'inset(0 0 0 0)', transform: 'none' },
+      ],
+      dur: 1250,
+      delay,
+    });
+    if (inner) specs.push({ target: inner, frames: [{ transform: 'scale(1.18)' }, { transform: 'scale(1)' }], dur: 1600, delay });
+  } else if (kind === 'iris') {
+    specs.push({ target: el, frames: [{ clipPath: 'circle(0% at 50% 62%)' }, { clipPath: 'circle(82% at 50% 50%)' }], dur: 1300, delay });
+    if (inner) specs.push({ target: inner, frames: [{ transform: 'scale(1.22)' }, { transform: 'scale(1)' }], dur: 1700, delay });
+  } else if (kind === 'wipex') {
+    // The observed row is only moved and faded; the clip goes on its inner child. (A clipped element reports zero
+    // visible area to the observer, which would read as "scrolled away" and hide the row again.)
+    specs.push({ target: el, frames: [{ opacity: 0, transform: 'translateX(-28px)' }, { opacity: 1, transform: 'none' }], dur: 1000, delay });
+    const child = el.firstElementChild as HTMLElement | null;
+    if (child) specs.push({ target: child, frames: [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], dur: 1000, delay });
+  } else if (kind === 'title') {
+    it.parts?.forEach((p, i) => specs.push({ target: p, frames: [{ transform: PART_HIDDEN.title! }, { transform: 'none' }], dur: 900, delay: delay + i * 95 }));
+    const n = it.parts?.length ?? 0;
+    if (it.stop) specs.push({ target: it.stop, frames: [{ transform: 'scale(0)' }, { transform: 'scale(1)' }], dur: 380, delay: delay + n * 95 + 260 });
+  } else if (kind === 'words') {
+    const n = it.parts?.length ?? 1;
+    const step = Math.min(34, 780 / n); // long paragraphs stay under about 0.8s of stagger
+    it.parts?.forEach((p, i) => specs.push({ target: p, frames: [{ transform: PART_HIDDEN.words! }, { transform: 'none' }], dur: 800, delay: delay + i * step }));
+  } else if (kind === 'letters') {
+    it.parts?.forEach((p, i) => specs.push({ target: p, frames: [{ transform: PART_HIDDEN.letters! }, { transform: 'none' }], dur: 950, delay: delay + i * 55 }));
+  }
+  return specs;
+}
+
+const running = new Map<Item, Animation[]>();
+const stopAnims = (it: Item) => {
+  running.get(it)?.forEach((a) => a.cancel());
+  running.delete(it);
+};
+
+function play(it: Item) {
+  stopAnims(it);
   it.armed = false;
   it.shown = true;
-  const instant = isFast();
   clear(it);
-  if (instant) return;
-  const opts = (d: number, dl = 0): KeyframeAnimationOptions => ({ duration: d * K, delay: dl * K, easing: EASE, fill: 'backwards' });
-  if (kind === 'fade') el.animate([{ opacity: 0, transform: 'translateY(24px)' }, { opacity: 1, transform: 'none' }], opts(650, delay));
-  else if (kind === 'wipe') el.animate([{ clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], opts(800, delay));
-  else if (kind === 'title') {
-    it.parts?.forEach((p, i) => p.animate([{ transform: 'translateY(115%)' }, { transform: 'none' }], opts(600, delay + i * 70)));
-    const n = it.parts?.length ?? 0;
-    it.stop?.animate([{ transform: 'scale(0)' }, { transform: 'scale(1)' }], { duration: 300 * K, delay: (delay + n * 70 + 240) * K, easing: EASE, fill: 'backwards' });
-  } else if (kind === 'letters') it.parts?.forEach((p, i) => p.animate([{ transform: 'translateY(105%)' }, { transform: 'none' }], opts(700, delay + i * 40)));
+  if (isFast()) return;
+  const anims = specsFor(it).map((s) => s.target.animate(s.frames, { duration: s.dur * K, delay: s.delay * K, easing: EASE, fill: 'backwards' }));
+  running.set(it, anims);
+}
+
+// Exit: the same moves in reverse, a touch quicker, then the element rests in its hidden state ready for the next entry.
+function exit(it: Item) {
+  stopAnims(it);
+  it.shown = false;
+  if (isFast()) {
+    hide(it);
+    return;
+  }
+  const specs = specsFor(it);
+  if (!specs.length) {
+    hide(it);
+    return;
+  }
+  const anims = specs.map((s, i) =>
+    s.target.animate([...s.frames].reverse(), { duration: s.dur * 0.62 * K, delay: Math.min(i * 22, 240) * K, easing: 'cubic-bezier(0.55, 0, 0.9, 0.4)', fill: 'forwards' }),
+  );
+  running.set(it, anims);
+  void Promise.all(anims.map((a) => a.finished.catch(() => null))).then(() => {
+    if (running.get(it) === anims) {
+      anims.forEach((a) => a.cancel());
+      running.delete(it);
+      hide(it);
+    }
+  });
 }
 
 const io = new IntersectionObserver(
@@ -134,23 +219,24 @@ const io = new IntersectionObserver(
     for (const e of entries) {
       const it = items.get(e.target);
       if (!it) continue;
-      if (e.intersectionRatio >= 0.12 || (e.isIntersecting && e.intersectionRatio > 0 && e.boundingClientRect.height > innerHeight * 3)) {
+      const tall = e.boundingClientRect.height > innerHeight * 3;
+      if (e.intersectionRatio >= 0.18 || (e.isIntersecting && e.intersectionRatio > 0 && tall)) {
         if (!it.shown) play(it);
-      } else if (e.intersectionRatio === 0 && it.shown) {
-        hide(it); // off screen: reset quietly so it can play again
+      } else if (e.intersectionRatio < 0.08 && it.shown && !tall) {
+        exit(it); // leaving the screen: play the entrance backwards
       }
     }
   },
-  { threshold: [0, 0.12] },
+  { threshold: [0, 0.08, 0.18], rootMargin: '0px 0px -8% 0px' },
 );
 
 export function reveal(el: HTMLElement, kind: Kind, delay = 0) {
-  // A clipped element reports zero visible area to the observer, so a wipe is observed through its parent.
-  const target = kind === 'wipe' ? (el.parentElement ?? el) : el;
+  // A clipped element reports zero visible area to the observer, so wipes and irises are observed through their parent.
+  const target = kind === 'wipe' || kind === 'iris' ? (el.parentElement ?? el) : el;
   if (reduced || items.has(target)) return;
   const it: Item = { el, kind, delay, shown: false, armed: false };
-  if (kind === 'title') {
-    splitTitle(el);
+  if (kind === 'title' || kind === 'words') {
+    split(el);
     it.parts = Array.from(el.querySelectorAll<HTMLElement>('.twi'));
     it.stop = el.querySelector<HTMLElement>('.fs');
   }
@@ -160,10 +246,15 @@ export function reveal(el: HTMLElement, kind: Kind, delay = 0) {
 }
 
 export function initReveals() {
-  document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => reveal(el, 'fade', Number(el.dataset.delay ?? 0)));
-  document.querySelectorAll<HTMLElement>('[data-wipe]').forEach((el) => reveal(el, 'wipe', Number(el.dataset.delay ?? 0)));
-  document.querySelectorAll<HTMLElement>('[data-title]').forEach((el) => reveal(el, 'title'));
-  document.querySelectorAll<HTMLElement>('[data-letters]').forEach((el) => reveal(el, 'letters'));
+  const all = (sel: string, kind: Kind, delayed = true) =>
+    document.querySelectorAll<HTMLElement>(sel).forEach((el) => reveal(el, kind, delayed ? Number(el.dataset.delay ?? 0) : 0));
+  all('[data-reveal]', 'fade');
+  all('[data-wipe]', 'wipe');
+  all('[data-iris]', 'iris');
+  all('[data-wipex]', 'wipex');
+  all('[data-title]', 'title', false);
+  all('[data-words]', 'words');
+  all('[data-letters]', 'letters', false);
 }
 
 export const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));

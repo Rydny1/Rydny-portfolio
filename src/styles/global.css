@@ -338,6 +338,7 @@ html.has-cursor :where(input, textarea, select) {
 }
 .twi {
   display: inline-block;
+  transform-origin: 0 100%;
 }
 .fs {
   display: inline-block;

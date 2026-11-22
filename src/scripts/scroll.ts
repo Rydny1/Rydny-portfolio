@@ -22,6 +22,19 @@ function parallax(vh: number) {
   }
 }
 
+// ---------- drifting titles: each section title slides sideways as it crosses the screen, in alternating directions ----------
+const drifts = Array.from(document.querySelectorAll<HTMLElement>('[data-drift]'));
+function drift(vh: number) {
+  if (reduced) return;
+  const amount = innerWidth * (innerWidth < 900 ? 0.03 : 0.04);
+  for (const el of drifts) {
+    const r = el.getBoundingClientRect();
+    if (r.bottom < -80 || r.top > vh + 80) continue;
+    const p = clamp((r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2), -1, 1);
+    el.style.transform = `translateX(${(Number(el.dataset.drift) * p * amount).toFixed(1)}px)`;
+  }
+}
+
 // ---------- page wire ----------
 const main = document.querySelector<HTMLElement>('main');
 const NS = 'http://www.w3.org/2000/svg';
@@ -139,6 +152,7 @@ function buildWire() {
 
 function update(sy: number, vh: number) {
   parallax(vh);
+  drift(vh);
   if (!progressLine) return;
   // The reading point sits at 55% of the screen, easing to the bottom edge near the end of the page
   // so the final node always lights.
