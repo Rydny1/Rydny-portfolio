@@ -13,6 +13,14 @@
   font-style: italic;
   font-display: swap;
 }
+/* The hero's second line is the roman face slanted (as in the target), not the true italic. Same file, no extra download. */
+@font-face {
+  font-family: 'Fraunces Slant';
+  src: url('/fonts/fraunces-latin-wght-normal.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 @font-face {
   font-family: 'Plus Jakarta Sans';
   src: url('/fonts/plus-jakarta-sans-latin-400-normal.woff2') format('woff2');
@@ -41,11 +49,11 @@
   --green: #2e4636; /* vintage green: leaf cursor, active flow step, What I fix hover */
   --mist: #66625b; /* brief says #6E6A63, which measures 4.45:1 on paper; this is the nearest value that passes AA */
   --paper-raised: #f6f2ed;
-  --paper-glass: rgb(234 232 222 / 0.92); /* sections let the blurred wall drift faintly behind */
+  --paper-glass: transparent; /* sections are transparent: the cream page and the faint wall show through */
   --hairline: rgb(31 32 35 / 0.15);
   --hairline-strong: rgb(31 32 35 / 0.28);
   --wire-track: rgb(31 32 35 / 0.1);
-  --night: #17181a; /* evening: contact section and footer */
+  --night: #161615; /* evening: contact section and footer */
   --on-night-mist: #aaa59c;
   --glass: #e6eef6;
   --glass-deep: #a9bdd1; /* the glow around the light: reads blue-grey, never white */ /* the light that travels the line: cool blue-grey */
@@ -57,7 +65,7 @@
 
   /* Brief gives two sizes (12vw in sec. 6, 6.8vw in sec. 4). The approved mockup measures about 7.4vw. */
   --fs-hero: clamp(52px, 7.4vw, 128px);
-  --fs-h2: clamp(72px, 11vw, 176px);
+  --fs-h2: clamp(64px, 12.2vw, 190px);
   --fs-h3: 44px;
   --fs-lead: clamp(20px, 1.6vw, 21px);
   --fs-body: 18px;
@@ -78,8 +86,8 @@
   --s-24: 192px;
 
   /* layout */
-  --max: 1280px;
-  --pad: clamp(24px, 5vw, 64px);
+  --max: 1440px;
+  --pad: clamp(24px, 4.45vw, 64px);
   --section-y: clamp(72px, round(12vh, 8px), 152px);
   --radius-pill: 999px;
   --radius-badge: 4px;

@@ -1,7 +1,7 @@
 ---
-// Three steps joined by the orange line, stacked vertically on every screen. Scroll-driven (see scripts/flows.ts):
-// step 1 lights as the flow enters, the blue-grey light travels the line to step 2, and so on.
-// With reduced motion or no JS: three plain pills.
+// Three steps joined by the orange line, in one row on every screen (smaller pills on phones).
+// Scroll-driven (see scripts/flows.ts): step 1 turns green as the flow enters, the blue-grey light carries it to
+// step 2, then step 3. Done steps keep a green outline and a tick. With reduced motion or no JS: three plain pills.
 interface Props {
   steps: readonly [string, string, string];
 }
@@ -22,31 +22,31 @@ const { steps } = Astro.props;
 <style>
   .flow {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     list-style: none;
     padding: 0;
-    margin-top: var(--s-4);
+    margin-top: 28px;
   }
   .step {
     position: relative;
     z-index: 1;
+    flex: 0 1 auto;
+    min-width: 0;
   }
   .step span {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: var(--s-1);
-    min-height: 40px;
-    padding: 0 var(--s-2);
-    border: 1px solid var(--hairline-strong);
+    padding: 8px 12px;
+    border: 1px solid rgb(46 70 54 / 0.35);
     border-radius: var(--radius-pill);
-    background: var(--paper-raised);
+    background: #f5f1ea;
     color: var(--ink);
     font-size: 13px;
     font-weight: 600;
-    line-height: 1;
-    white-space: nowrap;
-    transform-origin: left center;
+    line-height: 1.2;
+    text-align: center;
     transition: background-color 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease), transform 0.35s var(--ease);
   }
   .step[data-state='active'] span {
@@ -65,21 +65,22 @@ const { steps } = Astro.props;
   }
   .line {
     position: relative;
-    width: 2px;
-    height: 24px;
-    margin-left: var(--s-3);
+    flex: 1;
+    min-width: 18px;
+    height: 3px;
+    border-radius: 2px;
     background: var(--signal);
   }
   .light {
     position: absolute;
-    left: -0.5px;
+    left: 0;
     top: 0;
-    width: 3px;
-    height: 28px;
+    width: 28px;
+    height: 3px;
     border-radius: 2px;
-    background: linear-gradient(to bottom, transparent, var(--glass-deep), var(--glass), var(--glass-deep), transparent);
+    background: linear-gradient(to right, transparent, var(--glass-deep), var(--glass), var(--glass-deep), transparent);
     opacity: 0;
-    transform: translateY(-28px);
+    transform: translateX(-28px);
     will-change: transform;
   }
   /* Reduced motion: all three read as done, no light */
@@ -91,6 +92,23 @@ const { steps } = Astro.props;
       content: '✓';
       color: var(--green);
       font-size: 12px;
+    }
+  }
+
+  /* Phones: the same row, smaller pills (a stacked flow wastes space) */
+  @media (max-width: 899px) {
+    .flow {
+      margin-top: var(--s-2);
+    }
+    .step span {
+      padding: 6px 8px;
+      font-size: 11px;
+    }
+    .step[data-state='done'] span::after {
+      font-size: 10px;
+    }
+    .line {
+      min-width: 8px;
     }
   }
 </style>

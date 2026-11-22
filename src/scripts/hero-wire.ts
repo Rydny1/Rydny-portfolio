@@ -64,33 +64,52 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
     const sp = pos(stopEl);
     const bp = pos(bEl);
     const mobile = W < 900;
-    const S: Pt = { x: sp.x + sp.w / 2, y: sp.y + sp.h * 0.5 + fs * 0.3 };
+    const S: Pt = { x: sp.x + sp.w / 2 + fs * 0.03, y: sp.y + sp.h * 0.5 + fs * 0.31 };
     const E: Pt = mobile
-      ? { x: Math.max(24, bp.x), y: bp.y + fs * 0.1 }
-      : { x: Math.max(12, bp.x - 18), y: bp.y + bp.h * 0.5 + fs * 0.12 };
+      ? { x: Math.max(30, bp.x - 16), y: bp.y + bp.h * 0.5 }
+      : { x: Math.max(12, bp.x - 6), y: bp.y + bp.h * 0.5 };
     const dy = Math.max(120, E.y - S.y);
 
     let d: string;
     let ts: number[];
     if (!mobile) {
-      // Same loop as the approved mockup, but built from the real S and E so it holds at any width.
-      const xl = Math.min(W * 0.165, S.x - 120); // left extreme of the loop
-      const fx = (r: number) => S.x - r * (S.x - xl);
-      const fy = (r: number) => S.y + r * dy;
-      const bottomMid = fx(0.645);
+      // The target's route (mockup 1440x900), rebuilt from the real full stop S and "B" node E so it holds at any size:
+      // down from the stop, a long run left through MAP and DESIGN, the turn at AUTOMATE, then back right to TEST and E.
+      const xl = W * 0.1285; // left extreme of the turn
+      const span = S.x - xl;
+      const y = (r: number) => S.y + r * dy;
       d =
         `M ${S.x} ${S.y} ` +
-        `C ${S.x} ${fy(0.38)}, ${fx(0.26)} ${fy(0.31)}, ${fx(0.55)} ${fy(0.41)} ` +
-        `C ${fx(0.976)} ${fy(0.55)}, ${fx(1.12)} ${fy(0.95)}, ${fx(0.884)} ${fy(1.185)} ` +
-        `C ${bottomMid} ${fy(1.42)}, ${E.x - Math.max(60, 0.3 * (E.x - bottomMid))} ${fy(1.08)}, ${E.x} ${E.y}`;
-      ts = [0.13, 0.37, 0.61, 0.8];
+        `C ${S.x} ${y(0.325)}, ${S.x - 0.1206 * span} ${y(0.364)}, ${S.x - 0.316 * span} ${y(0.37)} ` +
+        `C ${S.x - 0.6813 * span} ${y(0.39)}, ${xl - 0.0127 * span} ${y(0.35)}, ${xl} ${y(0.756)} ` +
+        `C ${xl + 0.0085 * span} ${y(1.065)}, ${E.x - 0.37 * (E.x - xl)} ${y(1.032)}, ${E.x} ${E.y}`;
+      ts = [0.127, 0.498, 0.749, 0.917]; // MAP, DESIGN, AUTOMATE, TEST: fractions of the target curve
     } else {
-      // Phones: a tall S between the two lines, ending above the "B". Two pills.
+      // Phones: one smooth S. From the full stop it swings out to the right, sweeps left across the whole width and
+      // eases down into the node above-left of "Build". Built as a Catmull-Rom spline through a few anchors, so the
+      // direction never changes abruptly: no kinks, no bends beside "Build". Everything stays 16px+ inside the edges.
+      // Phones: the smoothest possible line. A chain of true quarter-curves, each one leaving a point in exactly the
+      // direction the last one arrived (horizontal or vertical at every join), so there is no wobble anywhere:
+      // out to the right, a round turn down the right edge, a level sweep left, a second round turn down the
+      // left lane, a round U under the node, then straight up into it. All 16px+ inside the screen edges.
+      const k = 0.5523; // quarter-circle handle length
+      const L = 26; // left lane
+      const R = { x: W - 28, y: S.y + 0.2 * dy }; // right turn
+      const M = { x: W * 0.5, y: S.y + 0.5 * dy }; // middle of the sweep
+      const Lp = { x: L, y: S.y + 0.74 * dy }; // left turn
+      const r = (E.x - L) / 2; // radius of the U
+      const yb = E.y + 52; // bottom of the U
+      const cx = L + r;
       d =
         `M ${S.x} ${S.y} ` +
-        `C ${S.x + (W - S.x) * 0.8} ${S.y + dy * 0.04}, ${W - 48} ${S.y + dy * 0.3}, ${W * 0.7} ${S.y + dy * 0.46} ` +
-        `C ${W * 0.46} ${S.y + dy * 0.62}, ${E.x} ${S.y + dy * 0.55}, ${E.x} ${E.y}`;
-      ts = [0.3, 0.72];
+        `C ${S.x + k * (R.x - S.x)} ${S.y}, ${R.x} ${R.y - k * (R.y - S.y)}, ${R.x} ${R.y} ` +
+        `C ${R.x} ${R.y + k * (M.y - R.y)}, ${M.x + k * (R.x - M.x)} ${M.y}, ${M.x} ${M.y} ` +
+        `C ${M.x - k * (M.x - L)} ${M.y}, ${L} ${Lp.y - k * (Lp.y - M.y)}, ${L} ${Lp.y} ` +
+        `L ${L} ${yb - r} ` +
+        `C ${L} ${yb - r + k * r}, ${cx - k * r} ${yb}, ${cx} ${yb} ` +
+        `C ${cx + k * r} ${yb}, ${E.x} ${yb - r + k * r}, ${E.x} ${yb - r} ` +
+        `L ${E.x} ${E.y}`;
+      ts = [0.16, 0.46];
     }
     track.setAttribute('d', d);
     line.setAttribute('d', d);
@@ -121,7 +140,9 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
     pills.forEach((p, i) => {
       p.t = ts[i]!;
       const pt = line.getPointAtLength(L * p.t);
-      p.g.setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)})`);
+      // keep every pill at least 16px inside the screen edges
+      const px = Math.min(W - 16 - p.w / 2, Math.max(16 + p.w / 2, pt.x));
+      p.g.setAttribute('transform', `translate(${px.toFixed(1)} ${pt.y.toFixed(1)})`);
     });
 
     startG.setAttribute('transform', `translate(${S.x} ${S.y})`);
@@ -130,7 +151,7 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
 
   // Static pieces: nodes and the light gradient.
   const popS = el<SVGGElement>('g', {}, 'pop');
-  popS.append(el('circle', { r: 18 }, 'node-ring'), el('circle', { r: 8 }, 'node-dot'));
+  popS.append(el('circle', { r: 20 }, 'node-ring'), el('circle', { r: 9 }, 'node-dot'));
   startG.append(popS);
   const popE = el<SVGGElement>('g', {}, 'pop');
   popE.append(el('circle', { r: 12 }, 'node-ring'), el('circle', { r: 6 }, 'node-dot'));

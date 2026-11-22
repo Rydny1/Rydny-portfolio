@@ -10,9 +10,9 @@
 }
 .wire .track {
   fill: none;
-  stroke: var(--ink);
-  stroke-opacity: 0.1;
-  stroke-width: 8;
+  stroke: var(--green);
+  stroke-opacity: 0.12;
+  stroke-width: 9;
   stroke-linecap: round;
 }
 .wire .line {
@@ -33,18 +33,19 @@
   transform-origin: center;
 }
 .wire .pill rect {
-  fill: var(--paper-raised);
-  stroke: var(--ink);
-  stroke-opacity: 0.28;
+  fill: #f3eee6;
+  stroke: var(--green);
+  stroke-opacity: 0.45;
 }
 .wire .pill .d {
   fill: var(--signal);
 }
 .wire .pill.active rect {
-  fill: var(--signal);
+  fill: var(--green);
+  stroke-opacity: 1;
 }
-.wire .pill.active .d {
-  fill: var(--ink);
+.wire .pill.active text {
+  fill: var(--paper);
 }
 .wire .pill .flash {
   fill: var(--glass);
@@ -54,7 +55,7 @@
   font-family: var(--font-mono);
   font-size: var(--fs-pill);
   letter-spacing: 1.2px;
-  fill: var(--ink);
+  fill: var(--green);
 }
 
 .wire .node-ring {
@@ -136,5 +137,15 @@
 @keyframes wire-dot {
   from {
     fill: var(--mist);
+  }
+}
+
+/* Phones: a finer line */
+@media (max-width: 899px) {
+  .wire .line {
+    stroke-width: 2.2;
+  }
+  .wire .track {
+    stroke-width: 6.5;
   }
 }

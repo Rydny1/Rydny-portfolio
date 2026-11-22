@@ -30,8 +30,8 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.025em;
+  font-weight: 560;
+  letter-spacing: -0.03em;
   text-wrap: balance;
 }
 p {
@@ -44,6 +44,7 @@ a {
 main {
   position: relative;
   z-index: 1;
+  background: var(--paper);
 }
 ul {
   list-style: none;
@@ -429,4 +430,39 @@ html.has-cursor :where(input, textarea, select) {
 .letter.stepper input[type='email'],
 .letter.stepper textarea {
   min-height: 48px;
+}
+
+/* Film grain over everything, very quiet (from the target mockup) */
+@media (max-width: 899px) {
+  .grain {
+    display: none;
+  }
+}
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+}
+
+/* The faint wall behind the cream sections: leaf shadows keep drifting, very quietly */
+.wallfaint {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  pointer-events: none;
+}
+main > section {
+  position: relative;
+  z-index: 1;
+}
+
+[hidden] {
+  display: none !important;
 }

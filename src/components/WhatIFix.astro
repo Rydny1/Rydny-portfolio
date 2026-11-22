@@ -13,14 +13,12 @@ const { fix } = copy;
     <ol class="rows">
       {fix.rows.map((r, i) => (
         <li class="row" data-reveal data-delay={i * 70}>
-          <button class="toggle" type="button" aria-expanded="false" aria-controls={`fix-d${i}`} data-hover>
-            <span class="n label" aria-hidden="true">{r.n}</span>
+          <button class="toggle" type="button" aria-expanded="false" data-hover>
+            <span class="n" aria-hidden="true">{r.n}</span>
             <span class="title">{r.title}<span class="dot" aria-hidden="true">.</span></span>
+            <span class="desc">{r.text}</span>
             <span class="arrow" aria-hidden="true">→</span>
           </button>
-          <div class="desc" id={`fix-d${i}`}>
-            <p>{r.text}</p>
-          </div>
         </li>
       ))}
     </ol>
@@ -29,43 +27,43 @@ const { fix } = copy;
 
 <style>
   .fix {
-    padding-block: var(--section-y);
-    background: var(--paper-glass);
+    padding: 40px 0 160px;
   }
   .head {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     gap: var(--s-4);
-    margin-bottom: var(--s-6);
+    margin-bottom: 64px;
   }
   h2 {
     color: var(--green);
     font-size: var(--fs-h2);
-    line-height: 0.86;
+    line-height: 0.82;
+    font-weight: 560;
+    letter-spacing: -0.03em;
   }
   .lead {
-    font-size: var(--fs-lead);
-    margin-bottom: var(--s-2);
-    max-width: 30ch;
+    font-size: 20px;
+    max-width: 24ch;
   }
   .rows {
     list-style: none;
     padding: 0;
-    border-top: 1px solid var(--hairline-strong);
   }
   .row {
-    position: relative;
-    border-bottom: 1px solid var(--hairline-strong);
+    border-top: 1px solid rgb(31 32 35 / 0.16);
+  }
+  .row:last-child {
+    border-bottom: 1px solid rgb(31 32 35 / 0.16);
   }
   .toggle {
     display: grid;
-    grid-template-columns: 96px 1fr auto;
+    grid-template-columns: 90px 1fr 380px 40px;
     align-items: center;
     column-gap: var(--s-3);
     width: 100%;
-    min-height: 136px;
-    padding: var(--s-3) 0;
+    padding: 34px 0;
     border: 0;
     background: none;
     color: var(--ink);
@@ -74,14 +72,18 @@ const { fix } = copy;
     cursor: pointer;
   }
   .n {
-    font-size: var(--fs-label);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    opacity: 0.5;
   }
   .title {
     font-family: var(--font-display);
-    font-size: clamp(40px, 4.4vw, 64px);
-    font-weight: 500;
-    line-height: 1.02;
-    letter-spacing: -0.025em;
+    font-size: clamp(36px, 4.45vw, 64px);
+    font-weight: 540;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: var(--ink);
     max-width: 14em;
     transition: color 0.4s var(--ease), transform 0.4s var(--ease);
   }
@@ -92,32 +94,25 @@ const { fix } = copy;
     transform: scale(0.4);
     transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
   }
+  .desc {
+    font-size: 17px;
+    line-height: 1.6;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+  }
   .arrow {
     display: grid;
     place-items: center;
     width: 40px;
     height: 40px;
-    border: 1px solid var(--hairline-strong);
+    border: 1px solid rgb(31 32 35 / 0.3);
     border-radius: 50%;
     font-size: 16px;
     transition: background-color 0.4s var(--ease), color 0.4s var(--ease), border-color 0.4s var(--ease), transform 0.4s var(--ease);
   }
-  .desc {
-    position: absolute;
-    right: calc(40px + var(--s-3) * 2);
-    top: 50%;
-    width: min(340px, 30%);
-    transform: translateY(-50%);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s var(--ease);
-  }
-  .desc p {
-    font-size: 15px;
-    line-height: 1.55;
-  }
 
-  /* Hover and keyboard focus (fine pointers): green title slides right and gains its full stop, text fades in, arrow fills ink */
+  /* Hover and keyboard focus (fine pointers): green title slides right and gains its orange full stop,
+     the description fades in, the arrow fills ink */
   @media (hover: hover) and (min-width: 900px) {
     .row:hover .title,
     .toggle:focus-visible .title,
@@ -132,7 +127,7 @@ const { fix } = copy;
       transform: none;
     }
     .row:hover .desc,
-    .toggle:focus-visible + .desc,
+    .toggle:focus-visible .desc,
     .row.open .desc {
       opacity: 1;
     }
@@ -145,38 +140,44 @@ const { fix } = copy;
     }
   }
 
-  /* Touch and narrow screens: an accordion */
+  /* Touch and narrow screens: tap-to-open accordion */
   @media (hover: none), (max-width: 899px) {
+    .fix {
+      padding: var(--s-4) 0 var(--section-y);
+    }
+    .head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
     .toggle {
-      grid-template-columns: 32px 1fr auto;
+      grid-template-columns: 32px 1fr 40px;
+      grid-template-areas: 'n title arrow' '. desc desc';
       column-gap: var(--s-2);
-      min-height: 96px;
-      padding: var(--s-2) 0;
+      padding: var(--s-3) 0;
+    }
+    .n {
+      grid-area: n;
     }
     .title {
+      grid-area: title;
       font-size: clamp(28px, 8vw, 40px);
     }
-    .desc {
-      position: static;
-      transform: none;
-      width: auto;
-      display: grid;
-      grid-template-rows: 0fr;
-      opacity: 1;
-      pointer-events: auto;
-      transition: grid-template-rows 0.4s var(--ease);
+    .arrow {
+      grid-area: arrow;
     }
-    .desc p {
+    .desc {
+      grid-area: desc;
+      opacity: 1;
+      font-size: 15px;
+      max-height: 0;
       overflow: hidden;
-      min-height: 0;
-      padding: 0 0 0 calc(32px + var(--s-2));
-      max-width: none;
+      transition: max-height 0.4s var(--ease), padding 0.4s var(--ease);
     }
     .row.open .desc {
-      grid-template-rows: 1fr;
-    }
-    .row.open .desc p {
-      padding-bottom: var(--s-3);
+      max-height: 12em;
+      padding-top: var(--s-2);
     }
     .row.open .arrow {
       transform: rotate(90deg);
@@ -190,11 +191,6 @@ const { fix } = copy;
     .row.open .dot {
       opacity: 1;
       transform: none;
-    }
-    .head {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--s-2);
     }
   }
 </style>

@@ -9,7 +9,7 @@ interface Flow {
   steps: HTMLElement[];
   lines: HTMLElement[];
   lights: HTMLElement[];
-  heights: number[];
+  widths: number[];
   state: string;
   pos: number[];
 }
@@ -21,7 +21,7 @@ const flows: Flow[] = Array.from(document.querySelectorAll<HTMLElement>('[data-f
     steps: Array.from(el.querySelectorAll<HTMLElement>('.step')),
     lines,
     lights: lines.map((l) => l.querySelector<HTMLElement>('.light')!),
-    heights: lines.map((l) => l.offsetHeight),
+    widths: lines.map((l) => l.offsetWidth),
     state: '',
     pos: lines.map(() => -1),
   };
@@ -44,16 +44,16 @@ function apply(f: Flow, t: number) {
     const rounded = Math.round(p * 200) / 200;
     if (rounded === f.pos[i]) return;
     f.pos[i] = rounded;
-    const h = f.heights[i] ?? 24;
+    const w = f.widths[i] ?? 24;
     light.style.opacity = p > 0 && p < 1 ? String(Math.min(1, p / 0.08, (1 - p) / 0.08)) : '0';
-    light.style.transform = `translateY(${(p * (h + 28) - 28).toFixed(1)}px)`;
+    light.style.transform = `translateX(${(p * (w + 28) - 28).toFixed(1)}px)`;
   });
 }
 
 if (reduced) {
   flows.forEach((f) => f.steps.forEach((s) => s.setAttribute('data-state', 'idle')));
 } else if (flows.length) {
-  addEventListener('resize', () => flows.forEach((f) => (f.heights = f.lines.map((l) => l.offsetHeight))));
+  addEventListener('resize', () => flows.forEach((f) => (f.widths = f.lines.map((l) => l.offsetWidth))));
   onFrame((_sy, vh) => {
     for (const f of flows) {
       const top = f.el.getBoundingClientRect().top;

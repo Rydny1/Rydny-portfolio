@@ -33,7 +33,7 @@ export const copy = {
     title: 'Proof',
     lead: 'Three problems. Three working fixes.',
     labels: { problem: 'Problem', fix: 'Fix', result: 'Result' },
-    ask: { label: 'Want something like this? Get in touch.', href: '#contact' },
+    ask: { text: 'Want something like this?', label: 'Get in touch', href: '#contact' },
     more: {
       prefix: 'More:',
       items: [
@@ -49,7 +49,7 @@ export const copy = {
       {
         n: '01',
         title: 'Manual processes',
-        text: 'Data entry, follow-ups, reports, handovers. The work your team repeats every day, automated end to end.',
+        text: 'Data entry, follow-ups, reports, handovers. Automated end to end.',
       },
       {
         n: '02',
@@ -59,7 +59,7 @@ export const copy = {
       {
         n: '03',
         title: 'The problem behind the problem',
-        text: 'Before any code, I map where the time and money actually go. If the right fix is a better process, you hear that first.',
+        text: 'I map where the time and money go first. Sometimes the fix is a better process.',
       },
     ],
   },
@@ -83,18 +83,18 @@ export const copy = {
       from: 'from',
       like: "I'd like to",
       short: 'The short version:',
-      reach: 'You can reach me at',
+      reach: 'Reach me at',
       nameLabel: 'Your name',
       companyLabel: 'Company, optional',
       emailLabel: 'Your email address',
       namePh: 'your name',
-      companyPh: 'company, optional',
+      companyPh: 'company',
       messagePh: 'one or two lines',
-      emailPh: 'your email',
+      emailPh: 'email',
       choices: ['Build something new', 'Improve what I have', 'Hire you', 'Just say hi'],
       submit: 'Send it',
       sent: "Sent. I'll get back to you within 2 working days.",
-      prefer: 'Prefer email?',
+      prefer: 'or email',
     },
     email: 'rydny01@gmail.com',
     links: [

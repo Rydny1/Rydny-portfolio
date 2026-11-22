@@ -35,26 +35,24 @@ const { hero } = copy;
     <g class="end"></g>
   </svg>
 
-  <div class="inner">
-    <h1 id="hero-title">
-      <span class="l1">{hero.line1}<span class="stop" data-wire-start>.</span></span>
-      <span class="l2"><em><span class="b" data-wire-end>B</span>uild the fix.</em></span>
-    </h1>
+  <h1 id="hero-title" class="big">
+    <span class="l1">{hero.line1}<span class="stop" data-wire-start>.</span></span>
+    <span class="l2"><em><span class="b" data-wire-end>B</span>uild the fix.</em></span>
+  </h1>
 
-    <div class="bottom">
-      <div class="lead-block">
-        <p class="lead">{hero.lead}</p>
-        <div class="cta">
-          <a class="btn" href={hero.primary.href} data-magnetic>{hero.primary.label}</a>
-          <a class="link" href={hero.secondary.href}>{hero.secondary.label}</a>
-        </div>
+  <div class="bottom">
+    <div class="lead-block">
+      <p class="lead">{hero.lead}</p>
+      <div class="cta">
+        <a class="btn" href={hero.primary.href} data-magnetic>{hero.primary.label}</a>
+        <a class="link" href={hero.secondary.href}>{hero.secondary.label}</a>
       </div>
-      <ul class="facts">
-        {hero.facts.map((f) => (
-          <li><b>{f.title}</b><span>{f.text}</span></li>
-        ))}
-      </ul>
     </div>
+    <ul class="facts">
+      {hero.facts.map((f) => (
+        <li><b>{f.title}</b><span>{f.text}</span></li>
+      ))}
+    </ul>
   </div>
 </section>
 
@@ -63,86 +61,93 @@ const { hero } = copy;
     position: sticky;
     top: 0;
     z-index: 0;
-    min-height: 100svh;
+    height: max(100svh, 540px);
     overflow: hidden;
     isolation: isolate;
-    background: var(--paper);
+    background: #e8e8e0;
   }
   .poster,
   .poster img,
-  .wall {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .poster {
-    z-index: -3;
-  }
-  .wall {
-    z-index: -2;
-    opacity: 0;
-  }
-  .wall.ready {
-    opacity: 1;
-  }
-  /* Pre-blurred wall: its opacity rises as the page slides over the hero. */
+  .wall,
   .blur {
     position: absolute;
     inset: 0;
-    z-index: -1;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  .poster,
+  .wall {
+    opacity: 0.16;
+  }
+  .poster {
+    z-index: -5;
+  }
+  .wall {
+    z-index: -4;
     opacity: 0;
   }
+  .wall.ready {
+    opacity: 0.16;
+  }
+  /* Pre-blurred wall: its opacity rises as the page slides over the hero. */
+  .blur {
+    z-index: -3;
+    opacity: 0;
+  }
+  /* A soft cream veil keeps the wall a quiet presence under the type */
   .veil {
     position: absolute;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background: linear-gradient(90deg, rgb(246 241 234 / 0.5), rgb(246 241 234 / 0.2) 60%, transparent 80%), rgb(140 160 128 / 0.16);
+    background: radial-gradient(ellipse at 40% 45%, rgb(240 235 227 / 0.55), rgb(240 235 227 / 0) 70%);
   }
-  .inner {
-    position: relative;
-    z-index: 2;
-    min-height: 100svh;
-    max-width: var(--max);
-    margin-inline: auto;
-    padding: clamp(120px, round(17vh, 8px), 160px) var(--pad) var(--s-6);
-    display: flex;
-    flex-direction: column;
-  }
-  h1 {
+
+  /* Headlines: heavy green Fraunces, placed as in the mockup (percentages of the hero) */
+  .big {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    margin: 0;
+    font-weight: 560;
+    letter-spacing: -0.05em;
+    line-height: 0.88;
+    font-size: clamp(56px, min(11.95vw, 19.1vh), 232px);
     color: var(--green);
-    font-size: var(--fs-hero);
-    font-weight: 380;
-    letter-spacing: -0.045em;
-    line-height: 0.95;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    text-wrap: nowrap;
+  }
+  .big > span {
+    position: absolute;
+    white-space: nowrap;
   }
   .l1 {
-    align-self: flex-start;
+    left: calc(var(--pad) - 8px);
+    top: 16%;
   }
   .l2 {
-    align-self: flex-end;
-    margin-top: auto;
-    margin-bottom: clamp(var(--s-6), round(17vh, 8px), 160px);
+    right: var(--pad);
+    top: 56%;
   }
   .l2 em {
-    font-style: italic;
-    font-weight: 340;
+    font-family: 'Fraunces Slant', var(--font-display);
+    font-style: normal;
+    font-weight: 480;
+    display: inline-block;
+    transform: skewX(-9.5deg);
+    transform-origin: 50% 80%;
   }
   .bottom {
+    position: absolute;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: clamp(24px, 4.4vh, 40px);
+    z-index: 4;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     gap: var(--s-6);
-    margin-top: var(--s-3);
+    max-width: calc(var(--max) - var(--pad) * 2);
+    margin-inline: auto;
   }
   .lead {
     font-size: var(--fs-lead);
@@ -168,51 +173,46 @@ const { hero } = copy;
   }
   .facts b {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 560;
     font-size: var(--fs-fact);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 
-  /* Desktop: the hero is exactly one screen. Type scales with the smaller of width and height. */
-  @media (min-width: 900px) {
-    .hero {
-      height: max(100svh, 540px);
-      min-height: 0;
-    }
-    .inner {
-      height: 100%;
-      min-height: 0;
-      padding-bottom: clamp(var(--s-3), round(5vh, 8px), var(--s-6));
-    }
-    h1 {
-      font-size: clamp(52px, min(7.4vw, 13vh), 128px);
-    }
-  }
-
+  /* Phones: the headline flows normally; "Find the problem." left, "Build the fix." right */
   @media (max-width: 899px) {
-    h1 {
+    .hero {
+      height: auto;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      padding: var(--s-16) var(--pad) var(--s-3);
+    }
+    .big {
+      position: static;
+      flex: none;
+      display: flex;
+      flex-direction: column;
       font-size: clamp(44px, 13.5vw, 96px);
       text-wrap: balance;
     }
-    .l1,
-    .l2 {
-      align-self: flex-start;
+    .big > span {
+      position: static;
+      white-space: normal;
     }
     .l1 {
-      margin-bottom: var(--s-8);
+      align-self: flex-start;
+      margin-bottom: clamp(224px, 32svh, 288px);
     }
     .l2 {
-      margin-bottom: 0;
-    }
-    .inner {
-      padding-top: var(--s-16);
-      padding-bottom: var(--s-3);
+      align-self: flex-end;
     }
     .bottom {
+      position: static;
       flex-direction: column;
       align-items: stretch;
       gap: var(--s-3);
-      margin-top: var(--s-4);
+      margin-top: auto;
+      padding-top: var(--s-4);
     }
     .lead {
       font-size: 18px;
@@ -245,8 +245,7 @@ const { hero } = copy;
     :global(html.js:not(.seen)) .l2 {
       animation: rise calc(0.45s * var(--k)) var(--ease) calc(1.15s * var(--k)) both;
     }
-    :global(html.js:not(.seen)) .lead-block,
-    :global(html.js:not(.seen)) .facts {
+    :global(html.js:not(.seen)) .bottom {
       animation: fade-up calc(0.4s * var(--k)) var(--ease) calc(1.2s * var(--k)) both;
     }
   }
@@ -270,8 +269,9 @@ const { hero } = copy;
   const hero = document.querySelector<HTMLElement>('.hero');
   const v = document.querySelector<HTMLVideoElement>('.hero .wall');
   const blur = document.querySelector<HTMLElement>('.hero .blur');
-  const inner = document.querySelector<HTMLElement>('.hero .inner');
   const wire = document.querySelector<SVGElement>('.hero .wire');
+  const faint = document.querySelector<HTMLVideoElement>('.wallfaint');
+  const content = document.querySelectorAll<HTMLElement>('.hero .big, .hero .bottom');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
   const posterOnly = reduced || !!conn?.saveData || /^(slow-2g|2g|3g)$/.test(conn?.effectiveType ?? '');
@@ -284,23 +284,40 @@ const { hero } = copy;
     else v.pause();
   };
 
-  // The hero stays pinned; the page slides over it. As it does, the wall blurs and the type eases away.
-  // Only opacity and transform change: the blur is a pre-blurred image fading in, never a live filter.
+  // The hero stays pinned; the page slides over it. The wall, the line and the pills soften and fade together,
+  // scrubbed to scroll and reversible. Only opacity and transform change; the blur is a pre-blurred image
+  // fading in (the SVG layer takes one small blur), never a per-frame filter on many elements.
   let ticking = false;
   const onScroll = () => {
     ticking = false;
     if (!hero) return;
     const p = Math.min(1, Math.max(0, scrollY / (innerHeight * 0.9)));
-    // The line and pills go with the wall: 0 to 60% of the hero, one element blurred up to 6px.
     const lp = Math.min(1, Math.max(0, scrollY / (hero.offsetHeight * 0.6)));
     if (blur) blur.style.opacity = String(p);
-    if (inner) {
-      inner.style.opacity = String(Math.max(0, 1 - p * 2.4));
-      inner.style.transform = p ? `translateY(${(-p * 32).toFixed(1)}px)` : '';
-    }
+    content.forEach((c) => {
+      c.style.opacity = String(Math.max(0, 1 - p * 2.4));
+    });
     if (wire) {
       wire.style.opacity = String(1 - lp);
       wire.style.filter = lp > 0.02 ? `blur(${(lp * 6).toFixed(2)}px)` : '';
+    }
+    // the faint wall behind the cream sections fades in as they cover the hero
+    if (faint) {
+      const fo = 0.16 * Math.min(1, Math.max(0, (scrollY - innerHeight * 0.35) / (innerHeight * 0.5)));
+      faint.style.opacity = fo.toFixed(3);
+      if (fo > 0 && !posterOnly && matchMedia('(min-width: 900px)').matches) {
+        if (!faint.dataset.ready) {
+          faint.dataset.ready = '1';
+          for (const [type, ext] of [['video/webm', 'webm'], ['video/mp4', 'mp4']] as const) {
+            const s = document.createElement('source');
+            s.src = `/video/wall-light.${ext}`;
+            s.type = type;
+            faint.append(s);
+          }
+          faint.load();
+        }
+        faint.play().catch(() => {});
+      } else if (fo === 0) faint.pause();
     }
     sync();
   };

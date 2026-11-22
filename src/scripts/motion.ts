@@ -64,13 +64,15 @@ function splitTitle(h: HTMLElement) {
   h.dataset.split = '1';
   const stop = h.querySelector<HTMLElement>('.fs');
   const nodes = Array.from(h.childNodes).filter((n) => n !== stop);
-  const text = nodes.map((n) => n.textContent ?? '').join('');
   nodes.forEach((n) => n.remove());
   const frag = document.createDocumentFragment();
-  text
-    .trim()
-    .split(/\s+/)
-    .forEach((word, i, arr) => {
+  nodes.forEach((n) => {
+    if (n.nodeType === 1 && (n as Element).tagName === 'BR') {
+      frag.append(document.createElement('br'));
+      return;
+    }
+    const words = (n.textContent ?? '').trim().split(/\s+/).filter(Boolean);
+    words.forEach((word, i) => {
       const w = document.createElement('span');
       w.className = 'tw';
       const wi = document.createElement('span');
@@ -78,8 +80,9 @@ function splitTitle(h: HTMLElement) {
       wi.textContent = word;
       w.append(wi);
       frag.append(w);
-      if (i < arr.length - 1) frag.append(document.createTextNode(' '));
+      if (i < words.length - 1) frag.append(document.createTextNode(' '));
     });
+  });
   h.prepend(frag);
 }
 

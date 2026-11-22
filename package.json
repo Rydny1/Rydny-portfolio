@@ -23,7 +23,9 @@
     "chrome-launcher": "^1.2.3",
     "html-validate": "^11.21.1",
     "lighthouse": "^13.6.0",
+    "pixelmatch": "^8.0.0",
     "playwright": "^1.65.1",
+    "pngjs": "^7.0.0",
     "typescript": "^6.0.3"
   }
 }

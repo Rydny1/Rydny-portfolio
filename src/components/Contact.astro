@@ -4,12 +4,14 @@ const { contact: c } = copy;
 ---
 
 <section class="contact" id="contact" aria-labelledby="contact-title" data-node>
+  <!-- Cream to night: a smooth ramp, never a hard edge -->
+  <div class="fade" aria-hidden="true"></div>
   <!-- Leaf shadows keep drifting, very faintly, on the night background (desktop, in view only) -->
   <video class="shadows" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" poster="/img/wall-blur.webp" data-webm="/video/wall-light.webm" data-mp4="/video/wall-light.mp4"></video>
 
-  <div class="wrap">
-    <div class="top">
-      <h2 id="contact-title" data-title>{c.title}<span class="fs">.</span></h2>
+  <div class="wrap" data-tone="dark">
+    <div class="ctop">
+      <h2 id="contact-title" data-title>Get in<br />touch<span class="fs">.</span></h2>
       <p class="lead" data-reveal data-delay="120">{c.lead}</p>
     </div>
 
@@ -35,8 +37,8 @@ const { contact: c } = copy;
         </fieldset>
 
         <p class="line">
-          <label for="f-message">{c.form.short}</label>
-          <textarea id="f-message" name="message" rows="2" required minlength="5" maxlength="600" placeholder={c.form.messagePh}></textarea>
+          <label for="f-message">{c.form.short}</label>{' '}
+          <textarea id="f-message" name="message" rows="1" required minlength="5" maxlength="600" placeholder={c.form.messagePh}></textarea>
         </p>
 
         <p class="line">
@@ -51,7 +53,7 @@ const { contact: c } = copy;
 
         <div class="actions">
           <button class="btn" type="submit" data-magnetic>{c.form.submit}</button>
-          <p class="prefer">{c.form.prefer} <a class="link" href={`mailto:${c.email}`}>{c.email}</a></p>
+          <p class="prefer">{c.form.prefer} <a class="mail" href={`mailto:${c.email}`}>{c.email}</a></p>
           <p class="err" role="alert" data-error></p>
         </div>
       </form>
@@ -64,12 +66,12 @@ const { contact: c } = copy;
     <div class="footrow" data-end-node>
       <ul class="small">
         {c.links.map((l) => (
-          <li><a class="link" href={l.href} rel="noopener">{l.label}</a></li>
+          <li><a class="flink" href={l.href} rel="noopener">{l.label}</a></li>
         ))}
-        {c.cv && <li><a class="link" href={c.cv} download>{c.cvLabel}</a></li>}
+        {c.cv && <li><a class="flink" href={c.cv} download>{c.cvLabel}</a></li>}
         <li class="clock">Riga, <time data-riga-time datetime=""></time> <span data-riga-zone>GMT+2</span></li>
       </ul>
-      <p class="status label"><span class="live" aria-hidden="true"></span>{c.status}</p>
+      <p class="status"><span class="live" aria-hidden="true"></span>{c.status}</p>
     </div>
 
     <div class="big" aria-hidden="true" data-letters>{[...'Rydny Ihims'].map((ch) => <span class="ch">{ch === ' ' ? ' ' : ch}</span>)}</div>
@@ -79,24 +81,15 @@ const { contact: c } = copy;
 
 <style>
   .contact {
-    --letter: clamp(22px, 2.6vw, 36px);
     position: relative;
     isolation: isolate;
-    overflow: visible;
-    padding-block: var(--section-y) var(--s-4);
+    padding: 0 0 56px;
     background: var(--night);
     color: var(--paper);
   }
-  /* Cream to night: a soft ramp over the padding at the bottom of About, never a hard edge */
-  .contact::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(-1 * var(--section-y) - var(--s-8));
-    height: calc(var(--section-y) + var(--s-8));
-    background: linear-gradient(to bottom, transparent, rgb(23 24 26 / 0.55) 45%, var(--night));
-    pointer-events: none;
+  .fade {
+    height: 220px;
+    background: linear-gradient(to bottom, var(--paper), var(--night));
   }
   .shadows {
     position: absolute;
@@ -105,52 +98,49 @@ const { contact: c } = copy;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.1;
+    opacity: 0.07;
     mix-blend-mode: screen;
     pointer-events: none;
   }
   .contact :global(:focus-visible) {
     outline-color: var(--paper);
   }
-  .contact :global(.link) {
-    color: var(--paper);
-  }
 
-  .top {
+  .ctop {
     display: grid;
-    grid-template-columns: 7fr 5fr;
-    gap: var(--s-6);
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
     align-items: end;
-    padding-bottom: var(--s-6);
-    border-bottom: 1px solid rgb(238 233 227 / 0.18);
-    margin-bottom: var(--s-6);
+    padding-top: 96px;
   }
   h2 {
-    font-size: clamp(56px, 8.4vw, 136px);
-    line-height: 0.9;
-    max-width: 6ch;
+    font-size: clamp(64px, 11.7vw, 168px);
+    line-height: 0.84;
+    font-weight: 560;
+    letter-spacing: -0.05em;
   }
   .lead {
-    font-size: var(--fs-lead);
-    color: var(--on-night-mist);
-    max-width: 34ch;
-    margin-bottom: var(--s-1);
+    font-size: 20px;
+    max-width: 30ch;
+    opacity: 0.8;
+    padding-bottom: 18px;
   }
 
   .letter-wrap {
     position: relative;
-    max-width: 1040px;
+    margin-top: 80px;
+    padding-top: 56px;
+    border-top: 1px solid rgb(238 233 227 / 0.14);
   }
   .letter {
     font-family: var(--font-display);
-    font-size: var(--letter);
-    font-weight: 380;
-    line-height: 1.5;
-    letter-spacing: -0.02em;
+    font-size: clamp(24px, 2.78vw, 40px);
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.015em;
   }
   .line {
     max-width: none;
-    margin-bottom: var(--s-2);
   }
   .letter label:not(.sr-only):not(.pill) {
     font: inherit;
@@ -170,30 +160,31 @@ const { contact: c } = copy;
     color: var(--paper);
     background: linear-gradient(var(--signal), var(--signal)) left bottom / 0 2px no-repeat;
     border: 0;
-    border-bottom: 1px solid rgb(238 233 227 / 0.4);
+    border-bottom: 1.5px solid rgb(238 233 227 / 0.3);
     border-radius: 0;
     padding: 0 4px;
     margin: 0;
     outline: none;
     field-sizing: content;
-    min-width: 9ch;
+    min-width: 240px;
     max-width: 100%;
     transition: background-size 0.4s var(--ease);
   }
   .letter textarea {
-    display: block;
-    width: 100%;
-    min-height: 2.9em;
+    display: inline-block;
+    vertical-align: baseline;
+    min-width: min(440px, 100%);
     resize: none;
-    margin-top: var(--s-1);
-    line-height: 1.45;
+    line-height: 1.3;
+    height: auto;
+    overflow: hidden;
   }
   .letter input:focus,
   .letter textarea:focus {
     background-size: 100% 2px;
   }
   .letter ::placeholder {
-    color: rgb(238 233 227 / 0.5);
+    color: rgb(238 233 227 / 0.38);
     font-style: italic;
     opacity: 1;
   }
@@ -205,19 +196,22 @@ const { contact: c } = copy;
   .choice {
     border: 0;
     padding: 0;
+    margin: 0;
     min-width: 0;
   }
   .choice legend {
     padding: 0;
     float: left;
-    margin-right: var(--s-2);
+    margin-right: var(--s-1);
   }
   .pills {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-1);
+    gap: 10px;
     overflow: hidden;
     padding-block: 4px;
+    align-items: center;
+    min-height: 1.6em;
   }
   .pill {
     position: relative;
@@ -233,11 +227,11 @@ const { contact: c } = copy;
   .pill span {
     display: flex;
     align-items: center;
-    min-height: 44px;
-    padding: 0 var(--s-2);
-    font: 500 16px/1.2 var(--font-body);
+    min-height: 40px;
+    padding: 0 16px;
+    font: 600 15px/1.2 var(--font-body);
     letter-spacing: 0;
-    border: 1px solid rgb(238 233 227 / 0.45);
+    border: 1px solid rgb(238 233 227 / 0.3);
     border-radius: var(--radius-pill);
     transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
   }
@@ -246,7 +240,7 @@ const { contact: c } = copy;
   }
   .pill input:checked + span {
     background: var(--paper);
-    color: var(--ink);
+    color: var(--night);
     border-color: var(--paper);
   }
   .pill input:focus-visible + span {
@@ -259,18 +253,22 @@ const { contact: c } = copy;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--s-2) var(--s-3);
-    margin-top: var(--s-3);
+    margin-top: 44px;
+    font-family: var(--font-body);
+    font-size: 15px;
   }
   .prefer {
-    font: 400 14px/1.4 var(--font-body);
+    font: 400 15px/1.4 var(--font-body);
     letter-spacing: 0;
-    color: var(--on-night-mist);
+    opacity: 0.6;
+  }
+  .mail {
+    text-decoration: none;
   }
   .err {
     flex-basis: 100%;
     font: 500 15px/1.4 var(--font-body);
     letter-spacing: 0;
-    color: var(--paper);
     max-width: 40ch;
   }
   .err:empty {
@@ -285,7 +283,7 @@ const { contact: c } = copy;
   }
   .sent {
     font-family: var(--font-display);
-    font-size: var(--letter);
+    font-size: clamp(24px, 2.78vw, 40px);
     line-height: 1.3;
     letter-spacing: -0.02em;
     padding-block: var(--s-6);
@@ -300,17 +298,21 @@ const { contact: c } = copy;
     justify-content: space-between;
     align-items: center;
     gap: var(--s-3);
-    margin-top: var(--s-8);
-    padding-top: var(--s-3);
-    border-top: 1px solid rgb(238 233 227 / 0.18);
+    margin-top: 150px;
+    padding-top: 32px;
+    border-top: 1px solid rgb(238 233 227 / 0.14);
     font-size: 14px;
-    color: var(--on-night-mist);
   }
   .small {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--s-1) var(--s-3);
+    gap: var(--s-1) 28px;
+    opacity: 0.75;
+  }
+  .flink {
+    color: inherit;
+    text-decoration: none;
   }
   .clock {
     font-variant-numeric: tabular-nums;
@@ -318,26 +320,30 @@ const { contact: c } = copy;
   .status {
     display: flex;
     align-items: center;
-    gap: var(--s-1);
-    color: var(--on-night-mist);
+    gap: 10px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.8;
   }
   .live {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--signal);
-    box-shadow: 0 0 0 4px rgb(228 87 46 / 0.2);
+    box-shadow: 0 0 0 6px rgb(228 87 46 / 0.18);
   }
 
   .big {
     overflow: hidden;
     padding-bottom: var(--s-4);
     font-family: var(--font-display);
-    font-size: min(14.2vw, 206px);
-    font-weight: 380;
-    letter-spacing: -0.045em;
-    line-height: 0.9;
-    margin-top: var(--s-3);
+    font-size: min(14.7vw, calc((100vw - 2 * var(--pad)) / 6.1), 228px);
+    font-weight: 560;
+    letter-spacing: -0.055em;
+    line-height: 0.78;
+    color: #e9e3d8;
+    margin-top: 40px;
     white-space: nowrap;
   }
   .big :global(.ch) {
@@ -346,18 +352,36 @@ const { contact: c } = copy;
   }
   footer {
     margin-top: var(--s-3);
-    padding-top: var(--s-3);
-    border-top: 1px solid rgb(238 233 227 / 0.18);
     font-size: var(--fs-meta);
-    color: var(--on-night-mist);
+    opacity: 0.6;
   }
 
   @media (max-width: 899px) {
-    .top {
+    .fade {
+      height: 120px;
+    }
+    .ctop {
       grid-template-columns: 1fr;
       gap: var(--s-3);
-      padding-bottom: var(--s-4);
-      margin-bottom: var(--s-4);
+      padding-top: var(--s-6);
+    }
+    .lead {
+      padding-bottom: 0;
+    }
+    .letter-wrap {
+      margin-top: var(--s-6);
+      padding-top: var(--s-4);
+    }
+    .letter input[type='text'],
+    .letter input[type='email'],
+    .letter textarea {
+      min-width: 9ch;
+    }
+    .letter textarea {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      margin-top: var(--s-1);
     }
     .shadows {
       display: none;
@@ -365,8 +389,10 @@ const { contact: c } = copy;
     .footrow {
       flex-direction: column;
       align-items: flex-start;
-      margin-top: var(--s-6);
+      margin-top: var(--s-8);
+    }
+    .big {
+      margin-top: var(--s-2);
     }
   }
 </style>
-

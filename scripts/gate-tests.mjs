@@ -138,10 +138,10 @@ try {
     const nodes = await page.$$eval('.pagewire .pw-node', (n) => n.length);
     await page.evaluate(() => window.scrollTo(0, 700));
     await page.waitForTimeout(500);
-    const mid = await page.evaluate(() => ({ blur: parseFloat(document.querySelector('.hero .blur').style.opacity), inner: parseFloat(document.querySelector('.hero .inner').style.opacity), heroTop: Math.round(document.querySelector('.hero').getBoundingClientRect().top), scrolled: document.querySelector('[data-nav]').classList.contains('scrolled') }));
+    const mid = await page.evaluate(() => ({ blur: parseFloat(document.querySelector('.hero .blur').style.opacity), inner: parseFloat(document.querySelector('.hero .big').style.opacity), heroTop: Math.round(document.querySelector('.hero').getBoundingClientRect().top), scrolled: document.querySelector('[data-nav]').classList.contains('glass') }));
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
     await page.waitForTimeout(600);
-    const end = await page.evaluate(() => ({ night: document.querySelector('[data-nav]').classList.contains('on-night'), litNodes: document.querySelectorAll('.pagewire .pw-node.on').length }));
+    const end = await page.evaluate(() => ({ night: document.querySelector('[data-nav]').classList.contains('on-dark'), litNodes: document.querySelectorAll('.pagewire .pw-node.on').length }));
     log('   hero pinned, nav fixed, page wire has 5 nodes', sticky === 'sticky' && navPos === 'fixed' && nodes === 5, JSON.stringify({ sticky, navPos, nodes }));
     log('   scroll blur: wall blurs, type fades, hero stays pinned, bar appears', mid.blur > 0.5 && mid.inner < 0.2 && mid.heroTop === 0 && mid.scrolled, JSON.stringify(mid));
     log('   end of page: nav turns paper on night, all 5 nodes lit', end.night && end.litNodes === 5, JSON.stringify(end));

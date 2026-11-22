@@ -17,44 +17,33 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
 
 <article class="project" aria-labelledby={`p-${p.slug}`}>
   <div class="media">
-    <figure>
-      <div class="frame" style={`aspect-ratio:${ratio}`} data-wipe data-tone={p.tone}>
-        {primary ? (
-          <a href={primary.href} rel="noopener" data-cursor="View project" aria-label={`${p.name}: ${primary.label}`}>
-            <div class="pane" data-parallax-in>
-              {p.video ? (
-                <video class="loop" muted loop playsinline preload="none" poster={`/img/${p.image.src}.webp`} data-webm={p.video.webm} data-mp4={p.video.mp4} aria-label={p.image.alt}></video>
-              ) : (
-                <Pic base={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} sizes="(min-width: 900px) 62vw, 86vw" />
-              )}
-            </div>
-          </a>
-        ) : (
-          <div class="pane" data-parallax-in>
-            <Pic base={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} sizes="(min-width: 900px) 62vw, 86vw" />
-          </div>
-        )}
-      </div>
-      <figcaption>{p.caption}</figcaption>
-    </figure>
+    <div class="shot" style={`aspect-ratio:${ratio}`} data-wipe data-tone={p.tone}>
+      {primary ? (
+        <a href={primary.href} rel="noopener" data-cursor="View project" aria-label={`${p.name}: ${primary.label}`}>
+          {p.video ? (
+            <video class="loop" muted loop playsinline preload="none" poster={`/img/${p.image.src}.webp`} data-webm={p.video.webm} data-mp4={p.video.mp4} aria-label={p.image.alt}></video>
+          ) : (
+            <Pic base={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} sizes="(min-width: 900px) 58vw, 86vw" />
+          )}
+        </a>
+      ) : (
+        <Pic base={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} sizes="(min-width: 900px) 58vw, 86vw" />
+      )}
+    </div>
   </div>
 
   <div class="text">
     <div class="meta" data-reveal>
-      <span class="idx" aria-hidden="true">{p.index}</span>
       {p.badge ? <span class="badge">{p.badge}</span> : <span class="label">{p.label}</span>}
       <h3 id={`p-${p.slug}`}>{p.name}</h3>
     </div>
     <dl data-reveal data-delay="80">
       <dt>{L.problem}</dt><dd>{p.problem}</dd>
       <dt>{L.fix}</dt><dd>{p.fix}</dd>
+      <dt>{L.result}</dt><dd>{p.result}</dd>
     </dl>
-    <div class="result" data-reveal data-delay="140">
-      <span class="rl">{L.result}</span>
-      <p class="rt">{p.result}</p>
-    </div>
     <MiniFlow steps={p.flow} />
-    <a class="link ask" href={copy.proof.ask.href}>{copy.proof.ask.label}</a>
+    <p class="more-line">{copy.proof.ask.text} <a class="ask" href={copy.proof.ask.href}>{copy.proof.ask.label}</a></p>
     {p.links.length > 0 && (
       <ul class="links">
         {p.links.map((l) => (
@@ -68,145 +57,98 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
 <style>
   .project {
     display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: var(--s-6);
+    grid-template-columns: 7fr 5fr;
+    gap: 56px;
     align-items: start;
-    border-top: 1px solid var(--hairline);
+    padding: 44px 0;
+    border-top: 1px solid rgb(46 70 54 / 0.2);
   }
-  /* Desktop: the media stays pinned while the text scrolls past. The next project's media slides up over it. */
-  .media {
-    grid-column: 1 / 9;
-    position: sticky;
-    top: 104px;
-    padding-block: var(--s-6);
-  }
-  .project:nth-child(2) .media {
-    z-index: 2;
-  }
-  .project:nth-child(3) .media {
-    z-index: 3;
-  }
-  figure {
-    margin: 0;
-  }
-  .frame {
+  .shot {
     overflow: hidden;
-    border: 1px solid var(--hairline-strong);
-    background: var(--ink);
-    box-shadow: 0 24px 48px -24px rgb(31 32 35 / 0.35);
+    border-radius: 6px;
+    background: #111;
+    box-shadow: 0 30px 60px -30px rgb(46 70 54 / 0.55);
   }
-  .frame a {
+  .shot a {
     display: block;
     height: 100%;
   }
-  .pane {
-    height: 100%;
-    transform: translateY(var(--py, 0px)) scale(1.1);
-    will-change: transform;
-  }
-  .frame :global(picture),
-  .frame :global(video) {
+  .shot :global(picture),
+  .shot :global(video) {
     display: block;
     width: 100%;
     height: 100%;
   }
-  .frame :global(img),
-  .frame :global(video) {
+  .shot :global(img),
+  .shot :global(video) {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top;
+    transition: transform 0.9s var(--ease);
   }
-  figcaption {
-    margin-top: var(--s-2);
-    font-size: 13px;
-    color: var(--mist);
+  @media (hover: hover) {
+    .shot a:hover :global(img),
+    .shot a:focus-visible :global(img),
+    .shot a:hover :global(video) {
+      transform: scale(1.04);
+    }
   }
-  .text {
-    grid-column: 9 / 13;
-    padding-block: round(14vh, 8px);
-  }
-  .idx {
-    display: block;
-    font-family: var(--font-display);
-    font-size: clamp(64px, 6vw, 96px);
-    font-weight: 380;
-    line-height: 0.9;
-    letter-spacing: -0.04em;
-    color: var(--mist);
-    margin-bottom: var(--s-3);
+  .meta {
+    margin-bottom: 24px;
   }
   h3 {
-    font-size: var(--fs-h3);
+    font-size: 48px;
     line-height: 1;
-    margin: var(--s-2) 0 var(--s-4);
+    font-weight: 540;
+    color: var(--ink);
+    margin: 14px 0 0;
   }
   .badge {
     display: inline-block;
-    background: var(--ink);
+    background: var(--green);
     color: var(--paper);
-    font-size: var(--fs-label);
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    padding: var(--s-1);
-    border-radius: var(--radius-badge);
+    padding: 6px 11px;
+    border-radius: var(--radius-pill);
   }
   dl {
     display: grid;
-    grid-template-columns: 72px 1fr;
-    gap: var(--s-1) var(--s-2);
+    grid-template-columns: 88px 1fr;
+    gap: 10px 16px;
+    font-size: 17px;
   }
   dt {
-    font-size: var(--fs-label);
+    font-size: 11px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     font-weight: 600;
-    color: var(--mist);
-    padding-top: var(--s-1);
+    color: var(--ink);
+    opacity: 0.5;
+    padding-top: 5px;
   }
   dd {
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .more-line {
+    margin-top: 20px;
     font-size: 15px;
-    line-height: 1.55;
-    margin-bottom: var(--s-1);
-  }
-  .result {
-    margin-top: var(--s-4);
-  }
-  .rl {
-    font-size: var(--fs-label);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
     font-weight: 600;
-    color: var(--mist);
   }
-  .rt {
-    margin-top: var(--s-1);
-    font-family: var(--font-display);
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 1.25;
-    letter-spacing: -0.01em;
+  .ask {
+    text-decoration: underline;
+    text-decoration-color: var(--signal);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
   }
   .links {
     display: flex;
     gap: var(--s-3);
-    margin-top: var(--s-3);
-  }
-  .ask {
-    display: inline-block;
-    margin-top: var(--s-4);
-  }
-  .frame :global(img),
-  .frame :global(video) {
-    transition: transform 0.9s var(--ease);
-  }
-  @media (hover: hover) {
-    .frame a:hover :global(img),
-    .frame a:focus-visible :global(img),
-    .frame a:hover :global(video) {
-      transform: scale(1.04);
-    }
+    margin-top: var(--s-2);
   }
 
   /* Phones: each project is a card inside the swipe carousel */
@@ -215,36 +157,28 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
       display: block;
       flex: 0 0 86%;
       scroll-snap-align: start;
-      border: 1px solid var(--hairline-strong);
-      background: var(--paper-raised);
+      border: 1px solid rgb(46 70 54 / 0.25);
+      border-radius: 6px;
+      background: #f5f1ea;
       padding: var(--s-2);
     }
-    .media {
-      position: static;
-      padding: 0;
-    }
-    .frame {
+    .shot {
       box-shadow: none;
-    }
-    .pane {
-      transform: none;
-    }
-    figcaption {
-      margin-top: var(--s-1);
-      font-size: 12px;
     }
     .text {
       padding: var(--s-3) 0 var(--s-1);
     }
-    .idx {
-      display: inline-block;
-      font-size: 40px;
-      margin: 0 var(--s-2) 0 0;
-      vertical-align: middle;
+    .meta {
+      margin-bottom: var(--s-2);
+    }
+    .badge {
+      font-size: 9.5px;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
     }
     h3 {
       font-size: 32px;
-      margin: var(--s-1) 0 var(--s-2);
+      margin-top: var(--s-1);
     }
     dl {
       grid-template-columns: 1fr;
@@ -255,16 +189,10 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
     }
     dd {
       font-size: 14px;
-      margin-bottom: 0;
+      line-height: 1.5;
     }
-    .rt {
-      font-size: 20px;
-    }
-    .result {
+    .more-line {
       margin-top: var(--s-2);
-    }
-    .ask {
-      margin-top: var(--s-3);
       font-size: 13px;
     }
   }
