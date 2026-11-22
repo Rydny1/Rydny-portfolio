@@ -12,7 +12,10 @@ const { contact: c } = copy;
   <div class="wrap" data-tone="dark">
     <div class="ctop">
       <h2 id="contact-title" data-title>Get in<br />touch<span class="fs">.</span></h2>
-      <p class="lead" data-words>{c.lead}</p>
+      <div class="leadcol">
+        <p class="lead" data-words>{c.lead}</p>
+        <p class="avail">{c.availability}</p>
+      </div>
     </div>
 
     <div class="letter-wrap" data-form-wrap data-reveal data-delay="120">
@@ -119,11 +122,20 @@ const { contact: c } = copy;
     font-weight: 560;
     letter-spacing: -0.05em;
   }
+  .leadcol {
+    padding-bottom: 18px;
+  }
   .lead {
     font-size: 20px;
-    max-width: 30ch;
+    max-width: 36ch;
     opacity: 0.8;
-    padding-bottom: 18px;
+  }
+  .avail {
+    margin-top: var(--s-2);
+    font-size: 14px;
+    max-width: 36ch;
+    text-wrap: balance;
+    opacity: 0.6;
   }
 
   .letter-wrap {
@@ -366,7 +378,7 @@ const { contact: c } = copy;
       gap: var(--s-3);
       padding-top: var(--s-6);
     }
-    .lead {
+    .leadcol {
       padding-bottom: 0;
     }
     .letter-wrap {

@@ -34,13 +34,6 @@ export const copy = {
     lead: 'Three problems. Three working fixes.',
     labels: { problem: 'Problem', fix: 'Fix', result: 'Result' },
     ask: { text: 'Want something like this?', label: 'Get in touch', href: '#contact' },
-    more: {
-      prefix: 'More:',
-      items: [
-        { label: 'Steady (fitness app)', href: 'https://github.com/Rydny1/steady-fitness' },
-        // QuickList (school project, repo not public) left out on purpose, per Rydny.
-      ],
-    },
   },
   fix: {
     title: 'What I fix',
@@ -70,14 +63,15 @@ export const copy = {
     paragraphs: [
       "I'm Rydny. I build software and automations for people whose work has outgrown doing it by hand.",
       'I start by finding where the time goes. Then I design the fix, build it, and stay with it until it runs on its own.',
-      'I grew up in Cameroon, lived in Dubai, and now study Computer Science at the University of Latvia in Riga. I work in English and French, and I enter hackathons whenever I can.',
+      'I grew up in Cameroon, lived in Dubai, and now study Computer Science at the University of Latvia in Riga. I work in English and French, and I enter hackathons whenever I can. Open to freelance projects, internships and part-time roles.',
     ],
-    quote: { text: 'What stands in the way becomes the way.', cite: 'Marcus Aurelius, Meditations' },
+    quote: { text: 'An hour lost at a bottleneck is an hour lost for the entire system.', cite: 'Eliyahu M. Goldratt, The Goal' },
     tools: ['React', 'Next.js', 'TypeScript', 'Python', 'Laravel', 'MySQL', 'n8n', 'REST APIs'],
   },
   contact: {
     title: 'Get in touch',
-    lead: 'Hiring, building something new, or making what you have better. Send a note and you get a straight answer.',
+    lead: "Tell me what you're trying to solve. You'll get a straight answer on what to build, what to automate, and whether I'm the right person for it.",
+    availability: 'Open to freelance projects, internships and part-time roles.',
     form: {
       hi: "Hi Rydny, I'm",
       from: 'from',

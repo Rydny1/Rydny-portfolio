@@ -5,6 +5,7 @@ export interface Project {
   index: string;
   name: string;
   badge?: string; // ink badge with paper text
+  badgeHref?: string; // the badge links here (proof of the win)
   label?: string; // plain small label when there is no badge
   problem: string;
   fix: string;
@@ -22,7 +23,8 @@ export const projects: Project[] = [
     slug: 'plateshare',
     index: '01',
     name: 'PlateShare',
-    badge: '1st place · Hackathon winner',
+    badge: '1st place · Global Challenge Hackathon',
+    badgeHref: 'https://github.com/Rydny1/PlateShare',
     problem: 'Campus canteens bin good food at closing. Students go hungry at 5 pm.',
     fix: 'One WhatsApp message from the canteen. Every student gets pinged. First reply claims the meal.',
     result: 'Won first place. The bot runs on a live database.',

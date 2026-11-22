@@ -3,6 +3,7 @@ import type { Project } from '../content/projects';
 import { copy } from '../content/copy';
 import Pic from './Pic.astro';
 import MiniFlow from './MiniFlow.astro';
+import { how } from '../content/how';
 
 interface Props {
   project: Project;
@@ -10,6 +11,8 @@ interface Props {
 const { project: p } = Astro.props;
 const L = copy.proof.labels;
 const primary = p.links[0];
+const steps = how[p.slug];
+const labels = ['Built with', 'The hard problem', 'How it solves it'];
 // 16:10 unless the source is wider (then it is shown whole, never cropped through text)
 const wide = p.image.width / p.image.height > 1.7;
 const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
@@ -34,7 +37,7 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
 
   <div class="text">
     <div class="meta" data-reveal>
-      {p.badge ? <span class="badge">{p.badge}</span> : <span class="label">{p.label}</span>}
+      {p.badge ? (p.badgeHref ? <a class="badge" href={p.badgeHref} rel="noopener">{p.badge}</a> : <span class="badge">{p.badge}</span>) : <span class="label">{p.label}</span>}
       <h3 id={`p-${p.slug}`}>{p.name}</h3>
     </div>
     <dl data-reveal data-delay="80">
@@ -42,6 +45,20 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
       <dt>{L.fix}</dt><dd>{p.fix}</dd>
       <dt>{L.result}</dt><dd>{p.result}</dd>
     </dl>
+    {steps && (
+      <div class="how">
+        <button class="how-btn" type="button" aria-expanded="false" aria-controls={`how-${p.slug}`}>
+          <span>How it works</span><span class="plus" aria-hidden="true"></span>
+        </button>
+        <div class="how-panel" id={`how-${p.slug}`} role="region" aria-label={`How ${p.name} works`}>
+          <div class="how-inner">
+            <ul>
+              {steps.map((t, i) => <li><b>{labels[i]}</b> {t}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+    )}
     <MiniFlow steps={p.flow} />
     <p class="more-line">{copy.proof.ask.text} <a class="ask" href={copy.proof.ask.href}>{copy.proof.ask.label}</a></p>
     {p.links.length > 0 && (
@@ -104,6 +121,14 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
     color: var(--ink);
     margin: 14px 0 0;
   }
+  a.badge {
+    text-decoration: none;
+    transition: background-color 0.3s var(--ease);
+  }
+  a.badge:hover,
+  a.badge:focus-visible {
+    background: var(--ink);
+  }
   .badge {
     display: inline-block;
     background: var(--green);
@@ -133,6 +158,81 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
   dd {
     font-size: 17px;
     line-height: 1.6;
+  }
+  .how {
+    margin: 4px 0 20px;
+    border-top: 1px solid rgb(46 70 54 / 0.2);
+  }
+  .how-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+  .plus {
+    position: relative;
+    width: 12px;
+    height: 12px;
+  }
+  .plus::before,
+  .plus::after {
+    content: '';
+    position: absolute;
+    inset: 5px 0 auto;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.4s var(--ease);
+  }
+  .plus::after {
+    transform: rotate(90deg);
+  }
+  .how-btn[aria-expanded='true'] .plus::after {
+    transform: rotate(0deg);
+  }
+  .how-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s var(--ease);
+  }
+  .how-panel.open {
+    grid-template-rows: 1fr;
+  }
+  .how-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+  .how-inner ul {
+    list-style: none;
+    padding: 4px 0 12px;
+    display: grid;
+    gap: 10px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .how-inner b {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    font-weight: 600;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .how-panel,
+    .plus::before,
+    .plus::after {
+      transition: none;
+    }
   }
   .more-line {
     margin-top: 20px;
@@ -225,3 +325,14 @@ const ratio = wide ? `${p.image.width} / ${p.image.height}` : '16 / 10';
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.how-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.getAttribute('aria-controls') ?? '');
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      panel?.classList.toggle('open', open);
+    });
+  });
+</script>

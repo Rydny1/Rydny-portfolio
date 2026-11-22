@@ -22,18 +22,6 @@ const { proof } = copy;
       <span class="track"><i data-rail-bar></i></span>
     </div>
   </div>
-
-  <div class="wrap">
-    <p class="more">
-      {proof.more.prefix}{' '}
-      {proof.more.items.map((m, i) => (
-        <>
-          {i > 0 && ', '}
-          <a class="link" href={m.href} rel="noopener">{m.label}</a>
-        </>
-      ))}
-    </p>
-  </div>
 </section>
 
 <style>
@@ -60,15 +48,6 @@ const { proof } = copy;
   }
   .progress {
     display: none;
-  }
-  .more {
-    border-top: 1px solid rgb(46 70 54 / 0.2);
-    padding-top: var(--s-4);
-    font-size: 16px;
-    color: var(--mist);
-  }
-  .more :global(a) {
-    color: var(--ink);
   }
 
   @media (max-width: 899px) {
@@ -125,9 +104,6 @@ const { proof } = copy;
       transform-origin: left;
       transform: scaleX(0.34);
       transition: transform 0.2s linear;
-    }
-    .more {
-      margin-top: var(--s-4);
     }
   }
 </style>
