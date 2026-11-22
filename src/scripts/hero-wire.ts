@@ -42,6 +42,7 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
   const h1 = hero.querySelector<HTMLElement>('h1')!;
 
   let L = 1;
+  let lut = new Float32Array(3 * 361);
   const pills: PillRef[] = [];
   let pillsBuilt = false;
   let lastMobile: boolean | null = null;
@@ -121,6 +122,17 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
     track.setAttribute('d', d);
     line.setAttribute('d', d);
     L = line.getTotalLength();
+    // Sample the path once per layout. Asking the SVG for a point on the path every frame is slow on phones.
+    const N = 360;
+    lut = new Float32Array((N + 1) * 3);
+    for (let i = 0; i <= N; i++) {
+      const q = line.getPointAtLength((L * i) / N);
+      const q2 = line.getPointAtLength(Math.min(L, (L * i) / N + 1));
+      const q1 = line.getPointAtLength(Math.max(0, (L * i) / N - 1));
+      lut[i * 3] = q.x;
+      lut[i * 3 + 1] = q.y;
+      lut[i * 3 + 2] = (Math.atan2(q2.y - q1.y, q2.x - q1.x) * 180) / Math.PI;
+    }
 
     const wanted = labels; // all four steps, on phones too
 
@@ -223,11 +235,13 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
       const p = t / TRIP;
       const e = easeInOut(p);
       const len = e * L;
-      const a = line.getPointAtLength(len);
-      const b = line.getPointAtLength(Math.min(L, len + 1));
-      const c = line.getPointAtLength(Math.max(0, len - 1));
-      const ang = (Math.atan2(b.y - c.y, b.x - c.x) * 180) / Math.PI;
-      l.g.setAttribute('transform', `translate(${a.x.toFixed(2)} ${a.y.toFixed(2)}) rotate(${ang.toFixed(2)})`);
+      const f = (len / L) * 360;
+      const i0 = Math.min(359, Math.floor(f));
+      const u = f - i0;
+      const ax = lut[i0 * 3] + (lut[i0 * 3 + 3] - lut[i0 * 3]) * u;
+      const ay = lut[i0 * 3 + 1] + (lut[i0 * 3 + 4] - lut[i0 * 3 + 1]) * u;
+      const ang = lut[i0 * 3 + 2] + (lut[i0 * 3 + 5] - lut[i0 * 3 + 2]) * u;
+      l.g.setAttribute('transform', `translate(${ax.toFixed(2)} ${ay.toFixed(2)}) rotate(${ang.toFixed(2)})`);
       l.g.style.opacity = String(Math.min(1, p / 0.04, (1 - p) / 0.03));
       pills.forEach((pl, i) => {
         if (!l.fired[i] && e >= pl.t) { l.fired[i] = true; flash(pl); }
@@ -257,6 +271,12 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
     visible ? start() : stop();
   }).observe(hero);
   document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+  window.addEventListener('hero-replay', () => {
+    stop();
+    t0Pending = true;
+    lights.forEach((l) => { l.cycle = -1; l.g.style.opacity = '0'; });
+    start();
+  });
   addEventListener('scroll', () => (covered() ? stop() : start()), { passive: true });
   start();
 }

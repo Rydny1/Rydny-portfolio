@@ -354,10 +354,27 @@ const { hero } = copy;
   // The hero stays pinned; the page slides over it. The wall, the line and the pills soften and fade together,
   // scrubbed to scroll and reversible. Only opacity and transform change; the blur is a pre-blurred image
   // fading in (the SVG layer takes one small blur), never a per-frame filter on many elements.
+  // Scrolling back up to the top replays the opening sequence (headline, line drawing, pills, light), like a fresh
+  // load. Leaving the hero already fades and softens it, so coming back is the same move in reverse.
+  let away = false;
+  const replay = () => {
+    hero?.getAnimations({ subtree: true }).forEach((a) => {
+      if (a instanceof CSSAnimation) {
+        a.cancel();
+        a.play();
+      }
+    });
+    window.dispatchEvent(new Event('hero-replay'));
+  };
   let ticking = false;
   const onScroll = () => {
     ticking = false;
     if (!hero) return;
+    if (scrollY > innerHeight * 0.7) away = true;
+    else if (away && scrollY < innerHeight * 0.2) {
+      away = false;
+      replay();
+    }
     const p = Math.min(1, Math.max(0, scrollY / (innerHeight * 0.9)));
     const lp = Math.min(1, Math.max(0, scrollY / (hero.offsetHeight * 0.6)));
     if (blur) blur.style.opacity = String(p);
