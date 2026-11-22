@@ -115,7 +115,14 @@ const { about } = copy;
     line-height: 1.6;
     color: var(--mist);
   }
+  /* Phones: no blended, endlessly drifting overlay (it forces a costly repaint on every frame) */
   @media (max-width: 899px) {
+    .frame::after {
+      animation: none;
+      mix-blend-mode: normal;
+      opacity: 0.18;
+      transform: none;
+    }
     .grid {
       grid-template-columns: 1fr;
       gap: var(--s-6);

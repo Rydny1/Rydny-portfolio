@@ -194,22 +194,24 @@ const { hero } = copy;
   }
 
   @media (max-width: 899px) {
+    /* Phones: the hero is exactly one screen. Every size below scales with the screen height (svh) and width
+       (vw), so the headline, line, copy and button always fit, from a small iPhone to a tall Galaxy. */
     .hero {
-      height: auto;
-      min-height: 100svh;
+      height: 100vh;
+      height: 100svh;
       display: flex;
       flex-direction: column;
-      padding: 104px var(--pad) var(--s-3);
+      padding: clamp(4.25rem, 13svh, 6.5rem) var(--pad) clamp(0.75rem, 2.4svh, 1.5rem);
     }
     .big {
       position: static;
       flex: 1;
-      min-height: 430px;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      font-size: clamp(44px, 13.5vw, 96px);
+      font-size: clamp(2rem, min(13.5vw, 8.6svh), 6rem);
       text-wrap: balance;
-      margin-bottom: var(--s-4);
+      margin-bottom: clamp(0.5rem, 2svh, 1.5rem);
     }
     .big > span {
       position: static;
@@ -228,7 +230,7 @@ const { hero } = copy;
     .gap {
       display: block;
       flex: 2.6;
-      min-height: 128px;
+      min-height: 3.5rem;
     }
     .big::after {
       flex: 0.45;
@@ -245,24 +247,24 @@ const { hero } = copy;
       flex-direction: column;
       align-items: stretch;
       text-align: left;
-      gap: var(--s-3);
-      padding-top: var(--s-2);
+      gap: clamp(0.5rem, 1.8svh, 1.5rem);
+      padding-top: 0;
     }
     .lead {
-      font-size: clamp(13.5px, 4.05vw, 16px);
+      font-size: clamp(0.8rem, min(4.05vw, 2.4svh), 1rem);
       max-width: none;
       text-wrap: balance; /* two even lines */
     }
     .cta {
-      margin-top: var(--s-2);
+      margin-top: clamp(0.375rem, 1.4svh, 1rem);
       flex-direction: column;
       align-items: stretch;
-      gap: var(--s-2);
+      gap: clamp(0.25rem, 1.2svh, 1rem);
     }
     .cta .btn {
       justify-content: center;
       padding: 0 var(--s-3);
-      min-height: 52px;
+      min-height: clamp(2.75rem, 6.6svh, 3.25rem);
     }
     .cta .btn::after {
       display: none;
@@ -273,24 +275,37 @@ const { hero } = copy;
     .facts {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--s-3);
+      gap: var(--s-2);
       width: 100%;
       justify-items: start;
     }
     .facts li {
-      font-size: var(--fs-label);
+      font-size: clamp(0.6875rem, 1.9svh, 0.8125rem);
       line-height: 1.35;
     }
     .facts b {
-      font-size: 17px;
+      font-size: clamp(0.875rem, 2.6svh, 1.0625rem);
       line-height: 1.2;
-      margin-bottom: 4px;
+      margin-bottom: 0.15em;
+    }
+  }
+  /* Very short screens (small phones with browser bars, landscape): drop the two supporting facts so the
+     headline, line and button stay the whole story and nothing is cut off */
+  @media (max-width: 899px) and (max-height: 600px) {
+    .facts {
+      display: none;
+    }
+  }
+  @media (max-width: 899px) and (max-height: 440px) {
+    .lead {
+      display: none;
     }
   }
 
   /* Load sequence (1.6s base, every duration and delay x --k). Plays once per session.
      Pure CSS, so nothing can stay hidden if a script fails. */
-  @media (prefers-reduced-motion: no-preference) {
+  /* Always on: a phone with "remove animations" or battery saver still gets the calm load-in (opacity and a small rise) */
+  @media all {
     :global(html.js:not(.seen)) .l1 {
       animation: rise calc(0.55s * var(--k)) var(--ease) both;
     }
@@ -351,7 +366,7 @@ const { hero } = copy;
     });
     if (wire) {
       wire.style.opacity = String(1 - lp);
-      wire.style.filter = lp > 0.02 ? `blur(${(lp * 6).toFixed(2)}px)` : '';
+      wire.style.filter = lp > 0.02 && matchMedia('(min-width: 900px)').matches ? `blur(${(lp * 6).toFixed(2)}px)` : '';
     }
     // the faint wall behind the cream sections fades in as they cover the hero
     if (faint) {

@@ -166,9 +166,10 @@ const { nav, contact } = copy;
   /* Phones */
   @media (max-width: 899px) {
     .nav::before {
-      background: rgb(238 233 227 / 0.62);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      /* no live blur on phones: a masked backdrop blur is the most common cause of scroll stutter on Android */
+      background: rgb(238 233 227 / 0.82);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
     .nav.on-dark::before {
       background: rgb(22 22 21 / 0.62);

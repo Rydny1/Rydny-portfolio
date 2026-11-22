@@ -25,7 +25,9 @@ const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t 
 function init(hero: HTMLElement, svg: SVGSVGElement) {
   const labels: string[] = JSON.parse(svg.dataset.steps ?? '[]');
   const lightCount = new URLSearchParams(location.search).get('lights') === '2' ? 2 : 1;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // "Reduce motion" (also switched on by Android battery saver and Remove animations) keeps the calm version:
+  // the line still draws and the light still travels. Only the large spatial moves are dropped elsewhere.
+  const reduced = false as boolean;
   const animateIn = !reduced && !document.documentElement.classList.contains('seen');
 
   const track = svg.querySelector<SVGPathElement>('.track')!;

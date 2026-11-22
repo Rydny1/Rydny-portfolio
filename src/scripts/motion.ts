@@ -62,8 +62,12 @@ interface Item {
 }
 const items = new Map<Element, Item>();
 
+// Reduce-motion users (and phones with battery saver or Remove animations on) still get every reveal, as a plain
+// fade with no travel. Never nothing: a site that shows no animation at all reads as broken.
+const CALM = reduced;
+const FADE_FROM: Record<string, string> = CALM ? { opacity: '0' } : { opacity: '0', transform: 'translateY(44px) rotate(1.4deg)' };
 const HIDDEN: Partial<Record<Kind, Record<string, string>>> = {
-  fade: { opacity: '0', transform: 'translateY(44px) rotate(1.4deg)' },
+  fade: FADE_FROM,
   wipe: { clipPath: 'inset(100% 0 0 0)', transform: 'perspective(1400px) rotateX(8deg) translateY(44px) scale(0.97)' },
   iris: { clipPath: 'circle(0% at 50% 62%)' },
   wipex: { opacity: '0', transform: 'translateX(-28px)' },
@@ -132,12 +136,13 @@ interface Spec {
   dur: number;
   delay: number;
 }
+const FADE_FROM_FRAME: Keyframe = CALM ? { opacity: 0 } : { opacity: 0, transform: 'translateY(44px) rotate(1.4deg)' };
 function specsFor(it: Item): Spec[] {
   const { kind, el, delay } = it;
   const inner = el.querySelector<HTMLElement>('img, video');
   const specs: Spec[] = [];
   if (kind === 'fade') {
-    specs.push({ target: el, frames: [{ opacity: 0, transform: 'translateY(44px) rotate(1.4deg)' }, { opacity: 1, transform: 'none' }], dur: 950, delay });
+    specs.push({ target: el, frames: [FADE_FROM_FRAME, { opacity: 1, transform: 'none' }], dur: CALM ? 700 : 950, delay });
   } else if (kind === 'wipe') {
     specs.push({
       target: el,
@@ -230,10 +235,11 @@ const io = new IntersectionObserver(
   { threshold: [0, 0.08, 0.18], rootMargin: '0px 0px -8% 0px' },
 );
 
-export function reveal(el: HTMLElement, kind: Kind, delay = 0) {
+export function reveal(el: HTMLElement, kindIn: Kind, delay = 0) {
+  const kind: Kind = CALM ? 'fade' : kindIn;
   // A clipped element reports zero visible area to the observer, so wipes and irises are observed through their parent.
   const target = kind === 'wipe' || kind === 'iris' ? (el.parentElement ?? el) : el;
-  if (reduced || items.has(target)) return;
+  if (items.has(target)) return;
   const it: Item = { el, kind, delay, shown: false, armed: false };
   if (kind === 'title' || kind === 'words') {
     split(el);

@@ -2,7 +2,7 @@
 // t runs 0 to 1 as the flow moves from the lower part of the screen to the upper part:
 //   step 1 active from t > 0, light runs line 1 (0.12 to 0.45), step 2 active from 0.48 (step 1 done),
 //   light runs line 2 (0.55 to 0.88), step 3 active from 0.9 (step 2 done).
-import { onFrame, reduced, clamp } from './motion';
+import { onFrame, clamp } from './motion';
 
 interface Flow {
   el: HTMLElement;
@@ -50,9 +50,7 @@ function apply(f: Flow, t: number) {
   });
 }
 
-if (reduced) {
-  flows.forEach((f) => f.steps.forEach((s) => s.setAttribute('data-state', 'idle')));
-} else if (flows.length) {
+if (flows.length) {
   addEventListener('resize', () => flows.forEach((f) => (f.widths = f.lines.map((l) => l.offsetWidth))));
   onFrame((_sy, vh) => {
     for (const f of flows) {
