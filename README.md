@@ -112,6 +112,6 @@ Deployed to Vercel as a static site, with `api/contact.ts` as its one serverless
 
 ## Author
 
-Built by **Rydny Ihims**, a Computer Science student at the University of Latvia in Riga, working in English and French. Open to freelance projects and part-time roles.
+Built by **Rydny Ihims**, a Computer Science student at the University of Latvia in Riga, working in English and French. Open to work.
 
 Find him on [GitHub](https://github.com/Rydny1) or through the contact form on the [live site](https://rydny-portfolio-v2.vercel.app).

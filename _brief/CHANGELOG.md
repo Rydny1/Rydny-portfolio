@@ -69,3 +69,6 @@ One line per change, with why. Newest at the bottom.
 
 ## Contact: email as a copy pill
 - Email moved from the small faded line after the Send button to a prominent pill under the contact lead, with a copy icon that turns into a tick when copied. Why: on phones the old line was easy to miss; the email is now the first thing you can act on.
+
+## Copy
+- Sent message now says "within 24 hours"; availability line now "Open to work." (also in About and README). Why: Rydny corrected both.

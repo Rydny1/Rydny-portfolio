@@ -63,7 +63,7 @@ export const copy = {
     paragraphs: [
       "I'm Rydny. I build software and automations for people whose work has outgrown doing it by hand.",
       'I start by finding where the time goes. Then I design the fix, build it, and stay with it until it runs on its own.',
-      'I grew up in Cameroon, lived in Dubai, and now study Computer Science at the University of Latvia in Riga. I work in English and French, and I enter hackathons whenever I can. Open to freelance projects and part-time roles.',
+      'I grew up in Cameroon, lived in Dubai, and now study Computer Science at the University of Latvia in Riga. I work in English and French, and I enter hackathons whenever I can. Open to work.',
     ],
     quote: { text: 'An hour lost at a bottleneck is an hour lost for the entire system.', cite: 'Eliyahu M. Goldratt, The Goal' },
     tools: ['React', 'Next.js', 'TypeScript', 'Python', 'Laravel', 'MySQL', 'n8n', 'REST APIs'],
@@ -71,7 +71,7 @@ export const copy = {
   contact: {
     title: 'Get in touch',
     lead: "Tell me what you're trying to solve. You'll get a straight answer on what to build, what to automate, and whether I'm the right person for it.",
-    availability: 'Open to freelance projects and part-time roles.',
+    availability: 'Open to work.',
     form: {
       hi: "Hi Rydny, I'm",
       from: 'from',
@@ -87,7 +87,7 @@ export const copy = {
       emailPh: 'email',
       choices: ['Build something new', 'Improve what I have', 'Hire you', 'Just say hi'],
       submit: 'Send it',
-      sent: "Sent. I'll get back to you within 2 working days.",
+      sent: "Sent. I'll get back to you within 24 hours.",
       prefer: 'or email',
     },
     email: 'rydny01@gmail.com',
