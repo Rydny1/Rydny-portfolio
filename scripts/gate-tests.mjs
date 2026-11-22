@@ -52,7 +52,7 @@ try {
     page.on('pageerror', (e) => errors.push(String(e)));
     await page.goto(BASE, { waitUntil: 'networkidle' });
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-    const bigClip = await page.evaluate(() => { const b = document.querySelector('.big'); return b.scrollWidth - b.clientWidth; });
+    const bigClip = await page.evaluate(() => { const b = document.querySelector('.contact .big'); return b.scrollWidth - b.clientWidth; });
     log(`   width ${w}: footer name not clipped`, bigClip <= 0, bigClip > 0 ? `${bigClip}px clipped` : '');
     await page.screenshot({ path: `${shots}/hero-${w}.png` });
     // Trigger lazy images so the full-page shot is honest

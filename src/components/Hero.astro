@@ -37,6 +37,7 @@ const { hero } = copy;
 
   <h1 id="hero-title" class="big">
     <span class="l1">{hero.line1}<span class="stop" data-wire-start>.</span></span>
+    <span class="gap" aria-hidden="true"></span>
     <span class="l2"><em><span class="b" data-wire-end>B</span>uild the fix.</em></span>
   </h1>
 
@@ -120,6 +121,9 @@ const { hero } = copy;
     position: absolute;
     white-space: nowrap;
   }
+  .gap {
+    display: none;
+  }
   .l1 {
     left: calc(var(--pad) - 8px);
     top: 16%;
@@ -179,17 +183,28 @@ const { hero } = copy;
   }
 
   /* Phones: the headline flows normally; "Find the problem." left, "Build the fix." right */
+  /* Short laptop screens: a little smaller and higher so the two lines never touch the bottom block */
+  @media (min-width: 900px) and (max-height: 700px) {
+    .big {
+      font-size: clamp(56px, min(11.95vw, 17.2vh), 232px);
+    }
+    .l2 {
+      top: 50%;
+    }
+  }
+
   @media (max-width: 899px) {
     .hero {
       height: auto;
       min-height: 100svh;
       display: flex;
       flex-direction: column;
-      padding: var(--s-16) var(--pad) var(--s-3);
+      padding: 104px var(--pad) var(--s-3);
     }
     .big {
       position: static;
-      flex: none;
+      flex: 1;
+      min-height: 430px;
       display: flex;
       flex-direction: column;
       font-size: clamp(44px, 13.5vw, 96px);
@@ -200,9 +215,26 @@ const { hero } = copy;
       position: static;
       white-space: normal;
     }
+    /* Space is shared out in proportion: a little above the first line, the most between the two lines (the
+       curve lives there), and a balanced amount below "Build the fix." */
+    .big::before,
+    .big::after {
+      content: '';
+      display: block;
+    }
+    .big::before {
+      flex: 1;
+    }
+    .gap {
+      display: block;
+      flex: 2.4;
+      min-height: 128px;
+    }
+    .big::after {
+      flex: 1.1;
+    }
     .l1 {
       align-self: flex-start;
-      margin-bottom: clamp(136px, 28svh, 288px);
     }
     .l2 {
       align-self: flex-end;
@@ -212,8 +244,7 @@ const { hero } = copy;
       flex-direction: column;
       align-items: stretch;
       gap: var(--s-3);
-      margin-top: auto;
-      padding-top: var(--s-4);
+      padding-top: var(--s-2);
     }
     .lead {
       font-size: 18px;

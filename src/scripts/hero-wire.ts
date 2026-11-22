@@ -92,7 +92,8 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
       // direction the last one arrived (horizontal or vertical at every join), so there is no wobble anywhere:
       // out to the right, a round turn down the right edge, a level sweep left, a second round turn down the
       // left lane, a round U under the node, then straight up into it. All 16px+ inside the screen edges.
-      const k = 0.5523; // quarter-circle handle length
+      const k = 0.5523; // quarter-circle handle length (the final turn)
+      const ks = 0.62; // slightly longer handles on the two big turns: softer curvature, a silkier line
       const L = 24; // the far-left turn, 16px+ inside the edge
       const R = { x: W - 28, y: S.y + 0.2 * dy }; // right turn
       const M = { x: W * 0.5, y: S.y + 0.5 * dy }; // middle of the sweep
@@ -101,9 +102,9 @@ function init(hero: HTMLElement, svg: SVGSVGElement) {
       // right into the node beside "Build". Every join has the same direction on both sides, so there is no wobble.
       d =
         `M ${S.x} ${S.y} ` +
-        `C ${S.x + k * (R.x - S.x)} ${S.y}, ${R.x} ${R.y - k * (R.y - S.y)}, ${R.x} ${R.y} ` +
-        `C ${R.x} ${R.y + k * (M.y - R.y)}, ${M.x + k * (R.x - M.x)} ${M.y}, ${M.x} ${M.y} ` +
-        `C ${M.x - k * (M.x - L)} ${M.y}, ${L} ${Lp.y - k * (Lp.y - M.y)}, ${L} ${Lp.y} ` +
+        `C ${S.x + ks * (R.x - S.x)} ${S.y}, ${R.x} ${R.y - ks * (R.y - S.y)}, ${R.x} ${R.y} ` +
+        `C ${R.x} ${R.y + ks * (M.y - R.y)}, ${M.x + ks * (R.x - M.x)} ${M.y}, ${M.x} ${M.y} ` +
+        `C ${M.x - ks * (M.x - L)} ${M.y}, ${L} ${Lp.y - ks * (Lp.y - M.y)}, ${L} ${Lp.y} ` +
         `C ${L} ${Lp.y + k * (E.y - Lp.y)}, ${E.x - k * (E.x - L)} ${E.y}, ${E.x} ${E.y}`;
       ts = [0.17, 0.47];
     }
